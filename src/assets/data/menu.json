@@ -1,5 +1,6 @@
 {
-  "menu": [{
+  "menu": [
+    {
       "route": "dashboard",
       "name": "dashboard",
       "type": "link",
@@ -8,6 +9,11 @@
         "color": "red-500",
         "value": "5"
       }
+    },
+    {
+      "route": "users",
+      "name": "users",
+      "type": "link"
     },
     {
       "route": "sessions",
