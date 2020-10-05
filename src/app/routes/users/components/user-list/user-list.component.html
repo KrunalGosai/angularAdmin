@@ -1,0 +1,39 @@
+<page-header></page-header>
+
+<mat-card>
+
+  <section>
+    <h2>User List</h2>
+    <p>List of users.</p>
+    <section>
+      <a mat-raised-button aria-label="View basic sidenav example" color="primary"
+         routerLink="new">
+        Add New
+      </a>
+    </section>
+    <mat-table [dataSource]="paginatedDataSource"
+               aria-readonly="true"
+               aria-label="Users favorite colors and age">
+      <ng-container cdkColumnDef="name">
+        <mat-header-cell *cdkHeaderCellDef>Name</mat-header-cell>
+        <mat-cell *cdkCellDef="let row;">{{row.name}}</mat-cell>
+      </ng-container>
+      <ng-container cdkColumnDef="color">
+        <mat-header-cell *cdkHeaderCellDef>Color</mat-header-cell>
+        <mat-cell *cdkCellDef="let row;">{{row.color}}</mat-cell>
+      </ng-container>
+      <ng-container cdkColumnDef="age">
+        <mat-header-cell *cdkHeaderCellDef>Age</mat-header-cell>
+        <mat-cell *cdkCellDef="let row;">{{row.age}}</mat-cell>
+      </ng-container>
+      <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *cdkRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator #paginator
+                   [length]="2"
+                   [pageIndex]="0"
+                   [pageSize]="3"
+                   [pageSizeOptions]="[3,10,15]">
+    </mat-paginator>
+  </section>
+</mat-card>
