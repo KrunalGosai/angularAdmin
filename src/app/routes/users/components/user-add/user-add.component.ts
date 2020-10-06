@@ -17,7 +17,6 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
     gender: '',
   };
 
-  reactiveForm1: FormGroup;
   reactiveForm2: FormGroup;
 
   translateSubscription: Subscription;
@@ -27,18 +26,6 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
     private dateAdapter: DateAdapter<any>,
     private translate: TranslateService
   ) {
-    this.reactiveForm1 = this.fb.group({
-      username: ['', [Validators.required]],
-      gender: ['', [Validators.required]],
-      mobile: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      city: [''],
-      address: [''],
-      company: [''],
-      tele: [''],
-      website: [''],
-      date: [''],
-    });
 
     this.reactiveForm2 = this.fb.group({
       firstname: ['', [Validators.required]],
@@ -46,14 +33,18 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
       contact: ['', [Validators.required]],
       contact_al: [''],
       email: ['', [Validators.required, Validators.email]],
-      area: [''],
-      city: [''],
-      state: [''],
-      pincode: [''],
-      date: [''],
+      area: ['', [Validators.required]],
+      city: ['', [Validators.required]],
+      state: ['', [Validators.required]],
+      pincode: ['', [Validators.required]],
       identityfile: [''],
-      gstno: [''],
+      description: [''],
+      gstno: ['', [Validators.required]],
       packagename: [''],
+      manager_name: ['', [Validators.required]],
+      manager_add: ['', [Validators.required]],
+      manager_contact: ['', [Validators.required]],
+      manager_aadhar: ['', [Validators.required]],
     });
   }
 

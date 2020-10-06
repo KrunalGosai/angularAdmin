@@ -16,6 +16,16 @@
       "type": "link"
     },
     {
+      "route": "categories",
+      "name": "categories",
+      "type": "link"
+    },
+    {
+      "route": "products",
+      "name": "products",
+      "type": "link"
+    },
+    {
       "route": "sessions",
       "name": "sessions",
       "type": "sub",
