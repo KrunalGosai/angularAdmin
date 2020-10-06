@@ -2,7 +2,8 @@
   "name": "ecomm-admin",
   "version": "0.0.0",
   "scripts": {
-    "start": "ng serve",
+    "ng": "ng",
+    "start": "node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -35,10 +36,12 @@
     "@ngx-formly/material": "^5.10.1",
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
+    "express": "^4.17.1",
     "moment": "^2.28.0",
     "ng-matero": "^10.0.5",
     "ngx-progressbar": "^6.0.3",
     "ngx-toastr": "^13.0.0",
+    "path": "^0.12.7",
     "photoviewer": "^3.5.3",
     "rxjs": "~6.5.5",
     "screenfull": "^5.0.2",
@@ -71,5 +74,9 @@
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~3.9.5"
+  },
+  "engines": {
+    "node": "~10.16.3",
+    "npm": "~6.13.7"
   }
 }
