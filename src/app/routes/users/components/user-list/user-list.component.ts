@@ -1,10 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { DataSource } from '@angular/cdk/table';
 import { BehaviorSubject, Observable, merge } from 'rxjs';
 import { map, subscribeOn } from 'rxjs/operators';
 import { UsersFacade } from '../../users-facade';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface UserData {
   name: string;
@@ -12,60 +14,53 @@ export interface UserData {
   age: number;
 }
 
-let exampleData:any = [
-  // { name: 'Austin', color: 'blue', age: 30 },
-  // { name: 'Jeremy', color: 'green', age: 33 }
-];
-
-
 @Component({
   selector: 'app-users-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss']
 })
-export class UsersUserListComponent implements OnInit {
+export class UsersUserListComponent implements OnInit,AfterViewInit {
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) pager: MatPaginator;
+  displayedColumns: string[] = ['id', 'name', 'progress', 'color','controls'];
+  dataSource: MatTableDataSource<UserData>;
 
-  displayedColumns = ['name', 'color', 'age'];
-  paginatedDataSource: PaginatedDataSource;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private usersFacade: UsersFacade) { }
+  //filter field
+  q = {
+    username: '',
+    email: '',
+    gender: '',
+  };
+
+
+  constructor(private usersFacade: UsersFacade, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.usersFacade.loadUsers();
-    this.paginatedDataSource = new PaginatedDataSource(this.pager);
     this.usersFacade.getUsers().subscribe(res => {
-      console.log('paginator',this.paginatedDataSource.dataChange)
-      exampleData = res;
-      this.paginatedDataSource.dataChange.next(res);
+      this.dataSource = new MatTableDataSource(res);
     })
     
   }
 
-}
-
-export class PaginatedDataSource extends DataSource<UserData> {
-  dataChange: BehaviorSubject<UserData[]> = new BehaviorSubject<UserData[]>([]);
-
-  constructor(private paginator: MatPaginator) {
-    super();
-    this.dataChange.next(exampleData);
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
-  connect(): Observable<UserData[]> {
-    const displayDataChanges = [this.dataChange, this.paginator.page];
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
 
-    return merge(...displayDataChanges).pipe(
-      map(() => {
-        const data = [...exampleData];
-        const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-        return data.splice(startIndex, this.paginator.pageSize);
-      })
-    );
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
-  disconnect() {}
-}
+  deleteIcon() {
+    this.snackBar.open('Item deleted', '', { duration: 2000 });
+  }
 
+}

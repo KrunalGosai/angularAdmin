@@ -1,0 +1,111 @@
+<page-header></page-header>
+
+<section>
+  <a mat-raised-button aria-label="View basic sidenav example" color="primary"
+      routerLink="new">
+    Add New
+  </a>
+</section>
+<br>
+
+<!-- Filter -->
+
+<!-- <div fxLayout="row wrap" class="matero-row">
+    <div fxFlex="100" class="matero-col">
+      <mat-card>
+        <mat-card-title>Filter</mat-card-title>
+  
+        <form>
+          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
+            <input matInput placeholder="Username" [(ngModel)]="q.username" name="username">
+          </mat-form-field>
+  
+          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
+            <input matInput placeholder="Email" [(ngModel)]="q.email" name="email">
+          </mat-form-field>
+  
+          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
+            <mat-label>Gender</mat-label>
+            <mat-select [(ngModel)]="q.gender" name="gender">
+              <mat-option>-- None --</mat-option>
+              <mat-option value="1">male</mat-option>
+              <mat-option value="2">female</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <div fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
+            <button mat-raised-button color="primary">Search</button>
+          </div>
+        </form>
+  
+      </mat-card>
+    </div>
+</div> -->
+  
+<!-- Table  -->
+  
+<mat-form-field>
+    <mat-label>Search</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Abc" #input>
+</mat-form-field>
+  
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+  
+      <!-- ID Column -->
+      <!-- <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+      </ng-container> -->
+  
+      <!-- Progress Column -->
+      <!-- <ng-container matColumnDef="progress">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Progress </th>
+        <td mat-cell *matCellDef="let row"> {{row.progress}}% </td>
+      </ng-container> -->
+  
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+        <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+      </ng-container>
+  
+      <!-- Parent Column -->
+      <ng-container matColumnDef="parent">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> parent </th>
+        <td mat-cell *matCellDef="let row" > {{row.parent}} </td>
+      </ng-container>
+  
+      <!-- control column -->
+      <ng-container matColumnDef="controls">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Controls </th>
+        <td mat-cell *matCellDef="let row"> 
+          <mat-grid-list cols="2" rowHeight="50px">
+            <mat-grid-tile>
+              <button mat-icon-button aria-label="Edit">
+                <mat-icon color="primary">create</mat-icon>
+              </button>
+            </mat-grid-tile>
+            <mat-grid-tile>
+              <button mat-icon-button aria-label="Delete" (click)="deleteIcon()">
+                <mat-icon color="accent">delete</mat-icon>
+              </button>
+            </mat-grid-tile>
+          </mat-grid-list>
+          
+         
+         
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+      </tr>
+    </table>
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>
+  
