@@ -1,11 +1,11 @@
-<page-header title="New Category" [nav]="['home','categories','new']"></page-header>
+<page-header title="{{ isEditMode ? 'Edit Category': 'New Category'}}" [nav]="['home','categories','new']"></page-header>
 
 <div fxLayout="row wrap" class="matero-row">
     <div fxFlex="100" fxFlex.lt-sm="100" class="matero-col">
       <mat-card>
-        <mat-card-title>Add Category</mat-card-title>
+        <mat-card-title>{{ isEditMode ? 'Edit Category': 'New Category'}} </mat-card-title>
   
-        <form [formGroup]="categoryForm" class="form-field-full">
+        <form [formGroup]="categoryForm" (submit)="onFormSubmit($event);" class="form-field-full">
           <div fxLayout="row wrap" fxLayoutGap="8px grid">
             
             <div fxFlex="50" fxFlex.lt-sm="100">
@@ -22,20 +22,31 @@
             <div fxFlex="50" fxFlex.lt-sm="100">
               <mat-form-field>
                 <mat-label>Parent Category</mat-label>
-                <mat-select formControlName="parent" placeholder="Parent Category" multiple>
-                    <mat-option *ngFor="let cate of categoryList" [value]="cate.name">{{cate.name}}</mat-option>
+                <mat-select formControlName="parent" placeholder="Parent Category">
+                    <mat-option *ngFor="let cate of categoryList" [value]="cate._id">{{cate.name}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
+
+            <div fxFlex="25" fxFlex.lt-sm="100">
+              <mat-form-field>
+                <mat-label>Sort</mat-label>
+                <input matInput placeholder="Sort Order" formControlName="sort"
+                       required type="number">
+                <mat-error *ngIf="categoryForm.get('sort').invalid">
+                  {{'validations.required' | translate}}
+                </mat-error>
+              </mat-form-field>
+            </div>
   
-            <div fxFlex="100" fxFlex.lt-sm="100">
+            <div fxFlex="25" fxFlex.lt-sm="100">
               <mat-form-field>
                 <mat-label>Image</mat-label>
                 <input matInput placeholder="File Name" type="text"
                        formControlName="category_img_name" required readonly>
                 <input type="file" #file (change)="fileUpladChange($event)"
                        formControlName="category_img" required hidden="true">
-                <button mat-button matSuffix mat-icon-button aria-label="Upload"
+                <button mat-button type="button" matSuffix mat-icon-button aria-label="Upload"
                   (click)="file.click()">
                   <mat-icon>folder</mat-icon>
                 </button>
@@ -44,10 +55,16 @@
                 </mat-error>
               </mat-form-field>
             </div>
+
+            <div fxFlex="25" fxFlex.lt-sm="100">
+              <mat-slide-toggle formControlName="isactive" color="primary">
+                Is Active
+              </mat-slide-toggle>
+            </div>
   
           </div>
   
-          <button mat-raised-button color="primary" class="m-t-8">Save</button>
+          <button mat-raised-button color="primary" type="submit" class="m-t-8">Save</button>
         </form>
   
       </mat-card>

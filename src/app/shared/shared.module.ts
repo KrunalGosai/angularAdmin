@@ -18,6 +18,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { ErrorCodeComponent } from './components/error-code/error-code.component';
+import { ConfirmComponent } from './components/confirm/confirm.component';
 
 const THIRD_MODULES = [
   MaterialModule,
@@ -38,7 +39,7 @@ const DIRECTIVES = [];
 const PIPES = [];
 
 @NgModule({
-  declarations: [...COMPONENTS, ...COMPONENTS_DYNAMIC, ...DIRECTIVES, ...PIPES],
+  declarations: [...COMPONENTS, ...COMPONENTS_DYNAMIC, ...DIRECTIVES, ...PIPES, ConfirmComponent],
   imports: [CommonModule, FormsModule, RouterModule, ReactiveFormsModule, ...THIRD_MODULES],
   exports: [
     CommonModule,

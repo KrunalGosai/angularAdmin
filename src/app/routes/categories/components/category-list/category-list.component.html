@@ -10,37 +10,28 @@
 
 <!-- Filter -->
 
-<!-- <div fxLayout="row wrap" class="matero-row">
+<div fxLayout="row wrap" class="matero-row">
     <div fxFlex="100" class="matero-col">
       <mat-card>
         <mat-card-title>Filter</mat-card-title>
   
         <form>
           <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
-            <input matInput placeholder="Username" [(ngModel)]="q.username" name="username">
-          </mat-form-field>
-  
-          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
-            <input matInput placeholder="Email" [(ngModel)]="q.email" name="email">
-          </mat-form-field>
-  
-          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
-            <mat-label>Gender</mat-label>
-            <mat-select [(ngModel)]="q.gender" name="gender">
-              <mat-option>-- None --</mat-option>
-              <mat-option value="1">male</mat-option>
-              <mat-option value="2">female</mat-option>
+            <mat-label>Parent Category</mat-label>
+            <mat-select [(ngModel)]="parentCategoryFilterValue" name="gender">
+              <mat-option value="">--Select--</mat-option>
+              <mat-option [value]="item._id" *ngFor="let item of parentCategoryList">{{item.name}}</mat-option>
             </mat-select>
           </mat-form-field>
   
           <div fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
-            <button mat-raised-button color="primary">Search</button>
+            <button mat-raised-button color="primary" (click)="filterCategories();">Search</button>
           </div>
         </form>
   
       </mat-card>
     </div>
-</div> -->
+</div>
   
 <!-- Table  -->
   
@@ -73,7 +64,19 @@
       <!-- Parent Column -->
       <ng-container matColumnDef="parent">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> parent </th>
-        <td mat-cell *matCellDef="let row" > {{row.parent}} </td>
+        <td mat-cell *matCellDef="let row" > 
+          <span *ngFor="let parent of row.parent_categoriesIds">
+            {{parent.name}}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- active Column -->
+      <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Active </th>
+        <td mat-cell *matCellDef="let row" > 
+            {{row.is_active ? 'Yes' : 'No'}}
+        </td>
       </ng-container>
   
       <!-- control column -->
@@ -82,19 +85,16 @@
         <td mat-cell *matCellDef="let row"> 
           <mat-grid-list cols="2" rowHeight="50px">
             <mat-grid-tile>
-              <button mat-icon-button aria-label="Edit">
+              <button mat-icon-button aria-label="Edit" [routerLink]="['edit',row._id]" >
                 <mat-icon color="primary">create</mat-icon>
               </button>
             </mat-grid-tile>
             <mat-grid-tile>
-              <button mat-icon-button aria-label="Delete" (click)="deleteIcon()">
+              <button mat-icon-button aria-label="Delete" (click)="deleteIcon(row._id)">
                 <mat-icon color="accent">delete</mat-icon>
               </button>
             </mat-grid-tile>
           </mat-grid-list>
-          
-         
-         
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -106,6 +106,9 @@
       </tr>
     </table>
   
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    <mat-paginator (page)="pageEvent($event)"
+      [pageIndex]="0"
+      [pageSize]="pageDetails.itemsPerPage"
+     [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
 </div>
   
