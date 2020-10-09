@@ -1,9 +1,9 @@
+import { ConfirmService } from './../../../../shared/services/confirm.service';
 import { CategoriesFacadeService } from './../../categories-facade';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-categories-components-category-list',
@@ -12,11 +12,19 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class CategoriesComponentsCategoryListComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'parent', 'controls'];
+  displayedColumns: string[] = ['name', 'parent', 'active', 'controls'];
   dataSource: MatTableDataSource<any>;
+  parentCategoryFilterValue:string = '';
+  parentCategoryList;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  pageDetails = {
+    currentPage:1,
+    itemsPerPage:5,
+    totalPages:3,
+    totalRecords:100
+  }
 
   //filter field
   q = {
@@ -25,12 +33,17 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
     gender: '',
   };
 
-  constructor(private categoriesFacade:CategoriesFacadeService ,private snackBar: MatSnackBar) { }
+  constructor(private categoriesFacade:CategoriesFacadeService,
+    private confirmService:ConfirmService) { }
 
   ngOnInit() {
     this.categoriesFacade.loadCategories();
+    this.categoriesFacade.loadParentCategories();
     this.categoriesFacade.getCategories().subscribe(cate => {
       this.dataSource = new MatTableDataSource(cate);
+    })
+    this.categoriesFacade.getParentCategories().subscribe(parent => {
+      this.parentCategoryList = parent;
     })
   }
 
@@ -48,8 +61,26 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
     }
   }
 
-  deleteIcon() {
-    this.snackBar.open('Item deleted', '', { duration: 2000 });
+  public pageEvent(event:PageEvent){
+    this.pageDetails.itemsPerPage = event.pageSize;
+    this.pageDetails.currentPage = event.pageIndex;
+    this.categoriesFacade.loadCategories(1,event.pageSize,'');
+  }
+
+  public deleteIcon(id) {
+    this.confirmService.confirm('Are you sure want to delete this category?','Confirm').subscribe(result => {
+      if(result == true){
+        this.categoriesFacade.deleteCategory(id)
+          .then(res => this.categoriesFacade.loadCategories(this.pageDetails.currentPage+1,this.pageDetails.itemsPerPage))
+      }
+    })
+  }
+
+  public navigateToEdit(id){
+  }
+
+  public filterCategories(){
+    this.categoriesFacade.loadCategories(this.pageDetails.currentPage+1,this.pageDetails.itemsPerPage,this.parentCategoryFilterValue)
   }
 
 }

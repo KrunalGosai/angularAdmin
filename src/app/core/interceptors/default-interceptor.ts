@@ -38,10 +38,12 @@ export class DefaultInterceptor implements HttpInterceptor {
     const headers = {
       'Accept': 'application/json',
       'Accept-Language': this.settings.language,
-      'Authorization': `Bearer ${this.token.get().token}`,
+      'Access-Control-Allow-Origin':'*',
+      // 'Authorization': `Bearer ${this.token.get().token}`,
     };
+    let requrl = req.url
 
-    const newReq = req.clone({ url, setHeaders: headers, withCredentials: true });
+    const newReq = req.clone({ url:requrl , setHeaders: headers });
 
     return next.handle(newReq).pipe(
       mergeMap((event: HttpEvent<any>) => this.handleOkReq(event)),
@@ -62,7 +64,7 @@ export class DefaultInterceptor implements HttpInterceptor {
         if (body.msg && body.msg !== '') {
           this.toastr.error(body.msg);
         }
-        return throwError([]);
+        // return throwError([]);
       } else {
         return of(event);
       }
