@@ -25,6 +25,7 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
     totalPages:3,
     totalRecords:100
   }
+  totalCategory:number = 0;
 
   //filter field
   q = {
@@ -40,7 +41,8 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
     this.categoriesFacade.loadCategories();
     this.categoriesFacade.loadParentCategories();
     this.categoriesFacade.getCategories().subscribe(cate => {
-      this.dataSource = new MatTableDataSource(cate);
+      this.dataSource = new MatTableDataSource(cate.data);
+      this.totalCategory = cate.categryCount
     })
     this.categoriesFacade.getParentCategories().subscribe(parent => {
       this.parentCategoryList = parent;
@@ -48,7 +50,7 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    // this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
@@ -64,7 +66,7 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
   public pageEvent(event:PageEvent){
     this.pageDetails.itemsPerPage = event.pageSize;
     this.pageDetails.currentPage = event.pageIndex;
-    this.categoriesFacade.loadCategories(1,event.pageSize,'');
+    this.categoriesFacade.loadCategories(this.pageDetails.currentPage+1,event.pageSize,'');
   }
 
   public deleteIcon(id) {

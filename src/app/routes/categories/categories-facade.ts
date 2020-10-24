@@ -13,8 +13,7 @@ export class CategoriesFacadeService {
 
   public loadCategories(currentPage = 1,currentPageSize = 5,paretCategoryId = ''){
     this.api.getAllCategories(currentPage,currentPageSize,paretCategoryId).subscribe(cate => {
-      let data:any = cate;
-      this.state.setCategories(data.data);
+      this.state.setCategories(cate);
     },err => console.error('api call error from load categories ',err))
   }
 
