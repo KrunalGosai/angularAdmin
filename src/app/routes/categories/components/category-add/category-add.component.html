@@ -45,7 +45,7 @@
                 <input matInput placeholder="File Name" type="text"
                        formControlName="category_img_name" required readonly>
                 <input type="file" #file (change)="fileUpladChange($event)"
-                       formControlName="category_img" required hidden="true">
+                       formControlName="category_img" hidden="true">
                 <button mat-button type="button" matSuffix mat-icon-button aria-label="Upload"
                   (click)="file.click()">
                   <mat-icon>folder</mat-icon>

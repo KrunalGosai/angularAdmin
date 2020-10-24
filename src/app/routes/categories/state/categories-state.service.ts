@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class CategoriesStateService {
-  private categories:BehaviorSubject<any> = new BehaviorSubject([]);
+  private categories:BehaviorSubject<any> = new BehaviorSubject({});
   private parentCategories:BehaviorSubject<any> = new BehaviorSubject([]);
 
   constructor() { }
