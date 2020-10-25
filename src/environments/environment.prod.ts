@@ -1,5 +1,5 @@
 export const environment = {
-  SERVER_ORIGIN: 'http://3.12.12.123:4000',
+  SERVER_ORIGIN: 'https://fast.zuwagon.com',
   production: true,
   useHash: true,
   hmr: false,
