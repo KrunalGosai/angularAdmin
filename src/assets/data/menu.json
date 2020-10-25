@@ -21,6 +21,11 @@
       "type": "link"
     },
     {
+      "route": "banners",
+      "name": "banners",
+      "type": "link"
+    },
+    {
       "route": "products",
       "name": "products",
       "type": "link"

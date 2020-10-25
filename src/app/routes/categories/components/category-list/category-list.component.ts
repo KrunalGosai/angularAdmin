@@ -65,15 +65,15 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
 
   public pageEvent(event:PageEvent){
     this.pageDetails.itemsPerPage = event.pageSize;
-    this.pageDetails.currentPage = event.pageIndex;
-    this.categoriesFacade.loadCategories(this.pageDetails.currentPage+1,event.pageSize,'');
+    this.pageDetails.currentPage = event.pageIndex+1;
+    this.categoriesFacade.loadCategories(this.pageDetails.currentPage,event.pageSize,'');
   }
 
   public deleteIcon(id) {
     this.confirmService.confirm('Are you sure want to delete this category?','Confirm').subscribe(result => {
       if(result == true){
         this.categoriesFacade.deleteCategory(id)
-          .then(res => this.categoriesFacade.loadCategories(this.pageDetails.currentPage+1,this.pageDetails.itemsPerPage))
+          .then(res => this.categoriesFacade.loadCategories(this.pageDetails.currentPage,this.pageDetails.itemsPerPage))
       }
     })
   }
@@ -82,7 +82,7 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
   }
 
   public filterCategories(){
-    this.categoriesFacade.loadCategories(this.pageDetails.currentPage+1,this.pageDetails.itemsPerPage,this.parentCategoryFilterValue)
+    this.categoriesFacade.loadCategories(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.parentCategoryFilterValue)
   }
 
 }
