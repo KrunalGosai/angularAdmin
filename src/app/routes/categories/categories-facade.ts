@@ -1,3 +1,4 @@
+import { ThemeModule } from './../../theme/theme.module';
 import { ToastrService } from 'ngx-toastr';
 import { tap, subscribeOn } from 'rxjs/operators';
 import { CategoriesApiService } from './api/categories-api.service';
@@ -11,8 +12,8 @@ export class CategoriesFacadeService {
 
   constructor(private api:CategoriesApiService, private state:CategoriesStateService, private toster: ToastrService) { }
 
-  public loadCategories(currentPage = 1,currentPageSize = 5,paretCategoryId = ''){
-    this.api.getAllCategories(currentPage,currentPageSize,paretCategoryId).subscribe(cate => {
+  public loadCategories(currentPage = 1,currentPageSize = 5,paretCategoryId = '',categoryName = ''){
+    this.api.getAllCategories(currentPage,currentPageSize,paretCategoryId, categoryName).subscribe(cate => {
       this.state.setCategories(cate);
     },err => console.error('api call error from load categories ',err))
   }
@@ -37,7 +38,9 @@ export class CategoriesFacadeService {
       this.loadCategories();
       this.toster.success('Category Successfully Created',"Success",{timeOut:3000})
       return res;
-    }).catch(err => {console.error('api call error from new category ',err); return err })
+    }).catch(err => {
+      this.toster.error('Error While Create new category','Error',{timeOut:3000})
+      console.error('api call error from new category ',err); throw err })
   }
 
   public deleteCategory(categoryId){
@@ -56,6 +59,15 @@ export class CategoriesFacadeService {
       this.loadCategories();
       this.toster.success('Category Successfully Updated',"Success",{timeOut:3000})
       return res;
-    }).catch(err => {console.error('api call error from Update category ',err); return err })
+    }).catch(err => {
+      this.toster.error('Error While Update category','Error',{timeOut:3000})
+      console.error('api call error from Update category ',err); throw err; })
+  }
+
+  public changeActivationStatus(categoryId:string,isActive:boolean){
+    this.api.changeActivationStatus(categoryId,isActive).toPromise().then(res => {
+      this.loadCategories();
+      this.toster.success('Category Successfully Updated',"Success",{timeOut:3000})
+    }).catch(err => {console.error('api call error from change activation status',err )})
   }
 }

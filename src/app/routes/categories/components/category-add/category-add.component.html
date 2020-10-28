@@ -30,7 +30,7 @@
 
             <div fxFlex="25" fxFlex.lt-sm="100">
               <mat-form-field>
-                <mat-label>Sort</mat-label>
+                <mat-label>Position</mat-label>
                 <input matInput placeholder="Sort Order" formControlName="sort"
                        required type="number">
                 <mat-error *ngIf="categoryForm.get('sort').invalid">
@@ -41,16 +41,16 @@
   
             <div fxFlex="25" fxFlex.lt-sm="100">
               <mat-form-field>
-                <mat-label>Image</mat-label>
-                <input matInput placeholder="File Name" type="text"
-                       formControlName="category_img_name" required readonly>
-                <input type="file" #file (change)="fileUpladChange($event)"
-                       formControlName="category_img" hidden="true">
-                <button mat-button type="button" matSuffix mat-icon-button aria-label="Upload"
+                <mat-label>Image URL</mat-label>
+                <input matInput placeholder="Image URL" type="text"
+                       formControlName="category_image" required>
+                <!-- <input type="file" #file (change)="fileUpladChange($event)"
+                       formControlName="category_img" hidden="true"> -->
+                <!-- <button mat-button type="button" matSuffix mat-icon-button aria-label="Upload"
                   (click)="file.click()">
                   <mat-icon>folder</mat-icon>
-                </button>
-                <mat-error *ngIf="categoryForm.get('category_img').invalid">
+                </button> -->
+                <mat-error *ngIf="categoryForm.get('category_image').invalid">
                   {{'validations.required' | translate}}
                 </mat-error>
               </mat-form-field>

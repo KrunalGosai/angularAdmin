@@ -3,7 +3,7 @@ import { CategoriesFacadeService } from './../../categories-facade';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-categories-components-category-list',
@@ -12,20 +12,18 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 })
 export class CategoriesComponentsCategoryListComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'parent', 'active', 'controls'];
+  displayedColumns: string[] = ['category_sort', 'category_image', 'name', 'parent', 'created_at' , 'is_active', 'controls'];
   dataSource: MatTableDataSource<any>;
-  parentCategoryFilterValue:string = '';
+  parentCategoryFilterValue:string = ''; categoryNameFilterValue:string = '';
   parentCategoryList;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   pageDetails = {
     currentPage:1,
-    itemsPerPage:5,
-    totalPages:3,
-    totalRecords:100
+    itemsPerPage:200,
+    totalRecords:200
   }
-  totalCategory:number = 0;
 
   //filter field
   q = {
@@ -42,7 +40,7 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
     this.categoriesFacade.loadParentCategories();
     this.categoriesFacade.getCategories().subscribe(cate => {
       this.dataSource = new MatTableDataSource(cate.data);
-      this.totalCategory = cate.categryCount
+      this.pageDetails.totalRecords = cate.categryCount
     })
     this.categoriesFacade.getParentCategories().subscribe(parent => {
       this.parentCategoryList = parent;
@@ -58,31 +56,54 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    // if (this.dataSource.paginator) {
+    //   this.dataSource.paginator.firstPage();
+    // }
   }
 
   public pageEvent(event:PageEvent){
     this.pageDetails.itemsPerPage = event.pageSize;
     this.pageDetails.currentPage = event.pageIndex+1;
-    this.categoriesFacade.loadCategories(this.pageDetails.currentPage,event.pageSize,'');
+    this.categoriesFacade.loadCategories(this.pageDetails.currentPage,event.pageSize,this.parentCategoryFilterValue,this.categoryNameFilterValue);
   }
 
   public deleteIcon(id) {
     this.confirmService.confirm('Are you sure want to delete this category?','Confirm').subscribe(result => {
       if(result == true){
         this.categoriesFacade.deleteCategory(id)
-          .then(res => this.categoriesFacade.loadCategories(this.pageDetails.currentPage,this.pageDetails.itemsPerPage))
+          .then(res => this.categoriesFacade.loadCategories(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.parentCategoryFilterValue,this.categoryNameFilterValue))
       }
     })
+  }
+
+  public changeActivationStatus(row){
+    this.categoriesFacade.changeActivationStatus(row._id,row.is_active)
   }
 
   public navigateToEdit(id){
   }
 
   public filterCategories(){
-    this.categoriesFacade.loadCategories(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.parentCategoryFilterValue)
+    this.categoriesFacade.loadCategories(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.parentCategoryFilterValue, this.categoryNameFilterValue )
+  }
+
+  public resetFilter(){
+    this.categoryNameFilterValue = '';
+    this.parentCategoryFilterValue = '';
+  }
+
+  public categoryPositionChanged(categoryRow){
+    let category:any =  {
+      id:categoryRow._id,
+      name: categoryRow.name,
+      isactive: categoryRow.is_active,
+      sort:categoryRow.category_sort,
+      category_image:categoryRow.category_image
+    }
+    if(categoryRow.parent_categoriesIds != undefined && categoryRow.parent_categoriesIds != null && categoryRow.parent_categoriesIds.length > 0){
+      category.parent = categoryRow.parent_categoriesIds[0]._id;
+    }
+    this.categoriesFacade.updateCategory(category)
   }
 
 }
