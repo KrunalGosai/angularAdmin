@@ -26,7 +26,7 @@ export class CategoriesComponentsCategoryAddComponent implements OnInit {
         parent: [''],
         sort: [1],
         isactive: true,
-        category_img: [''],
+        category_image: [''],
         category_img_name: [''],
         img_file:[null]
       });
@@ -84,7 +84,7 @@ export class CategoriesComponentsCategoryAddComponent implements OnInit {
       this.categoryFacade.newCategory(this.categoryForm.value).then(res => {
         this.categoryForm.reset();
         this.router.navigate(['categories'])
-      })
+      }).catch(err => {})
     }
   }
 
