@@ -12,44 +12,42 @@ export class BannersFacadeService {
 
   constructor(private api:BannerApiService, private state:BannerStateService, private toster: ToastrService) { }
 
-  public loadBanners(currentPage = 1,currentPageSize = 5, searchByName= ''){
+  public loadBanners(currentPage = 1,currentPageSize = 200, searchByName= ''){
     this.api.getAllBanner(currentPage,currentPageSize,searchByName).subscribe(banner => {
       this.state.setBanner(banner);
     },err => console.error('api call error from load categories ',err))
   }
 
-  // public loadParentCategories(){
-  //   this.api.getParentCategories().subscribe(parent => {
-  //     let data:any = parent
-  //     this.state.setParentCategories(data.data.categories);
-  //   },err => console.error('api call error from load parent categories ',err))
-  // }
 
   public getBanners(){
     return this.state.getBanner().pipe(tap(cate => cate))
   }
 
-  // public getParentCategories(){
-  //   return this.state.getParentCategories().pipe(tap(cate => cate))
-  // }
 
   public newBanner(banner:banner){
     return this.api.newBanner(banner).toPromise().then( res => {
       this.loadBanners();
       this.toster.success('Banner Successfully Created',"Success",{timeOut:3000})
       return res;
-    }).catch(err => {console.error('api call error from new banner ',err); return err })
+    }).catch(err => {console.error('api call error from new banner ',err); throw err })
   }
 
   public deleteBanner(bannerId){
     return this.api.deleteBanner(bannerId).toPromise().then(res => {
       this.toster.success('Banner Successfully Deleted','Success',{timeOut:3000})
       return res;
-    }).catch(err => {console.error('api call error from Delete baner ',err); return err })
+    }).catch(err => {console.error('api call error from Delete baner ',err); throw err })
   }
 
-  public getBannerDetails(bannerId){
-    return this.api.getBannerDetailsById(bannerId).toPromise();
+  public getBannerDetails(){
+    return this.state.getEditBanner().pipe(tap(cate => cate))
+  }
+
+  public loadBannerDetails(bannerId){
+    return this.api.getBannerDetailsById(bannerId).toPromise().then(res => {
+      this.state.setEditBanner(res.data)
+      return res
+    }).catch(err => {console.error('api call error from load banner Details',err); throw err });
   }
 
   public updateBanner(banner:banner){
@@ -57,6 +55,6 @@ export class BannersFacadeService {
       this.loadBanners();
       this.toster.success('Banner Successfully Updated',"Success",{timeOut:3000})
       return res;
-    }).catch(err => {console.error('api call error from Update banner ',err); return err })
+    }).catch(err => {console.error('api call error from Update banner ',err); throw err })
   }
 }

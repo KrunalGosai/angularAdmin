@@ -1,8 +1,8 @@
+import { category, categoryDetailsResponse } from './../entities/index';
 import { environment } from './../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { invalid } from '@angular/compiler/src/render3/view/util';
 
 @Injectable({
   providedIn: 'root'
@@ -27,22 +27,22 @@ export class CategoriesApiService {
     return this.http.get(url);
   }
 
-  public newCategory(category){
+  public newCategory(category:category){
     let url = this.baseURl + '/api/category/add';
-    let formData = new FormData();
-    formData.append('name',category.name);
-    formData.append('parent_categoriesId',category.parent);
-    formData.append('is_active',category.isactive);
-    formData.append('category_sort',category.sort);
-    formData.append('category_image',category.category_image);
+    // let formData = new FormData();
+    // formData.append('name',category.name);
+    // formData.append('parent_categoriesId',category.parent);
+    // formData.append('is_active',category.isactive);
+    // formData.append('category_sort',category.sort);
+    // formData.append('category_image',category.category_image);
 
-    console.log('form data ',formData);
+    // console.log('form data ',formData);
 
     let body = {
       name: category.name,
-      parent_categoriesId: category.parent,
-      is_active: category.isactive,
-      category_sort:category.sort,
+      parent_categoriesId: category.parent_categoriesId,
+      is_active: category.is_active,
+      position:category.position,
       category_image:category.category_image
     }
 
@@ -54,18 +54,18 @@ export class CategoriesApiService {
     return this.http.delete(url);
   }
 
-  public getCategoryDetailsById(categoryId){
+  public getCategoryDetailsById(categoryId):Observable<categoryDetailsResponse>{
     let url = this.baseURl+`/api/category/categoryDetails/${categoryId}`;
-    return this.http.get(url);
+    return this.http.get<categoryDetailsResponse>(url);
   }
 
-  public updateCategory(category){
-    let url = this.baseURl+`/api/category/${category.id}`;
+  public updateCategory(category:category){
+    let url = this.baseURl+`/api/category/${category._id}`;
     let body = {
       name: category.name,
-      parent_categoriesId: category.parent,
-      is_active: category.isactive,
-      position:category.sort,
+      parent_categoriesId: category.parent_categoriesId,
+      is_active: category.is_active,
+      position:category.position,
       category_image:category.category_image
     }
     return this.http.put(url,body);

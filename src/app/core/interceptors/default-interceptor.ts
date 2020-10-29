@@ -79,14 +79,14 @@ export class DefaultInterceptor implements HttpInterceptor {
         this.goto(`/auth/login`);
         break;
       case 403:
-      case 404:
+      // case 404:
       case 500:
         this.goto(`/sessions/${error.status}`);
         break;
       default:
         if (error instanceof HttpErrorResponse) {
           console.error('ERROR', error);
-          this.toastr.error(error.error.msg || `${error.status} ${error.statusText}`);
+          this.toastr.error(error.error.message || error.message || `${error.status} ${error.statusText}`);
         }
         break;
     }

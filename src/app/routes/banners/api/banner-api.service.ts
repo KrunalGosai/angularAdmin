@@ -1,3 +1,4 @@
+import { bannerDetailsResponse } from './../Entities/index';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -48,9 +49,9 @@ export class BannerApiService {
     return this.http.delete(url);
   }
 
-  public getBannerDetailsById(bannerId){
+  public getBannerDetailsById(bannerId):Observable<bannerDetailsResponse>{
     let url = this.baseURl+`/api/banner/${bannerId}`;
-    return this.http.get(url);
+    return this.http.get<bannerDetailsResponse>(url);
   }
 
   public updateBanner(banner:banner){

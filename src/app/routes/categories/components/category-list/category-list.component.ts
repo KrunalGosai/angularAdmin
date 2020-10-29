@@ -1,9 +1,11 @@
+import { Router } from '@angular/router';
+import { category } from './../../entities/index';
 import { ConfirmService } from './../../../../shared/services/confirm.service';
 import { CategoriesFacadeService } from './../../categories-facade';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'app-categories-components-category-list',
@@ -12,8 +14,8 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 })
 export class CategoriesComponentsCategoryListComponent implements OnInit {
 
-  displayedColumns: string[] = ['category_sort', 'category_image', 'name', 'parent', 'created_at' , 'is_active', 'controls'];
-  dataSource: MatTableDataSource<any>;
+  displayedColumns: string[] = ['position', 'category_image', 'name', 'parent', 'created_at' , 'is_active', 'controls'];
+  dataSource: MatTableDataSource<category>;
   parentCategoryFilterValue:string = ''; categoryNameFilterValue:string = '';
   parentCategoryList;
 
@@ -32,7 +34,9 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
     gender: '',
   };
 
-  constructor(private categoriesFacade:CategoriesFacadeService,
+  constructor(
+    private router:Router,
+    private categoriesFacade:CategoriesFacadeService,
     private confirmService:ConfirmService) { }
 
   ngOnInit() {
@@ -40,16 +44,13 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
     this.categoriesFacade.loadParentCategories();
     this.categoriesFacade.getCategories().subscribe(cate => {
       this.dataSource = new MatTableDataSource(cate.data);
-      this.pageDetails.totalRecords = cate.categryCount
+      this.dataSource.sort = this.sort;
+      // this.dataSource.paginator = this.paginator;
+      this.pageDetails.totalRecords = cate.TotalCount;
     })
     this.categoriesFacade.getParentCategories().subscribe(parent => {
       this.parentCategoryList = parent;
     })
-  }
-
-  ngAfterViewInit() {
-    // this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {
@@ -81,6 +82,9 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
   }
 
   public navigateToEdit(id){
+    this.categoriesFacade.loadCategoryDetails(id).then(cate => {
+      this.router.navigate(['categories','edit',id])
+    })
   }
 
   public filterCategories(){
@@ -92,16 +96,16 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
     this.parentCategoryFilterValue = '';
   }
 
-  public categoryPositionChanged(categoryRow){
-    let category:any =  {
-      id:categoryRow._id,
+  public categoryPositionChanged(categoryRow:category){
+    let category:category =  {
+      _id:categoryRow._id,
       name: categoryRow.name,
-      isactive: categoryRow.is_active,
-      sort:categoryRow.category_sort,
-      category_image:categoryRow.category_image
+      is_active: categoryRow.is_active,
+      position:categoryRow.position,
+      category_image:categoryRow.category_image,
     }
     if(categoryRow.parent_categoriesIds != undefined && categoryRow.parent_categoriesIds != null && categoryRow.parent_categoriesIds.length > 0){
-      category.parent = categoryRow.parent_categoriesIds[0]._id;
+      category.parent_categoriesId = categoryRow.parent_categoriesIds[0]._id;
     }
     this.categoriesFacade.updateCategory(category)
   }

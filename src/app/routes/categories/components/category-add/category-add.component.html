@@ -22,7 +22,7 @@
             <div fxFlex="50" fxFlex.lt-sm="100">
               <mat-form-field>
                 <mat-label>Parent Category</mat-label>
-                <mat-select formControlName="parent" placeholder="Parent Category">
+                <mat-select formControlName="parent_categoriesId" placeholder="Parent Category">
                     <mat-option *ngFor="let cate of categoryList" [value]="cate._id">{{cate.name}}</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -31,9 +31,9 @@
             <div fxFlex="25" fxFlex.lt-sm="100">
               <mat-form-field>
                 <mat-label>Position</mat-label>
-                <input matInput placeholder="Sort Order" formControlName="sort"
+                <input matInput placeholder="Position Order" formControlName="position"
                        required type="number">
-                <mat-error *ngIf="categoryForm.get('sort').invalid">
+                <mat-error *ngIf="categoryForm.get('position').invalid">
                   {{'validations.required' | translate}}
                 </mat-error>
               </mat-form-field>
@@ -57,14 +57,22 @@
             </div>
 
             <div fxFlex="25" fxFlex.lt-sm="100">
-              <mat-slide-toggle formControlName="isactive" color="primary">
+              <span *ngIf="categoryForm.get('category_image').value.trim() == ''">Image Preview</span>
+              <a href="{{categoryForm.get('category_image').value}}" *ngIf="categoryForm.get('category_image').value.trim() != ''" target="_blank">
+                <img src="{{categoryForm.get('category_image').value}}" alt="Image Preview" width="100%" height="50px" />
+              </a>
+            </div>
+
+            <div fxFlex="25" fxFlex.lt-sm="100">
+              <mat-slide-toggle formControlName="is_active" color="primary">
                 Is Active
               </mat-slide-toggle>
             </div>
   
           </div>
   
-          <button mat-raised-button color="primary" type="submit" class="m-t-8">Save</button>
+          <button mat-raised-button color="primary" style="margin-right: 5px;" type="submit" class="m-t-8">Save</button>
+          <button mat-raised-button type="button" [routerLink]="['/categories']"  class="m-t-8">Back</button>
         </form>
   
       </mat-card>

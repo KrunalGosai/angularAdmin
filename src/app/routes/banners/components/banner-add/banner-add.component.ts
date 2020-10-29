@@ -45,19 +45,16 @@ export class BannersBannerAddComponent implements OnInit {
       this.categoryList = parent;
     })
     if(this.isEditMode){
-      this.bannerFacade.getBannerDetails(this.activeEditId).then(res => {
-        let data:any = res;
-        data = data.data
-        console.log({result:res})
+      this.bannerFacade.getBannerDetails().subscribe(res => {
         this.bannerForm.patchValue({
-          name:data.name,
-          banner_image_url: data.banner_image_url,
-          banner_redirect_url: data.banner_redirect_url,
-          is_active: data.is_active,
-          type: data.type,
-          category_id: data.category_id,
+          name:res.name,
+          banner_image_url: res.banner_image_url,
+          banner_redirect_url: res.banner_redirect_url,
+          is_active: res.is_active,
+          type: res.type,
+          category_id: res.category_id,
         })
-      }).catch(err => console.error(err))
+      },err => console.error(err))
     }
   }
 

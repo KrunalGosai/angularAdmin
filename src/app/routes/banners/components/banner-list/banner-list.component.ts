@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { ConfirmService } from './../../../../shared/services/confirm.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -13,18 +14,18 @@ import { banner } from '../../Entities';
 })
 export class BannersBannerListComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'Banner Image', 'Type', 'Category', 'controls'];
+  displayedColumns: string[] = ['name', 'banner_image_url', 'type', 'Category', 'is_active', 'controls'];
   dataSource: MatTableDataSource<banner>;
   bannerNameFilter:string = '';
   parentCategoryList;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   pageDetails = {
     currentPage:1,
-    itemsPerPage:5,
+    itemsPerPage:200,
     totalPages:3,
-    totalRecords:100
+    totalRecords:200
   }
   totalBanner:number = 0;
 
@@ -35,7 +36,9 @@ export class BannersBannerListComponent implements OnInit {
     gender: '',
   };
 
-  constructor(private bannerFacade:BannersFacadeService,
+  constructor(
+    private router:Router,
+    private bannerFacade:BannersFacadeService,
     private confirmService:ConfirmService) { }
 
   ngOnInit() {
@@ -43,16 +46,10 @@ export class BannersBannerListComponent implements OnInit {
     // this.bannerFacade.loadParentCategories();
     this.bannerFacade.getBanners().subscribe(banner => {
       this.dataSource = new MatTableDataSource(banner.data);
+      // this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
       this.totalBanner = banner.totalCount
     })
-    // this.bannerFacade.getParentCategories().subscribe(parent => {
-    //   this.parentCategoryList = parent;
-    // })
-  }
-
-  ngAfterViewInit() {
-    // this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {
@@ -80,10 +77,17 @@ export class BannersBannerListComponent implements OnInit {
   }
 
   public navigateToEdit(id){
+    this.bannerFacade.loadBannerDetails(id).then(cate => {
+      this.router.navigate(['banners','edit',id])
+    })
   }
 
   public filterBanner(){
     this.bannerFacade.loadBanners(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.bannerNameFilter)
+  }
+
+  public resetFilter(){
+    this.bannerNameFilter = '';
   }
 
 }

@@ -1,3 +1,4 @@
+import { category } from './../../entities/index';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoriesFacadeService } from './../../categories-facade';
@@ -23,19 +24,17 @@ export class CategoriesComponentsCategoryAddComponent implements OnInit {
 
       this.categoryForm = this.fb.group({
         name: ['', [Validators.required]],
-        parent: [''],
-        sort: [1],
-        isactive: true,
-        category_image: [''],
-        category_img_name: [''],
-        img_file:[null]
+        parent_categoriesId: [''],
+        position: [1],
+        is_active: true,
+        category_image: ['']
       });
-      this.activeRoute.params.subscribe(params => {
-        if(params.id != undefined && params.id != null && params.id != ''){
-          this.isEditMode = true;
-          this.activeEditId = params.id;
-        }
-      })
+      // this.activeRoute.params.subscribe(params => {
+      //   if(params.id != undefined && params.id != null && params.id != ''){
+      //     this.isEditMode = true;
+      //     this.activeEditId = params.id;
+      //   }
+      // })
     
     }
 
@@ -44,19 +43,24 @@ export class CategoriesComponentsCategoryAddComponent implements OnInit {
     this.categoryFacade.getParentCategories().subscribe(parent => {
       this.categoryList = parent;
     })
-    if(this.isEditMode){
-      this.categoryFacade.getCategoryDetails(this.activeEditId).then(res => {
-        let data:any = res;
-        data = data.categoryDetail;
-        console.log({result:res})
-        let cateParent = data.parent_categoriesIds.length > 0 ? data.parent_categoriesIds[0]: '';
-        this.categoryForm.patchValue({
-          name:data.name,
-          parent: cateParent,
-          category_img_name:data.category_image,
-          isactive:data.is_active})
-      }).catch(err => console.error(err))
-    }
+    this.activeRoute.params.subscribe(params => {
+      if(params.id != undefined && params.id != null && params.id != ''){
+        this.isEditMode = true;
+        this.activeEditId = params.id;
+      }
+      if(this.isEditMode){
+        this.categoryFacade.getCategoryDetails().subscribe(res => {
+          let cateParent = res.parent_categoriesIds.length > 0 ? res.parent_categoriesIds[0]: '';
+          this.categoryForm.patchValue({
+            name:res.name,
+            parent_categoriesId: cateParent,
+            position: res.position,
+            category_image:res.category_image,
+            is_active:res.is_active})
+        },err => console.error(err))
+      }
+    })
+    
   }
 
   public fileUpladChange(event){
@@ -74,8 +78,8 @@ export class CategoriesComponentsCategoryAddComponent implements OnInit {
     // console.log('form value ', this.categoryForm.value,this.categoryForm.valid,this.categoryForm)
     if(!this.categoryForm.valid) return;
     if(this.isEditMode){
-      let value = this.categoryForm.value;
-      value.id = this.activeEditId;
+      let value:category = this.categoryForm.value;
+      value._id = this.activeEditId;
       this.categoryFacade.updateCategory(value).then(res => {
         this.categoryForm.reset();
         this.router.navigate(['categories'])
