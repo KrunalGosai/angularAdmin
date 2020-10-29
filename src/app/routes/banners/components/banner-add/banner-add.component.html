@@ -39,11 +39,10 @@
             <div fxFlex="25" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Banner Redirect Url</mat-label>
-                  <input matInput placeholder="Redirect Url" formControlName="banner_redirect_url"
-                         required>
-                  <mat-error *ngIf="bannerForm.get('banner_redirect_url').invalid">
+                  <input matInput placeholder="Redirect Url" formControlName="banner_redirect_url">
+                  <!-- <mat-error *ngIf="bannerForm.get('banner_redirect_url').invalid">
                     {{'validations.required' | translate}}
-                  </mat-error>
+                  </mat-error> -->
                 </mat-form-field>
             </div>
   
@@ -80,7 +79,8 @@
   
           </div>
   
-          <button mat-raised-button color="primary" type="submit" class="m-t-8">Save</button>
+          <button mat-raised-button color="primary" type="submit" style="margin-right: 5px;" class="m-t-8">Save</button>
+          <button mat-raised-button type="button" [routerLink]="['/banners']"  class="m-t-8"> Back</button>
         </form>
   
       </mat-card>
