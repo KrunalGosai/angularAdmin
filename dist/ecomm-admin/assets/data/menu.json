@@ -26,6 +26,11 @@
       "type": "link"
     },
     {
+      "route": "unites",
+      "name": "unites",
+      "type": "link"
+    },
+    {
       "route": "products",
       "name": "products",
       "type": "link"
