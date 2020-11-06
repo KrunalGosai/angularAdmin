@@ -5,7 +5,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BannersFacadeService } from '../../banners-facade';
-import { banner } from '../../Entities';
+import { banner, bannerDetails } from '../../Entities';
 
 @Component({
   selector: 'app-banners-banner-list',
@@ -14,7 +14,7 @@ import { banner } from '../../Entities';
 })
 export class BannersBannerListComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'banner_image_url', 'type', 'Category', 'is_active', 'controls'];
+  displayedColumns: string[] = ['position', 'name', 'banner_image_url', 'type', 'Category', 'is_active', 'created_at', 'controls'];
   dataSource: MatTableDataSource<banner>;
   bannerNameFilter:string = '';
   parentCategoryList;
@@ -88,6 +88,20 @@ export class BannersBannerListComponent implements OnInit {
 
   public resetFilter(){
     this.bannerNameFilter = '';
+  }
+
+  public changeActivationStatus(row:banner){
+    let rowcopy = {...row};
+    let category_id:any = rowcopy.category_id;
+    rowcopy.category_id = category_id._id;
+    this.bannerFacade.changeActivationStatus(rowcopy);
+  }
+
+  public categoryPositionChanged(row:banner){
+    let rowcopy = {...row};
+    let category_id:any = rowcopy.category_id;
+    rowcopy.category_id = category_id._id;
+    this.bannerFacade.changeActivationStatus(rowcopy);
   }
 
 }

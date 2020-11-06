@@ -2,7 +2,7 @@ import { UnitesFacadeService } from './../../unites-facade';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { item, unit,packagingMaterial } from '../../entities';
+import { item, unit,packagingMaterial, packagingMaterialwithObject } from '../../entities';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -19,8 +19,8 @@ export class UnitesComponentsUnitAddComponent implements OnInit {
   isEditMode: Boolean = false;
   activeEditId: string = '';
   packaging_material_consumed_value:packagingMaterial[] = [];
-  packaging_material_consumed:packagingMaterial[] = [];
-  packageColumns: string[] = ['item_id','item_unit_id', 'item_quantity'];
+  packaging_material_consumed:packagingMaterialwithObject[] = [];
+  packageColumns: string[] = ['item_id','item_unit_id', 'item_quantity', 'controls'];
   dataSource: MatTableDataSource<any>;
 
 
@@ -33,7 +33,8 @@ export class UnitesComponentsUnitAddComponent implements OnInit {
         name: ['', [Validators.required]],
         base_unit: [''],
         base_quantity: [0],
-        packaging_material_consumed:[[]]
+        packaging_material_consumed:[[]],
+        is_active:[true]
       });
 
       this.packageForm = this.fb.group({
@@ -56,11 +57,23 @@ export class UnitesComponentsUnitAddComponent implements OnInit {
     this.loadBaseUnitNItem();
     if(this.isEditMode){
       this.unitFacade.getUnitDetails().subscribe(res => {
+        let base_unit:any = res.base_unit;
         this.unitForm.patchValue({
           name:res.name,
-          base_unit : res.base_unit,
-          base_quantity : res.base_quantity
+          base_unit : base_unit ? base_unit._id : '',
+          base_quantity : res.base_quantity,
+          is_active:res.is_active
         })
+        let packagingdata = res.packaging_material_consumed;
+        if(packagingdata && packagingdata.length > 0){
+          packagingdata.map(pack => {
+            this.packaging_material_consumed.push({ item_id: pack.item_id,item_quantity: pack.item_quantity, item_unit_id: pack.item_unit_id})
+            this.packaging_material_consumed_value.push({ item_id: pack.item_id._id,item_quantity: pack.item_quantity, item_unit_id: pack.item_unit_id._id})
+          })
+          console.log(this.packaging_material_consumed);
+          this.reloadPackagingsource();
+        }
+
       },err => console.error(err))
     }
   }
@@ -70,6 +83,21 @@ export class UnitesComponentsUnitAddComponent implements OnInit {
   public onFormSubmit(event){
     // console.log('form value ', this.unitForm.value,this.unitForm.valid,this.unitForm)
     if(!this.unitForm.valid) return;
+
+    //get material packaging 
+    this.packaging_material_consumed_value = [];
+    this.packaging_material_consumed.map(pack => {
+      this.packaging_material_consumed_value.push({
+        item_id: pack.item_id._id,
+        item_quantity: pack.item_quantity,
+        item_unit_id: pack.item_unit_id._id
+      })
+    })
+
+    this.unitForm.patchValue({
+        packaging_material_consumed:this.packaging_material_consumed_value
+    })
+
     if(this.isEditMode){
       let value = this.unitForm.value;
       value._id = this.activeEditId;
@@ -93,17 +121,17 @@ export class UnitesComponentsUnitAddComponent implements OnInit {
 
       //set value to datasource variable
       this.packaging_material_consumed.push(this.packageForm.value);
-      this.dataSource = new MatTableDataSource(this.packaging_material_consumed)
+      this.reloadPackagingsource();
 
-      //set value to main form
-      this.packaging_material_consumed_value.push({
-        item_id: formValue.item_id._id,
-      item_quantity: formValue.item_quantity,
-      item_unit_id: formValue.item_unit_id._id})
+      // //set value to main form
+      // this.packaging_material_consumed_value.push({
+      //   item_id: formValue.item_id._id,
+      // item_quantity: formValue.item_quantity,
+      // item_unit_id: formValue.item_unit_id._id})
 
-      this.unitForm.patchValue({
-        packaging_material_consumed:this.packaging_material_consumed_value
-      })
+      // this.unitForm.patchValue({
+      //   packaging_material_consumed:this.packaging_material_consumed_value
+      // })
 
       //reset form
       this.packageForm.setValue({
@@ -112,6 +140,10 @@ export class UnitesComponentsUnitAddComponent implements OnInit {
       item_unit_id: ''})
 
     }
+  }
+
+  reloadPackagingsource(){
+    this.dataSource = new MatTableDataSource(this.packaging_material_consumed)
   }
 
   public loadBaseUnitNItem(){
@@ -123,6 +155,18 @@ export class UnitesComponentsUnitAddComponent implements OnInit {
     this.unitFacade.getItemList().subscribe(items => {
       this.itemList = items.data;
     },err => console.error('error while load base unites',err))
+  }
+
+  deletePackging(itemrow:packagingMaterialwithObject){
+    // if(this.packaging_material_consumed.indexOf(itemrow) >= 0){
+    //   this.packaging_material_consumed = this.
+    // }
+    this.packaging_material_consumed = this.packaging_material_consumed.filter(item  => {
+      if(itemrow.item_id == item.item_id && itemrow.item_unit_id == item.item_unit_id && itemrow.item_quantity == item.item_quantity){}
+      else return item;
+    })
+    this.reloadPackagingsource();
+   
   }
 
 }

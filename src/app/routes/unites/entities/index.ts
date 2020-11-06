@@ -4,6 +4,17 @@ export interface packagingMaterial {
     item_unit_id?:string
 }
 
+export interface packagingMaterialwithObject {
+    item_id?:idNameObject,
+    item_quantity?:number,
+    item_unit_id?:idNameObject
+}
+
+export interface idNameObject{
+    _id?:string,
+    name?:string
+}
+
 export interface unit{
     _id?:string,
     name?:string,
@@ -11,8 +22,17 @@ export interface unit{
     base_quantity?:number,
     base_unit?:string,
     is_active?:boolean,
-    created_at?:number,
-    
+    created_at?:number,    
+}
+
+export interface unitDetails{
+    _id?:string,
+    name?:string,
+    packaging_material_consumed?: packagingMaterialwithObject[],
+    base_quantity?:number,
+    base_unit?:string,
+    is_active?:boolean,
+    created_at?:number,    
 }
 
 export interface unitResponse {
@@ -22,7 +42,7 @@ export interface unitResponse {
 }
 
 export interface unitDetailResponse{
-    message?:unit
+    message?:unitDetails
 }
 
 export interface item{

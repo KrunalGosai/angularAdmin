@@ -5,7 +5,6 @@ import { MatSort } from '@angular/material/sort';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { unit } from '../../entities';
-import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-unites-components-unit-list',
@@ -40,7 +39,6 @@ export class UnitesComponentsUnitListComponent implements OnInit {
       this.dataSource.sort = this.sort;
       this.pageDetails.totalRecords = unitres.totalCount
     })
-  
   }
 
   applyFilter(event: Event) {
@@ -80,6 +78,13 @@ export class UnitesComponentsUnitListComponent implements OnInit {
 
   public resetFilter(){
     this.searchedName = '';
+  }
+
+  public changeActivationStatus(row:unit){
+    let rowcopy = {...row};
+    let base_unit:any = rowcopy.base_unit;
+    rowcopy.base_unit = base_unit._id;
+    this.unitFacade.changeActivationStatus(rowcopy)
   }
 
 }

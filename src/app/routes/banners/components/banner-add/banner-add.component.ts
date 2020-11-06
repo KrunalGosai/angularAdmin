@@ -1,3 +1,4 @@
+import { category } from './../../../categories/entities/index';
 import { CategoriesFacadeService } from './../../../categories/categories-facade';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -28,7 +29,8 @@ export class BannersBannerAddComponent implements OnInit {
         banner_redirect_url: [''],
         is_active: true,
         type: [''],
-        category_id: ['']
+        category_id: [''],
+        position:[0]
       });
       this.activeRoute.params.subscribe(params => {
         if(params.id != undefined && params.id != null && params.id != ''){
@@ -46,13 +48,15 @@ export class BannersBannerAddComponent implements OnInit {
     })
     if(this.isEditMode){
       this.bannerFacade.getBannerDetails().subscribe(res => {
+        let category:any = res.category_id;
         this.bannerForm.patchValue({
           name:res.name,
           banner_image_url: res.banner_image_url,
           banner_redirect_url: res.banner_redirect_url,
           is_active: res.is_active,
           type: res.type,
-          category_id: res.category_id,
+          category_id: category._id,
+          position:res.position
         })
       },err => console.error(err))
     }
