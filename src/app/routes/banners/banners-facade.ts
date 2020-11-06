@@ -57,4 +57,12 @@ export class BannersFacadeService {
       return res;
     }).catch(err => {console.error('api call error from Update banner ',err); throw err })
   }
+
+  public changeActivationStatus(row:banner){
+    console.log(row)
+    this.api.updateBanner(row).toPromise().then(res => {
+      this.loadBanners();
+      this.toster.success('Unit Successfully Updated',"Success",{timeOut:3000})
+    }).catch(err => {console.error('api call error from change activation status Unit',err )})
+  }
 }

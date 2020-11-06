@@ -25,6 +25,7 @@ export class UnitApiService {
    
     let body:unit = {
       name: unit.name,
+      is_active:unit.is_active
     }
     if(unit.packaging_material_consumed && unit.packaging_material_consumed.length > 0) body.packaging_material_consumed = unit.packaging_material_consumed;
     if(unit.base_quantity && unit.base_quantity > 0) body.base_quantity = unit.base_quantity;
@@ -47,6 +48,7 @@ export class UnitApiService {
     let url = this.baseURl+`/api/units/edit/${unit._id}`;
     let body:unit = {
       name: unit.name,
+      is_active:unit.is_active
     }
     if(unit.packaging_material_consumed && unit.packaging_material_consumed.length > 0) body.packaging_material_consumed = unit.packaging_material_consumed;
     if(unit.base_quantity && unit.base_quantity > 0) body.base_quantity = unit.base_quantity;
@@ -58,6 +60,6 @@ export class UnitApiService {
   // item apis from here
 
   public getItemListByAdmin():Observable<itemResponse>{
-    return this.http.get<itemResponse>(this.baseURl+`/api/item/get_Item_ListByAdmin`);
+    return this.http.get<itemResponse>(this.baseURl+`/api/item/get_admin_item_list`);
   }
 }

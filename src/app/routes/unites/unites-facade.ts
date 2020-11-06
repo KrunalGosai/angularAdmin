@@ -70,10 +70,10 @@ export class UnitesFacadeService {
       console.error('api call error from Update unit ',err); throw err; })
   }
 
-  // public changeActivationStatus(categoryId:string,isActive:boolean){
-  //   this.api.changeActivationStatus(categoryId,isActive).toPromise().then(res => {
-  //     this.loadUnites();
-  //     this.toster.success('Category Successfully Updated',"Success",{timeOut:3000})
-  //   }).catch(err => {console.error('api call error from change activation status',err )})
-  // }
+  public changeActivationStatus(row:unit){
+    this.api.updateUnit(row).toPromise().then(res => {
+      this.loadUnites();
+      this.toster.success('Unit Successfully Updated',"Success",{timeOut:3000})
+    }).catch(err => {console.error('api call error from change activation status Unit',err )})
+  }
 }

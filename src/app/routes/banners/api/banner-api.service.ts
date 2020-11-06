@@ -38,7 +38,8 @@ export class BannerApiService {
       banner_redirect_url: banner.banner_redirect_url,
       is_active:banner.is_active,
       type:banner.type,
-      category_id:banner.category_id
+      category_id:banner.category_id,
+      position:banner.position
     }
 
     return this.http.post(url,body);
@@ -62,7 +63,8 @@ export class BannerApiService {
       banner_redirect_url: banner.banner_redirect_url,
       is_active:banner.is_active,
       type:banner.type,
-      category_id: banner.category_id
+      category_id: banner.category_id,
+      position:banner.position
     }
     return this.http.put(url,body);
   }

@@ -8,7 +8,7 @@
         <form [formGroup]="bannerForm" (submit)="onFormSubmit($event);" class="form-field-full">
           <div fxLayout="row wrap" fxLayoutGap="8px grid">
             
-            <div fxFlex="50" fxFlex.lt-sm="100">
+            <div fxFlex="33" fxFlex.lt-sm="100">
               <mat-form-field>
                 <mat-label>Name</mat-label>
                 <input matInput placeholder="Banner Name" formControlName="name"
@@ -19,7 +19,7 @@
               </mat-form-field>
             </div>
 
-            <div fxFlex="50" fxFlex.lt-sm="100">
+            <div fxFlex="33" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Image Url</mat-label>
                   <input matInput placeholder="Image Url" type="text"
@@ -34,7 +34,17 @@
                     {{'validations.required' | translate}}
                   </mat-error>
                 </mat-form-field>
-              </div>
+            </div>
+            <div fxFlex="34" fxFlex.lt-sm="100">
+              <mat-form-field>
+                <mat-label>Position</mat-label>
+                <input matInput placeholder="Position Order" formControlName="position"
+                       required type="number">
+                <mat-error *ngIf="bannerForm.get('position').invalid">
+                  {{'validations.required' | translate}}
+                </mat-error>
+              </mat-form-field>
+            </div>
             
             <div fxFlex="25" fxFlex.lt-sm="100">
                 <mat-form-field>

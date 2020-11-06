@@ -6,7 +6,9 @@ export interface banner {
     is_active?: boolean,
     type?: string,
     is_deleted?: boolean,
-    category_id?: string
+    category_id?: string,
+    position?:number,
+    created_at:number
 }
 
 export interface bannerResponse {
@@ -28,5 +30,6 @@ export interface bannerDetails {
     name?:string,
     banner_image_url?:string,
     banner_redirect_url?:string,
-    category_id?:string
+    category_id?:string,
+    position?:number
 }

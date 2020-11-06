@@ -1,13 +1,13 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { itemResponse, unit, unitResponse } from '../entities';
+import { itemResponse,  unitDetails, unitResponse } from '../entities';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UnitStateService {
   private unites:BehaviorSubject<unitResponse> = new BehaviorSubject({});
-  private editUnit:BehaviorSubject<unit> = new BehaviorSubject({});
+  private editUnit:BehaviorSubject<unitDetails> = new BehaviorSubject({});
   private items:BehaviorSubject<itemResponse> = new BehaviorSubject({});
 
   constructor() { }
@@ -20,11 +20,11 @@ export class UnitStateService {
     this.unites.next(unites);
   }
 
-  public getEditUnit():Observable<unit>{
+  public getEditUnit():Observable<unitDetails>{
     return this.editUnit.asObservable();
   }
 
-  public setEditUnit(unit:unit){
+  public setEditUnit(unit:unitDetails){
     this.editUnit.next(unit);
   }
 
