@@ -15,7 +15,7 @@ export class UsersApiService {
   public getUsers(currentPage = 1,currentPageSize = 5,searchByName = ''):Observable<userListResponse>{
     let url = this.baseUrl+`/api/user/list?currentPage=${currentPage}&currentPageSize=${currentPageSize}`;
     if(searchByName != undefined && searchByName !=  null && searchByName.trim() != '')
-      url += `&first_name=${searchByName}`;
+      url += `&searchByuserName=${searchByName}`;
     return this.http.get(url);
   }
 
