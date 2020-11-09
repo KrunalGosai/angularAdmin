@@ -5,19 +5,29 @@
     <form class="form-field-full" [formGroup]="loginForm">
 
       <mat-form-field appearance="outline">
-        <mat-label>{{'login.username' | translate}}: ng-matero</mat-label>
-        <input matInput placeholder="ng-matero" formControlName="username" required>
-        <mat-error *ngIf="username.invalid">
-          {{'login.please_enter' | translate}} <strong>ng-matero</strong>
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="role_id" placeholder="User Role" required>
+            <mat-option *ngFor="let role of roleList" [value]="role._id">{{role.name}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="role_id.invalid">
+          Please Select <strong>Role</strong>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>{{'login.password' | translate}}: ng-matero</mat-label>
-        <input matInput placeholder="ng-matero" type="password"
+        <mat-label>Contact</mat-label>
+        <input matInput placeholder="Contact" formControlName="contact" required>
+        <mat-error *ngIf="contact.invalid">
+          {{'login.please_enter' | translate}} <strong>Contact</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{'login.password' | translate}}</mat-label>
+        <input matInput placeholder="Password" type="password"
                formControlName="password" required>
         <mat-error *ngIf="password.invalid">
-          {{'login.please_enter' | translate}} <strong>ng-matero</strong>
+          {{'login.please_enter' | translate}} <strong>Password</strong>
         </mat-error>
       </mat-form-field>
 

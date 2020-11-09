@@ -11,16 +11,10 @@ export class UsersFacade {
   constructor(private usersapi:UsersApiService,
     private usersstate:UsersStateService) { }
 
-  loadUsers(){
-    // this.usersapi.getUsers().pipe(tap((res) => {
-    //   console.log('facade loadusers',res)
-    //   this.usersstate.setUsers(res);
-    // }))
-    this.usersapi.getUsers().subscribe(res => {
-        console.log('facade loadusers',res)
+  loadUsers(currentPage = 1,currentPageSize = 5,searchByName = ''){
+    this.usersapi.getUsers(currentPage,currentPageSize,searchByName).subscribe(res => {
         this.usersstate.setUsers(res)
-      })
-
+    })
   }
 
   getUsers(){

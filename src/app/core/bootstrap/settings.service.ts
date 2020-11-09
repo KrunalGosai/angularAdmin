@@ -6,10 +6,28 @@ import { AppSettings, defaults } from '../settings';
 export const USER_KEY = 'usr';
 
 export interface User {
-  id: number;
   name?: string;
-  email?: string;
   avatar?: string;
+  email?: string;
+  token?: string;
+  first_name?: string;
+  last_name?: string;
+  contact_2?: string;
+  contact?: string;
+  current_address?: string;
+  permanent_address?: string;
+  gender?: string;
+  dob?: string;
+  family_details?: string;
+  previous_occupation?: string;
+  bank_details?: string;
+  vehicle?: any;
+  profile_pic?: any;
+  role_id?: {
+    _id?: string;
+    type?: string;
+  }   
+       
 }
 
 @Injectable({

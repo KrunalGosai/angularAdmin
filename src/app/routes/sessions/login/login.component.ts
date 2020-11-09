@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SettingsService, StartupService, TokenService } from '@core';
+import { SettingsService, StartupService, TokenService, User } from '@core';
 
 @Component({
   selector: 'app-login',
@@ -9,6 +9,7 @@ import { SettingsService, StartupService, TokenService } from '@core';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  roleList  = []
 
   constructor(
     private fb: FormBuilder,
@@ -18,15 +19,22 @@ export class LoginComponent implements OnInit {
     private settings: SettingsService
   ) {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.pattern('ng-matero')]],
-      password: ['', [Validators.required, Validators.pattern('ng-matero')]],
+      role_id:['',Validators.required],
+      contact: ['', [Validators.required]],
+      password: ['', [Validators.required]],
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loadRoles();
+  }
 
-  get username() {
-    return this.loginForm.get('username');
+  get role_id(){
+    return this.loginForm.get('role_id');
+  }
+
+  get contact() {
+    return this.loginForm.get('contact');
   }
 
   get password() {
@@ -34,23 +42,50 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    const { token, uid, username } = { token: 'ng-matero-token', uid: 1, username: 'ng-matero' };
-    // Set user info
-    this.settings.setUser({
-      id: uid,
-      name: 'Zongbin',
-      email: 'nzb329@163.com',
-      avatar: '/assets/images/avatar.jpg',
-    });
-    // Set token info
-    this.token.set({ token, uid, username });
-    // Regain the initial data
-    this.startup.load().then(() => {
-      let url = this.token.referrer!.url || '/';
-      if (url.includes('/auth')) {
-        url = '/';
-      }
-      this.router.navigateByUrl(url);
-    });
+    this.token.validateLogin(this.loginForm.value).toPromise().then(user => {
+      let userdata:any = user;
+      let userInfo:any = userdata.userInfo
+
+      // Set user info
+      this.settings.setUser(userInfo)
+
+      // Set token info
+      this.token.set({token:userInfo.token});
+      
+      // Regain the initial data
+      this.startup.load().then(() => {
+        let url = this.token.referrer!.url || '/';
+        if (url.includes('/auth')) {
+          url = '/';
+        }
+        this.router.navigateByUrl(url);
+      });
+    }).catch(err => console.error(err))
+
+
+    // const { token, uid, username } = { token: 'ng-matero-token', uid: 1, username: 'ng-matero' };
+    // // Set user info
+    // this.settings.setUser({
+    //   name: 'Zongbin',
+    //   email: 'nzb329@163.com',
+    //   avatar: '/assets/images/avatar.jpg',
+    // });
+    // // Set token info
+    // this.token.set({ token});
+    // // Regain the initial data
+    // this.startup.load().then(() => {
+    //   let url = this.token.referrer!.url || '/';
+    //   if (url.includes('/auth')) {
+    //     url = '/';
+    //   }
+    //   this.router.navigateByUrl(url);
+    // });
+  }
+
+  loadRoles() {
+    this.token.getUserRoleList().subscribe(res => {
+      let data:any = res;
+      this.roleList = data.data;
+    })
   }
 }
