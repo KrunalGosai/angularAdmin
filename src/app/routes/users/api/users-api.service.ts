@@ -1,16 +1,22 @@
+import { environment } from './../../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { userListResponse } from '../entities';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersApiService {
 
-  constructor() { }
+  private baseUrl:string = environment.SERVER_ORIGIN;
+  constructor(private http:HttpClient) { }
 
-  getUsers(){
-    const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
-    return of(users)
+  public getUsers(currentPage = 1,currentPageSize = 5,searchByName = ''):Observable<userListResponse>{
+    let url = this.baseUrl+`/api/user/list?currentPage=${currentPage}&currentPageSize=${currentPageSize}`;
+    if(searchByName != undefined && searchByName !=  null && searchByName.trim() != '')
+      url += `&first_name=${searchByName}`;
+    return this.http.get(url);
   }
 
 }
