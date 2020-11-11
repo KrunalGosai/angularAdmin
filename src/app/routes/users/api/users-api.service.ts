@@ -2,7 +2,7 @@ import { environment } from './../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { userListResponse } from '../entities';
+import { userDetailsResponse, userEntity, userListResponse } from '../entities';
 
 @Injectable({
   providedIn: 'root'
@@ -19,27 +19,60 @@ export class UsersApiService {
     return this.http.get(url);
   }
 
+  public deleteUser(userId:number){
+    let url = this.baseUrl+`/api/user/delete/${userId}`
+    return this.http.delete(url)
+  }
+
+  public getUserRoleList(){
+    return this.http.get(this.baseUrl+'/api/role/list');
+  }
+
+  public getCountryList(){
+    return this.http.get(this.baseUrl+'/api/country');
+  }
+
+  public getStateList(){
+    return this.http.get(this.baseUrl+'/api/state');
+  }
+
+  public getCityList(){
+    return this.http.get(this.baseUrl+'/api/city');
+  }
+
+  public getAreaList(){
+    return this.http.get(this.baseUrl+'/api/area');
+  }
+  
+  public getVehicleList(){
+    return this.http.get(this.baseUrl+'/api/vehicle/list');
+  }
+  public newUser(user:userEntity){
+    let body:any = user;
+    if(user.location && user.location.trim() != '') {
+      body.location = {
+        type:'Point',
+        coordinates:user.location.split(',')};
+    }
+    let url = this.baseUrl+`/api/user/register`;
+    return this.http.post(url,user);
+  }
+
+  public updateUser(user:userEntity){
+    let body:any = user;
+    if(user.location && user.location.trim() != '') {
+      body.location = {
+        type:'Point',
+        coordinates:user.location.split(',')};
+    }
+    let url = this.baseUrl+`/api/user/update/${user._id}`;
+    return this.http.put(url,user);
+  }
+
+  public getUserDetailsById(userId):Observable<userDetailsResponse>{
+    let url = this.baseUrl+`/api/user/userDetail/${userId}`
+    return this.http.get<userDetailsResponse>(url);
+  }
+
 }
 
-/** Constants used to fill up our data base. */
-const COLORS: string[] = [
-  'maroon', 'red', 'orange', 'yellow', 'olive', 'green', 'purple', 'fuchsia', 'lime', 'teal',
-  'aqua', 'blue', 'navy', 'black', 'gray'
-];
-const NAMES: string[] = [
-  'Maia', 'Asher', 'Olivia', 'Atticus', 'Amelia', 'Jack', 'Charlotte', 'Theodore', 'Isla', 'Oliver',
-  'Isabella', 'Jasper', 'Cora', 'Levi', 'Violet', 'Arthur', 'Mia', 'Thomas', 'Elizabeth'
-];
-
-/** Builds and returns a new User. */
-function createNewUser(id: number): any {
-  const name = NAMES[Math.round(Math.random() * (NAMES.length - 1))] + ' ' +
-      NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) + '.';
-
-  return {
-    id: id.toString(),
-    name: name,
-    progress: Math.round(Math.random() * 100).toString(),
-    color: COLORS[Math.round(Math.random() * (COLORS.length - 1))]
-  };
-}

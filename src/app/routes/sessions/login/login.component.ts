@@ -83,9 +83,9 @@ export class LoginComponent implements OnInit {
   }
 
   loadRoles() {
-    this.token.getUserRoleList().subscribe(res => {
+    this.token.getUserRoleList().toPromise().then(res => {
       let data:any = res;
       this.roleList = data.data;
-    })
+    }).catch(err => console.error('error => ', err))
   }
 }

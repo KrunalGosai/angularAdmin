@@ -107,19 +107,17 @@
       <td mat-cell *matCellDef="let row"> 
         <mat-grid-list cols="2" rowHeight="1:1">
           <mat-grid-tile>
-            <button mat-icon-button aria-label="Edit">
+            <button mat-icon-button aria-label="Edit" (click)="navigateToEdit(row._id)">
               <mat-icon color="primary">create</mat-icon>
             </button>
           </mat-grid-tile>
           <mat-grid-tile>
-            <button mat-icon-button aria-label="Delete" (click)="deleteIcon()">
+            <button mat-icon-button aria-label="Delete" (click)="deleteUser(row)">
               <mat-icon color="accent">delete</mat-icon>
             </button>
           </mat-grid-tile>
         </mat-grid-list>
         
-       
-       
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

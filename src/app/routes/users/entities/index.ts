@@ -31,3 +31,71 @@ export interface userList{
         type?: string;
     }   
 }
+
+export interface userEntity{
+    _id?:string
+    first_name?: string,
+    last_name?: string,
+    contact?: string,
+    contact_2?: string,
+    role_id?: string,
+    gender?: string,
+    email?: string,
+    current_address?: string,
+    sameAddress?:boolean,
+    permanent_address?: string,
+    dob?: string,
+    uid?: string,
+    family_details?: string,
+    previous_occupation?: string,
+    bank_details?: string,
+    firm_name?: string,
+    firm_gst?: string,
+    supplier_of_what?: string,
+    reference?: string,
+    country_id?: string,
+    state_id?: string,
+    city_id?: string,
+    area_id?: string,
+    vehicle_id?: string,
+    location?: string
+}
+
+export interface userDetailsResponse{
+    message?:string,
+    data?:userDetails
+}
+
+export interface userDetails{
+    _id?:string
+    first_name?: string,
+    last_name?: string,
+    contact?: string,
+    contact_2?: string,
+    role_id?: {
+        _id?:string,
+        type?:string
+    },
+    gender?: string,
+    email?: string,
+    current_address?: string,
+    sameAddress?:boolean,
+    permanent_address?: string,
+    dob?: string,
+    uid?: string,
+    family_details?: string,
+    previous_occupation?: string,
+    bank_details?: string,
+    firm_name?: string,
+    firm_gst?: string,
+    supplier_of_what?: string,
+    reference?: string,
+    country_id?: string,
+    state_id?: string,
+    city_id?: string,
+    area_id?: string,
+    vehicle_id?: string,
+    location?:{
+        type?:string,
+        coordinates:number[]}
+}
