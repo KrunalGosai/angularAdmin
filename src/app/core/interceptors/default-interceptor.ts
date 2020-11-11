@@ -34,14 +34,14 @@ export class DefaultInterceptor implements HttpInterceptor {
       return next.handle(req);
     }
 
-    let tokenVal = this.token.get();
+    let tokenVal = this.token.get().token;
 
     // All APIs need JWT authorization
     const headers = {
       'Accept': 'application/json',
       'Accept-Language': this.settings.language,
       'Access-Control-Allow-Origin':'*',
-      'Authorization': this.token.get().token //'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlX2lkIjoiNWZhNGVlMGYwZDYwZTgwNzEwNTU2ODE1IiwidXNlcl90eXBlIjoiQURNSU4iLCJ1c2VyX2lkIjoiNWZhNGVlYmYwZDYwZTgwNzEwNTU2ODE2IiwiY3VzdG9tZXJfaWQiOm51bGwsInNlc3Npb25JZCI6IndkSDRqWG9iWWxlSFhra3N2T2szdkFOcGdhVlp0NVZtIiwiaWF0IjoxNjA0NjQ0NjA4fQ.nDaSHnVeFyE9EAZGcmi48JwaSVWwVOX7-ArbEkCzoQQ'//`Bearer ${this.token.get().token}`,
+      'Authorization': tokenVal && tokenVal.trim() != '' ? tokenVal : '' //'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlX2lkIjoiNWZhNGVlMGYwZDYwZTgwNzEwNTU2ODE1IiwidXNlcl90eXBlIjoiQURNSU4iLCJ1c2VyX2lkIjoiNWZhNGVlYmYwZDYwZTgwNzEwNTU2ODE2IiwiY3VzdG9tZXJfaWQiOm51bGwsInNlc3Npb25JZCI6IndkSDRqWG9iWWxlSFhra3N2T2szdkFOcGdhVlp0NVZtIiwiaWF0IjoxNjA0NjQ0NjA4fQ.nDaSHnVeFyE9EAZGcmi48JwaSVWwVOX7-ArbEkCzoQQ'//`Bearer ${this.token.get().token}`,
     };
     let requrl = req.url
 

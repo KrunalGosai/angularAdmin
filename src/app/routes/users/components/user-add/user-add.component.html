@@ -1,227 +1,323 @@
-<page-header title="Add User" [nav]="['home','users','new']"></page-header>
+<page-header title="{{isEditMode ? 'Edit User': 'New User'}}" [nav]="['home','users','new']"></page-header>
 
 <div fxLayout="row wrap" class="matero-row">
 
   <div fxFlex="100" fxFlex.lt-sm="100" class="matero-col">
     <mat-card>
-      <mat-card-title>New User</mat-card-title>
+      <mat-card-title>{{isEditMode ? 'Edit User': 'New User'}}</mat-card-title>
 
-      <form [formGroup]="reactiveForm2" class="form-field-full">
-        <div fxLayout="row wrap" fxLayoutGap="8px grid">
+      <form [formGroup]="userForm" (submit)="onFormSubmit($event);" class="form-field-full">
+
+        <mat-accordion class="example-headers-align">
+          <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Personal data
+              </mat-panel-title>
+              <mat-panel-description>
+                Personal Details
+                <mat-icon>account_circle</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div fxLayout="row wrap" fxLayoutGap="8px grid">
           
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>First Name</mat-label>
-              <input matInput placeholder="First Name" formControlName="firstname"
-                     required>
-              <mat-error *ngIf="reactiveForm2.get('firstname').invalid">
-                {{'validations.required' | translate}}
-              </mat-error>
-            </mat-form-field>
-          </div>
+              <!-- first_name -->
+              <div fxFlex="33" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>First Name</mat-label>
+                  <input matInput placeholder="First Name" formControlName="first_name"
+                         required>
+                  <mat-error *ngIf="userForm.get('first_name').invalid">
+                    {{'validations.required' | translate}}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+    
+              <!-- last_name -->
+              <div fxFlex="33" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Last Name</mat-label>
+                  <input matInput placeholder="Last Name" formControlName="last_name">
+                  <mat-error *ngIf="userForm.get('last_name').invalid">
+                    {{'validations.required' | translate}}
+                  </mat-error>
+                </mat-form-field>
+              </div>
 
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>Last Name</mat-label>
-              <input matInput placeholder="Last Name" formControlName="lastname"
-                     required>
-              <mat-error *ngIf="reactiveForm2.get('lastname').invalid">
-                {{'validations.required' | translate}}
-              </mat-error>
-            </mat-form-field>
-          </div>
+              <!-- contact -->
+              <div fxFlex="34" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Contact</mat-label>
+                  <input matInput placeholder="Contact" type="number"
+                         formControlName="contact" required>
+                  <mat-icon matSuffix>phone</mat-icon>
+                  <mat-error *ngIf="userForm.get('contact').invalid">
+                    {{'validations.required' | translate}}
+                  </mat-error>
+                </mat-form-field>
+              </div>
 
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>Contact</mat-label>
-              <input matInput placeholder="Contact" type="number"
-                     formControlName="contact" required>
-              <mat-icon matSuffix>phone</mat-icon>
-              <mat-error *ngIf="reactiveForm2.get('contact').invalid">
-                {{'validations.required' | translate}}
-              </mat-error>
-            </mat-form-field>
-          </div>
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>Alternative Contact</mat-label>
-              <input matInput placeholder="Alternative Contact" type="number"
-                     formControlName="contact_al">
-              <mat-icon matSuffix>phone</mat-icon>
-              <mat-error *ngIf="reactiveForm2.get('contact_al').invalid">
-                {{'validations.required' | translate}}
-              </mat-error>
-            </mat-form-field>
-          </div>
+              <!-- email -->
+              <div fxFlex="33" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Email</mat-label>
+                  <input matInput placeholder="Email" type="email" formControlName="email" required>
+                  <mat-error *ngIf="userForm.get('email').invalid">
+                    {{getErrorMessage(userForm) | translate}}
+                  </mat-error>
+                </mat-form-field>
+              </div>
 
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>Email</mat-label>
-              <input matInput placeholder="Email" formControlName="email" required>
-              <mat-error *ngIf="reactiveForm2.get('email').invalid">
-                {{getErrorMessage(reactiveForm2) | translate}}
-              </mat-error>
-            </mat-form-field>
-          </div>
+              <!-- role_id -->
+              <div fxFlex="33" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Role</mat-label>
+                  <mat-select formControlName="role_id" placeholder="User Role" required>
+                    <mat-option *ngFor="let role of roleList" [value]="role._id">{{role.name}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="userForm.get('role_id').invalid">
+                    {{getErrorMessage(userForm) | translate}}
+                  </mat-error>
+                </mat-form-field>
+              </div>
 
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>Area</mat-label>
-              <input matInput formControlName="area"
-                      [matAutocomplete]="autocomplete"
-                      [(ngModel)]="value"
-                      (ngModelChange)="filteredStates = filter(value)" required>
-              <mat-autocomplete #autocomplete="matAutocomplete">
-                <mat-option *ngFor="let state of filteredStates" [value]="state.name">
-                  <span>{{ state.name }}</span>
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
+              <!-- geneder -->
+              <div fxFlex="34" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Gender</mat-label>
+                  <mat-select formControlName="gender" placeholder="Gender" required>
+                    <mat-option value="Male">Male</mat-option>
+                    <mat-option value="Female">Female</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="userForm.get('gender').invalid">
+                    {{getErrorMessage(userForm) | translate}}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              
+              <!-- dob -->
+              <div fxFlex="33" fxFlex.lt-sm="100">
+                <mat-form-field color="accent">
+                  <mat-label>Birthdate</mat-label>
+                  <input matInput formControlName="dob" placeholder="Birthdate" [matDatepicker]="dob">
+                  <mat-datepicker-toggle matSuffix [for]="dob"></mat-datepicker-toggle>
+                  <mat-datepicker #dob></mat-datepicker>
+                </mat-form-field>
+              </div>
 
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>City</mat-label>
-              <input matInput formControlName="city"
-                      [matAutocomplete]="autocomplete"
-                      [(ngModel)]="value"
-                      (ngModelChange)="filteredStates = filter(value)" required>
-              <mat-autocomplete #autocomplete="matAutocomplete">
-                <mat-option *ngFor="let state of filteredStates" [value]="state.name">
-                  <span>{{ state.name }}</span>
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
+              <!-- uid -->
+              <div fxFlex="33" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>UID</mat-label>
+                  <input matInput placeholder="UID" formControlName="uid">
+                </mat-form-field>
+              </div>
 
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>State</mat-label>
-              <input matInput formControlName="state"
-                      [matAutocomplete]="autocomplete"
-                      [(ngModel)]="value"
-                      (ngModelChange)="filteredStates = filter(value)" required>
-              <mat-autocomplete #autocomplete="matAutocomplete">
-                <mat-option *ngFor="let state of filteredStates" [value]="state.name">
-                  <span>{{ state.name }}</span>
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
+              <!-- contact_2 -->
+              <div fxFlex="34" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Alternative Contact</mat-label>
+                  <input matInput placeholder="Alternative Contact" type="number"
+                         formControlName="contact_2">
+                  <mat-icon matSuffix>phone</mat-icon>
+                </mat-form-field>
+              </div>
 
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>Pin Code</mat-label>
-              <input matInput placeholder="Pin Code" type="number" 
-                formControlName="pincode" required>
-            </mat-form-field>
-          </div>
+              <!-- family_details -->
+              <div fxFlex="100" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Family Details</mat-label>
+                  <textarea matInput placeholder="Family Details"
+                  formControlName="family_details"></textarea>
+                </mat-form-field>
+              </div>
 
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>Indetity Proof</mat-label>
-              <input matInput placeholder="Indetity Proof" type="text"
-                     formControlName="identityfile">
-              <mat-icon matSuffix>folder</mat-icon>
-              <mat-error *ngIf="reactiveForm2.get('identityfile').invalid">
-                {{'validations.required' | translate}}
-              </mat-error>
-            </mat-form-field>
-          </div>
+             </div> 
+            <mat-action-row>
+              <button mat-button color="primary" type="button" (click)="nextStep()">Next</button>
+            </mat-action-row>
+          </mat-expansion-panel>
+        
+          <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Professional
+              </mat-panel-title>
+              <mat-panel-description>
+                Professional Details
+                <mat-icon>work</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
 
-          <div fxFlex="100" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>Description</mat-label>
-              <textarea matInput formControlName="description"></textarea>
-              <mat-error *ngIf="reactiveForm2.get('description').invalid">
-                {{'validations.required' | translate}}
-              </mat-error>
-            </mat-form-field>
-          </div>
+            <div fxLayout="row wrap" fxLayoutGap="8px grid">
 
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>GST Number</mat-label>
-              <input matInput placeholder="GST Number" type="number"
-                     formControlName="gstno" required>
-              <mat-error *ngIf="reactiveForm2.get('gstno').invalid">
-                {{'validations.required' | translate}}
-              </mat-error>
-            </mat-form-field>
-          </div>
+              <!-- previous_occupation -->
+              <div fxFlex="100" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Previous Occupation</mat-label>
+                  <textarea matInput placeholder="Previous Occupation"
+                  formControlName="previous_occupation"></textarea>
+                </mat-form-field>
+              </div>
 
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>Package Name</mat-label>
-              <input matInput placeholder="Package Name" type="text"
-                     formControlName="packagename">
-              <mat-error *ngIf="reactiveForm2.get('packagename').invalid">
-                {{'validations.required' | translate}}
-              </mat-error>
-            </mat-form-field>
-          </div>
+              <!-- bank_details -->
+              <div fxFlex="100" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Bank Details</mat-label>
+                  <textarea matInput placeholder="Bank Details"
+                  formControlName="bank_details"></textarea>
+                </mat-form-field>
+              </div>
 
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>Manager Name</mat-label>
-              <input matInput placeholder="Manager Name" type="text"
-                     formControlName="manager_name" required>
-              <mat-error *ngIf="reactiveForm2.get('manager_name').invalid">
-                {{'validations.required' | translate}}
-              </mat-error>
-            </mat-form-field>
-          </div>
+              <!-- firm_name -->
+              <div fxFlex="50" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Firm Name</mat-label>
+                  <input matInput placeholder="Firm Name" formControlName="firm_name">
+                </mat-form-field>
+              </div>
+    
+              <!-- firm_gst -->
+              <div fxFlex="50" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Firm GST</mat-label>
+                  <input matInput placeholder="Firm GST" formControlName="firm_gst">
+                </mat-form-field>
+              </div>
 
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>Manager Contact</mat-label>
-              <input matInput placeholder="Manager Contact" type="text"
-                     formControlName="manager_contact" required>
-              <mat-icon matSuffix>phone</mat-icon>
-              <mat-error *ngIf="reactiveForm2.get('manager_contact').invalid">
-                {{'validations.required' | translate}}
-              </mat-error>
-            </mat-form-field>
-          </div>
+              <!-- supplier_of_what -->
+              <div fxFlex="50" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Supplier of What</mat-label>
+                  <input matInput placeholder="Supplier of What" formControlName="supplier_of_what">
+                </mat-form-field>
+              </div>
+    
+              <!-- reference -->
+              <div fxFlex="50" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Reference</mat-label>
+                  <input matInput placeholder="Reference" formControlName="reference">
+                </mat-form-field>
+              </div>
 
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>Manager Aadhar</mat-label>
-              <input matInput placeholder="Manager Aadhar" type="text"
-                     formControlName="manager_aadhar" required>
-              <mat-error *ngIf="reactiveForm2.get('manager_aadhar').invalid">
-                {{'validations.required' | translate}}
-              </mat-error>
-            </mat-form-field>
-          </div>
-          
-          <div fxFlex="50" fxFlex.lt-sm="100">
-            <!-- <mat-form-field> -->
-              <!-- <mat-label>Package Name</mat-label>
-              <input matInput placeholder="Package Name" type="text"
-                     formControlName="packagename">
-              <mat-error *ngIf="reactiveForm2.get('packagename').invalid">
-                {{'validations.required' | translate}}
-              </mat-error> -->
-            <!-- </mat-form-field> -->
-          </div>
+             </div> 
+        
+            <mat-action-row>
+              <button mat-button color="warn" type="button" (click)="prevStep()">Previous</button>
+              <button mat-button color="primary" type="button" (click)="nextStep()">Next</button>
+            </mat-action-row>
+          </mat-expansion-panel>
 
-          <div fxFlex="100" fxFlex.lt-sm="100">
-            <mat-form-field>
-              <mat-label>Manager Address</mat-label>
-              <textarea matInput placeholder="Manager Address"
-              formControlName="manager_add" required></textarea>
-              <mat-error *ngIf="reactiveForm2.get('manager_add').invalid">
-                {{'validations.required' | translate}}
-              </mat-error>
-            </mat-form-field>
-          </div>
+          <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Address
+              </mat-panel-title>
+              <mat-panel-description>
+                Type the address Details
+                <mat-icon>map</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
 
-          
+            <div fxLayout="row wrap" fxLayoutGap="8px grid">
 
-        </div>
+              <!-- current_address -->
+              <div fxFlex="100" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Current Address</mat-label>
+                  <textarea matInput placeholder="Current Address"
+                  formControlName="current_address"></textarea>
+                </mat-form-field>
+              </div>
 
-        <button mat-raised-button color="primary" class="m-t-8">Save</button>
+              <!-- sameAddress -->
+              <div fxFlex="100" fxFlex.lt-sm="100">
+                <!-- <mat-form-field> -->
+                  <!-- <mat-label></mat-label> -->
+                  <mat-checkbox formControlName="sameAddress">Same As Above</mat-checkbox>
+                <!-- </mat-form-field> -->
+              </div>
+
+              <!-- permanent_address -->
+              <div fxFlex="100" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Permanent Address</mat-label>
+                  <textarea matInput placeholder="Permanent Address"
+                  formControlName="permanent_address"></textarea>
+                </mat-form-field>
+              </div>
+
+              <!-- country_id -->
+              <div fxFlex="33" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Country</mat-label>
+                  <mat-select formControlName="country_id" placeholder="Country">
+                    <mat-option *ngFor="let item of countryList" [value]="item._id">{{item.name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <!-- state_id -->
+              <div fxFlex="33" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>State</mat-label>
+                  <mat-select formControlName="state_id" placeholder="State">
+                    <mat-option *ngFor="let item of stateList" [value]="item._id">{{item.name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <!-- city_id -->
+              <div fxFlex="34" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>City</mat-label>
+                  <mat-select formControlName="city_id" placeholder="City">
+                    <mat-option *ngFor="let item of cityList" [value]="item._id">{{item.name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <!-- area_id -->
+              <div fxFlex="33" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Area</mat-label>
+                  <mat-select formControlName="area_id" placeholder="Area">
+                    <mat-option *ngFor="let item of areaList" [value]="item._id">{{item.name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <!-- location -->
+              <div fxFlex="33" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Location</mat-label>
+                  <input matInput placeholder="Location" formControlName="location">
+                </mat-form-field>
+              </div>
+
+              <!-- vehicle_id -->
+              <div fxFlex="34" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Vehicle</mat-label>
+                  <mat-select formControlName="vehicle_id" placeholder="Vehicle" >
+                    <mat-option *ngFor="let item of vehicleList" [value]="item._id">{{item.type +' - '+item.regnumber}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+             </div> 
+            
+        
+            <mat-action-row>
+              <button mat-button color="warn" type="button" (click)="prevStep()">Previous</button>
+              <button mat-button color="primary" type="submit">End</button>
+            </mat-action-row>
+          </mat-expansion-panel>
+        
+        </mat-accordion>
+        
       </form>
 
     </mat-card>

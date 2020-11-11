@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { ConfirmService } from './../../../../shared/services/confirm.service';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -34,15 +36,10 @@ export class UsersUserListComponent implements OnInit {
   }
   searchByName:string = '';
 
-  //filter field
-  q = {
-    username: '',
-    email: '',
-    gender: '',
-  };
-
-
-  constructor(private usersFacade: UsersFacade, private snackBar: MatSnackBar) { }
+  constructor(
+    private usersFacade: UsersFacade, 
+    private router:Router,
+    private confirmService:ConfirmService) { }
 
   ngOnInit() {
     this.usersFacade.loadUsers(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName);
@@ -55,7 +52,7 @@ export class UsersUserListComponent implements OnInit {
     
   }
 
-  applyFilter(event: Event) {
+  public applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
@@ -64,8 +61,13 @@ export class UsersUserListComponent implements OnInit {
     }
   }
 
-  deleteIcon() {
-    this.snackBar.open('Item deleted', '', { duration: 2000 });
+  public deleteUser(row:userList) {
+    this.confirmService.confirm('Are you sure want to delete this User?','Confirm').subscribe(result => {
+      if(result == true){
+        this.usersFacade.deleteUser(row._id)
+          .then(res => this.usersFacade.loadUsers(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName))
+      }
+    })
   }
 
   public pageEvent(event:PageEvent){
@@ -81,6 +83,12 @@ export class UsersUserListComponent implements OnInit {
 
   public filterUsers(){
     this.usersFacade.loadUsers(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName)
+  }
+
+  public navigateToEdit(id){
+    this.usersFacade.loadUserDetails(id).then(user => {
+      this.router.navigate(['users','edit',id])
+    })
   }
 
 }
