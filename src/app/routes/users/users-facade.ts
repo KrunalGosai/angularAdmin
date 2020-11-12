@@ -3,7 +3,7 @@ import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { UsersApiService } from './api/users-api.service';
 import { UsersStateService } from './state/users-state.service';
-import { userEntity } from './entities';
+import { userEntity, userList } from './entities';
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +80,23 @@ export class UsersFacade {
 
   public getUserDetails(){
     return this.usersstate.getEditUserDetails().pipe(tap(res => res))
+  }
+
+  public changeActivationStatus(row:userList){
+    let user:userEntity = {
+      _id:row._id,
+      role_id:row.role_id._id,
+      first_name:row.first_name,
+      contact:row.contact,
+      email:row.email,
+      gender:row.gender,
+      is_active:row.is_active
+    }
+    return this.api.updateUser(user).toPromise().then( res => {
+      this.loadUsers();
+      this.toster.success('User Successfully Updated',"Success",{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from Update User ',err); throw err })
   }
 
 

@@ -67,7 +67,8 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
       city_id: [''],
       area_id: [''],
       vehicle_id: [''],
-      location:['']
+      location:[''],
+      is_active:[true]
           
     });
 

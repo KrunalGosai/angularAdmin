@@ -1,0 +1,44 @@
+import { Observable } from 'rxjs';
+import { itemDetailResponse, itemListResponse } from './../entities/index';
+import { environment } from '@env/environment';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ItemApiService {
+
+  constructor(private http:HttpClient) { }
+
+  private baseURl = environment.SERVER_ORIGIN;
+
+  public getItemList(currentPage = 1,currentPageSize = 5,searchByName = ''):Observable<itemListResponse>{
+    let url = this.baseURl+`/api/item/get_admin_item_list?currentPage=${currentPage}&currentPageSize=${currentPageSize}`;
+    // if(searchByName != undefined && searchByName !=  null && searchByName.trim() != '')
+    //   url += `&searchByName=${searchByName}`;
+    return this.http.get<itemListResponse>(url);
+  }
+
+  public deleteItem(itemId){
+    let url = this.baseURl+`/api/item/delete_Item/${itemId}`;
+    return this.http.delete(url);
+  }
+
+  public getItemDetailsById(itemId):Observable<itemDetailResponse>{
+    let url = this.baseURl+`/api/item/get_Itemdetail?item_id=${itemId}`;
+    return this.http.get<itemDetailResponse>(url);
+  }
+
+  public updateActivationStatus(is_active:boolean,item_id:string){
+    let url = this.baseURl+`/api/item/update_Active_Deactive_Item`;
+    let body = {
+      item_id,is_active
+    }
+    return this.http.put(url,body);
+  }
+
+  
+
+  
+}

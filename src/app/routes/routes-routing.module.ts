@@ -33,6 +33,7 @@ const routes: Routes = [
   { path: 'products', loadChildren: () => import('./products/products.module').then(m => m.ProductsModule) },
   { path: 'banners', loadChildren: () => import('./banners/banners.module').then(m => m.BannersModule) },
   { path: 'unites', loadChildren: () => import('./unites/unites.module').then(m => m.UnitesModule) },
+  { path: 'items', loadChildren: () => import('./items/items.module').then(m => m.ItemsModule) },
     ],
   },
   {

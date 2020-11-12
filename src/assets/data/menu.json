@@ -31,6 +31,11 @@
       "type": "link"
     },
     {
+      "route": "items",
+      "name": "items",
+      "type": "link"
+    },
+    {
       "route": "products",
       "name": "products",
       "type": "link"
