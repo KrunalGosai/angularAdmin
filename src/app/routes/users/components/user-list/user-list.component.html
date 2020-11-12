@@ -79,7 +79,10 @@
 
     <ng-container matColumnDef="is_active">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Active </th>
-      <td mat-cell *matCellDef="let row"> {{row.is_active ? 'Yes' : 'No'}} </td>
+      <td mat-cell *matCellDef="let row"> 
+        <!-- {{row.is_active ? 'Yes' : 'No'}}  -->
+        <mat-slide-toggle [(ngModel)]="row.is_active" (change)="changeActivationStatus(row);" color="primary"></mat-slide-toggle>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="dob">

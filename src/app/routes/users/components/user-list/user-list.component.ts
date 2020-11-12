@@ -91,4 +91,9 @@ export class UsersUserListComponent implements OnInit {
     })
   }
 
+  public changeActivationStatus(row:userList){
+    let rowcopy = {...row};
+    this.usersFacade.changeActivationStatus(rowcopy);
+  }
+
 }

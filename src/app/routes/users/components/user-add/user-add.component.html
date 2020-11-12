@@ -97,7 +97,7 @@
               </div>
               
               <!-- dob -->
-              <div fxFlex="33" fxFlex.lt-sm="100">
+              <div fxFlex="25" fxFlex.lt-sm="100">
                 <mat-form-field color="accent">
                   <mat-label>Birthdate</mat-label>
                   <input matInput formControlName="dob" placeholder="Birthdate" [matDatepicker]="dob">
@@ -107,7 +107,7 @@
               </div>
 
               <!-- uid -->
-              <div fxFlex="33" fxFlex.lt-sm="100">
+              <div fxFlex="25" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>UID</mat-label>
                   <input matInput placeholder="UID" formControlName="uid">
@@ -115,13 +115,20 @@
               </div>
 
               <!-- contact_2 -->
-              <div fxFlex="34" fxFlex.lt-sm="100">
+              <div fxFlex="25" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Alternative Contact</mat-label>
                   <input matInput placeholder="Alternative Contact" type="number"
                          formControlName="contact_2">
                   <mat-icon matSuffix>phone</mat-icon>
                 </mat-form-field>
+              </div>
+
+              <!-- is_active -->
+              <div fxFlex="25" fxFlex.lt-sm="100">
+                <mat-slide-toggle formControlName="is_active" color="primary">
+                  Is Active
+                </mat-slide-toggle>
               </div>
 
               <!-- family_details -->

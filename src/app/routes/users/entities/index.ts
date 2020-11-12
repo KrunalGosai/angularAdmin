@@ -58,7 +58,8 @@ export interface userEntity{
     city_id?: string,
     area_id?: string,
     vehicle_id?: string,
-    location?: string
+    location?: string,
+    is_active?: boolean
 }
 
 export interface userDetailsResponse{
@@ -95,6 +96,7 @@ export interface userDetails{
     city_id?: string,
     area_id?: string,
     vehicle_id?: string,
+    is_active?: boolean,
     location?:{
         type?:string,
         coordinates:number[]}

@@ -15,7 +15,7 @@ export class BannersFacadeService {
   public loadBanners(currentPage = 1,currentPageSize = 200, searchByName= ''){
     this.api.getAllBanner(currentPage,currentPageSize,searchByName).subscribe(banner => {
       this.state.setBanner(banner);
-    },err => console.error('api call error from load categories ',err))
+    },err => console.error('api call error from load banners ',err))
   }
 
 
@@ -59,7 +59,6 @@ export class BannersFacadeService {
   }
 
   public changeActivationStatus(row:banner){
-    console.log(row)
     this.api.updateBanner(row).toPromise().then(res => {
       this.loadBanners();
       this.toster.success('Unit Successfully Updated',"Success",{timeOut:3000})
