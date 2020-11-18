@@ -67,8 +67,8 @@
             <div fxFlex="25" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Sub Category</mat-label>
-                  <mat-select formControlName="subCategory_ids" placeholder="Sub Category" required>
-                      <mat-option *ngFor="let cate of categoryList" [value]="cate._id">{{cate.name}}</mat-option>
+                  <mat-select formControlName="subCategory_ids" placeholder="Sub Category" required multiple>
+                      <mat-option *ngFor="let cate of subCategoryList" [value]="cate._id">{{cate.name}}</mat-option>
                   </mat-select>
                   <mat-error *ngIf="itemForm.get('subCategory_ids').invalid">
                       {{'validations.required' | translate}}
@@ -80,8 +80,7 @@
                 <mat-form-field>
                   <mat-label>Type</mat-label>
                   <mat-select formControlName="item_type" placeholder="Type" required>
-                      <mat-option value="ITEM_BANNER">ITEM BANNER</mat-option>
-                      <mat-option value="TOP_BANNER">TOP BANNER</mat-option>
+                      <mat-option *ngFor="let type of itemTypeList" [value]="type">{{type}}</mat-option>
                   </mat-select>
                   <mat-error *ngIf="itemForm.get('item_type').invalid">
                     {{'validations.required' | translate}}
@@ -93,7 +92,7 @@
                 <mat-form-field>
                   <mat-label>Unit</mat-label>
                   <mat-select formControlName="unit_id" placeholder="Unit" required>
-                      <mat-option *ngFor="let cate of categoryList" [value]="cate._id">{{cate.name}}</mat-option>
+                      <mat-option *ngFor="let unit of unitList" [value]="unit._id">{{unit.name}}</mat-option>
                   </mat-select>
                   <mat-error *ngIf="itemForm.get('unit_id').invalid">
                       {{'validations.required' | translate}}
@@ -104,8 +103,18 @@
             <div fxFlex="33" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Tags</mat-label>
-                  <input matInput placeholder="Tags" formControlName="category_tags"
-                         required>
+                  <mat-chip-list #chipList  aria-label="Tags">
+                  <mat-chip *ngFor="let tag of itemForm.get('category_tags').value" selectable="true"
+                            removable="true" (removed)="removetag(tag)">
+                    {{tag}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                  </mat-chip>
+                  <input placeholder="Tags"
+                          [matChipInputFor]="chipList"
+                          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                          [matChipInputAddOnBlur]="true"
+                          (matChipInputTokenEnd)="addtag($event)">
+                  </mat-chip-list>
                   <mat-error *ngIf="itemForm.get('category_tags').invalid">
                     {{'validations.required' | translate}}
                   </mat-error>
@@ -115,7 +124,7 @@
             <div fxFlex="33" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Recommendation</mat-label>
-                  <mat-select formControlName="recommended_items" placeholder="Recommendation" required>
+                  <mat-select formControlName="recommended_items" placeholder="Recommendation" multiple required>
                       <mat-option *ngFor="let cate of categoryList" [value]="cate._id">{{cate.name}}</mat-option>
                   </mat-select>
                   <mat-error *ngIf="itemForm.get('recommended_items').invalid">
@@ -144,8 +153,20 @@
             <div fxFlex="50" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Pictures</mat-label>
-                  <input matInput placeholder="Pictures" formControlName="picture"
-                         required>
+                  <!-- <input matInput placeholder="Pictures" 
+                         required> -->
+                  <mat-chip-list #picList aria-label="Pictures">
+                  <mat-chip *ngFor="let picitem of itemForm.get('picture').value" selectable="true"
+                            removable="true" (removed)="removepic(picitem)">
+                    {{picitem}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                  </mat-chip>
+                  <input placeholder="Pictures"
+                          [matChipInputFor]="picList"
+                          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                          [matChipInputAddOnBlur]="true"
+                          (matChipInputTokenEnd)="addpic($event)">
+                  </mat-chip-list>
                   <mat-error *ngIf="itemForm.get('picture').invalid">
                     {{'validations.required' | translate}}
                   </mat-error>

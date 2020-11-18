@@ -16,8 +16,9 @@ export class ItemsComponentsItemListComponent implements OnInit {
 
   displayedColumns: string[] = ['position', 'name', 'secondary_name', 'thumbnail', 'type', 'price', 'is_active', 'item_volume', 'controls'];
   dataSource: MatTableDataSource<itemList>;
-  bannerNameFilter:string = '';
   parentCategoryList;
+  itemTypeList:string[] = [];
+  searchItemType:string = ''
 
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -35,12 +36,15 @@ export class ItemsComponentsItemListComponent implements OnInit {
     private confirmService:ConfirmService) { }
 
   ngOnInit() {
-    this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage);
+    this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType);
     this.facade.getItemList().subscribe(items => {
       this.dataSource = new MatTableDataSource(items.data);
       // this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       // this.totalBanner = items.data.length;
+    })
+    this.facade.getItemTypes().subscribe(types => {
+      this.itemTypeList = types;
     })
   }
 
@@ -56,14 +60,14 @@ export class ItemsComponentsItemListComponent implements OnInit {
   public pageEvent(event:PageEvent){
     this.pageDetails.itemsPerPage = event.pageSize;
     this.pageDetails.currentPage = event.pageIndex+1;
-    this.facade.loadItemList(this.pageDetails.currentPage,event.pageSize,'');
+    this.facade.loadItemList(this.pageDetails.currentPage,event.pageSize,this.searchItemType);
   }
 
   public deleteIcon(id) {
     this.confirmService.confirm('Are you sure want to delete this Item?','Confirm').subscribe(result => {
       if(result == true){
         this.facade.deleteItem(id)
-          .then(res => this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage))
+          .then(res => this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType))
       }
     })
   }
@@ -74,18 +78,18 @@ export class ItemsComponentsItemListComponent implements OnInit {
     })
   }
 
-  public filterBanner(){
-    this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.bannerNameFilter)
+  public filterItem(){
+    this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType)
   }
 
   public resetFilter(){
-    this.bannerNameFilter = '';
+    this.searchItemType = '';
   }
 
   public changeActivationStatus(row){
     let rowcopy = {...row};
     this.facade.changeActivationStatus(rowcopy).then(res => {
-      this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage);
+      this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType);
     });
   }
 

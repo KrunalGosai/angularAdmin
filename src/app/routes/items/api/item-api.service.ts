@@ -13,10 +13,10 @@ export class ItemApiService {
 
   private baseURl = environment.SERVER_ORIGIN;
 
-  public getItemList(currentPage = 1,currentPageSize = 5,searchByName = ''):Observable<itemListResponse>{
+  public getItemList(currentPage = 1,currentPageSize = 5,searchItemType = ''):Observable<itemListResponse>{
     let url = this.baseURl+`/api/item/get_admin_item_list?currentPage=${currentPage}&currentPageSize=${currentPageSize}`;
-    // if(searchByName != undefined && searchByName !=  null && searchByName.trim() != '')
-    //   url += `&searchByName=${searchByName}`;
+    if(searchItemType != undefined && searchItemType !=  null && searchItemType.trim() != '')
+      url += `&item_type=${searchItemType}`;
     return this.http.get<itemListResponse>(url);
   }
 
@@ -36,6 +36,16 @@ export class ItemApiService {
       item_id,is_active
     }
     return this.http.put(url,body);
+  }
+
+  public newitem(item){
+    let url = this.baseURl + '/api/item/add_Item';
+    return this.http.post(url,item);
+  }
+
+  public updateItem(item){
+    let url = this.baseURl + `/api/item/update/${item._id}`;
+    return this.http.put(url,item);
   }
 
   
