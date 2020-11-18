@@ -234,7 +234,7 @@
               <div fxFlex="100" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Current Address</mat-label>
-                  <textarea matInput placeholder="Current Address"
+                  <textarea matInput (change)="addressChanged()" placeholder="Current Address"
                   formControlName="current_address"></textarea>
                 </mat-form-field>
               </div>
@@ -243,7 +243,7 @@
               <div fxFlex="100" fxFlex.lt-sm="100">
                 <!-- <mat-form-field> -->
                   <!-- <mat-label></mat-label> -->
-                  <mat-checkbox formControlName="sameAddress">Same As Above</mat-checkbox>
+                  <mat-checkbox (change)="changeSameAddress();" formControlName="sameAddress">Same As Above</mat-checkbox>
                 <!-- </mat-form-field> -->
               </div>
 
@@ -319,7 +319,7 @@
         
             <mat-action-row>
               <button mat-button color="warn" type="button" (click)="prevStep()">Previous</button>
-              <button mat-button color="primary" type="submit">End</button>
+              <button mat-button color="primary" type="submit">Save</button>
             </mat-action-row>
           </mat-expansion-panel>
         

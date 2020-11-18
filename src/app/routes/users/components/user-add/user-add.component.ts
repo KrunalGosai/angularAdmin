@@ -161,6 +161,21 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
     }
   }
 
+  public changeSameAddress(){
+    if(this.userForm.get('sameAddress').value){
+      this.userForm.get('permanent_address').setValue(this.userForm.get('current_address').value)
+      this.userForm.get('permanent_address').disable();
+    }else{
+      this.userForm.get('permanent_address').enable();
+    }
+  }
+
+  public addressChanged(){
+    if(this.userForm.get('sameAddress').value){
+      this.userForm.get('permanent_address').setValue(this.userForm.get('current_address').value)
+    }
+  }
+
   getErrorMessage(form: FormGroup) {
     return form.get('email').hasError('required')
       ? 'validations.required'

@@ -9,6 +9,7 @@ export class ItemStateService {
 
   private items:BehaviorSubject<itemListResponse> = new BehaviorSubject({});
   private editItem:BehaviorSubject<itemDetail> = new BehaviorSubject({});
+  private itemTypes:BehaviorSubject<string[]> = new BehaviorSubject(['SELLABLE','PACKAGING_MATERIAL','RAW_MATERIAL'])
 
   constructor() { }
 
@@ -26,5 +27,9 @@ export class ItemStateService {
 
   public setEditItem(item:itemDetail){
     this.editItem.next(item);
+  }
+
+  public getItemTypes(){
+    return this.itemTypes.asObservable()
   }
 }

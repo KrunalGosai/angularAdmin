@@ -10,25 +10,29 @@
 
 <!-- Filter -->
 
-<!-- <div fxLayout="row wrap" class="matero-row">
+<div fxLayout="row wrap" class="matero-row">
     <div fxFlex="100" class="matero-col">
       <mat-card>
         <mat-card-title>Filter</mat-card-title>
   
         <form>
           <mat-form-field class="m-r-8">
-            <input matInput placeholder="Name" [(ngModel)]="bannerNameFilter" name="bannerNameFilter">
+            <mat-label>Type</mat-label>
+            <mat-select  placeholder="Type" [(ngModel)]="searchItemType" name="filterType">
+                <mat-option *ngFor="let type of itemTypeList" [value]="type">{{type}}</mat-option>
+            </mat-select>
+            <!-- <input matInput placeholder="Name" [(ngModel)]="bannerNameFilter" name="bannerNameFilter"> -->
           </mat-form-field>
   
           <div fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
-            <button mat-raised-button color="primary"  style="margin-right:5px;" (click)="filterBanner();">Search</button>
+            <button mat-raised-button color="primary"  style="margin-right:5px;" (click)="filterItem();">Search</button>
             <button mat-raised-button (click)="resetFilter();">Reset</button>
           </div>
         </form>
   
       </mat-card>
     </div>
-</div> -->
+</div>
   
 <!-- Table  -->
   

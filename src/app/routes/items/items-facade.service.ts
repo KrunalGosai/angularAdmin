@@ -12,8 +12,8 @@ export class ItemsFacadeService {
 
   constructor(private api:ItemApiService, private state:ItemStateService, private toster: ToastrService) { }
 
-  public loadItemList(currentPage = 1,currentPageSize = 200, searchByName= ''){
-    this.api.getItemList(currentPage,currentPageSize,searchByName).subscribe(items => {
+  public loadItemList(currentPage = 1,currentPageSize = 200, searchItemType= ''){
+    this.api.getItemList(currentPage,currentPageSize,searchItemType).subscribe(items => {
       this.state.setItemList(items);
     },err => console.error('api call error from load items ',err))
   }
@@ -24,13 +24,13 @@ export class ItemsFacadeService {
   }
 
 
-  // public newItem(banner){
-  //   return this.api.newItem(banner).toPromise().then( res => {
-  //     this.loadBanners();
-  //     this.toster.success('Banner Successfully Created',"Success",{timeOut:3000})
-  //     return res;
-  //   }).catch(err => {console.error('api call error from new banner ',err); throw err })
-  // }
+  public newItem(newitem){
+    return this.api.newitem(newitem).toPromise().then( res => {
+      this.loadItemList();
+      this.toster.success('Item Successfully Created',"Success",{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from new Item ',err); throw err })
+  }
 
   public deleteItem(itemId){
     return this.api.deleteItem(itemId).toPromise().then(res => {
@@ -50,18 +50,22 @@ export class ItemsFacadeService {
     }).catch(err => {console.error('api call error from load Item Details',err); throw err });
   }
 
-  // public updateItem(banner){
-  //   return this.api.updateItem(banner).toPromise().then( res => {
-  //     this.loadBanners();
-  //     this.toster.success('Banner Successfully Updated',"Success",{timeOut:3000})
-  //     return res;
-  //   }).catch(err => {console.error('api call error from Update banner ',err); throw err })
-  // }
+  public updateItem(item){
+    return this.api.updateItem(item).toPromise().then( res => {
+      this.loadItemList();
+      this.toster.success('Item Successfully Updated',"Success",{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from Update item ',err); throw err })
+  }
 
   public changeActivationStatus(row:itemList){
     return this.api.updateActivationStatus(row.is_active,row._id).toPromise().then(res => {
       this.toster.success('Unit Successfully Updated',"Success",{timeOut:3000})
       return res;
     }).catch(err => {console.error('api call error from change activation status Unit',err ); throw err  })
+  }
+
+  public getItemTypes(){
+    return this.state.getItemTypes().pipe(tap(item => item))
   }
 }
