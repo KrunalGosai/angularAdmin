@@ -41,6 +41,33 @@
       "type": "link"
     },
     {
+      "route": "address",
+      "name": "address",
+      "type": "sub",
+      "icon": "map",
+      "children": [{
+          "route": "areas",
+          "name": "areas",
+          "type": "link"
+        },
+        {
+          "route": "cities",
+          "name": "cities",
+          "type": "link"
+        },
+        {
+          "route": "states",
+          "name": "states",
+          "type": "link"
+        },
+        {
+          "route": "countries",
+          "name": "countries",
+          "type": "link"
+        }
+      ]
+    },
+    {
       "route": "sessions",
       "name": "sessions",
       "type": "sub",
