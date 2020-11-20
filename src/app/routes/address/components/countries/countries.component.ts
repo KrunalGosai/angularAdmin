@@ -55,6 +55,10 @@ export class AddressComponentsCountriesComponent implements OnInit {
     })
   }
 
+  get is_active_value(){
+    return this.counryForm.get('is_active').value ? this.counryForm.get('is_active').value : false;
+  }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

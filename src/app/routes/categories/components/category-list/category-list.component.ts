@@ -40,9 +40,9 @@ export class CategoriesComponentsCategoryListComponent implements OnInit {
     private confirmService:ConfirmService) { }
 
   ngOnInit() {
-    this.categoriesFacade.loadCategories();
+    this.categoriesFacade.loadCategories(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.parentCategoryFilterValue, this.categoryNameFilterValue);
     this.categoriesFacade.loadParentCategories();
-    this.categoriesFacade.getCategories().subscribe(cate => {
+    this.categoriesFacade.getCategories(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.parentCategoryFilterValue, this.categoryNameFilterValue).subscribe(cate => {
       this.dataSource = new MatTableDataSource(cate.data);
       this.dataSource.sort = this.sort;
       // this.dataSource.paginator = this.paginator;

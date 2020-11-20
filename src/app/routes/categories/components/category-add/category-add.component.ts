@@ -49,18 +49,23 @@ export class CategoriesComponentsCategoryAddComponent implements OnInit {
         this.activeEditId = params.id;
       }
       if(this.isEditMode){
-        this.categoryFacade.getCategoryDetails().subscribe(res => {
-          let cateParent = res.parent_categoriesIds.length > 0 ? res.parent_categoriesIds[0]: '';
+        this.categoryFacade.getCategoryDetails(this.activeEditId).subscribe(res => {
+          let cateParent = res.parent_categoriesIds && res.parent_categoriesIds.length > 0 ? res.parent_categoriesIds[0]: '';
+          let image = res.category_image ? res.category_image : '';
           this.categoryForm.patchValue({
             name:res.name,
             parent_categoriesId: cateParent,
             position: res.position,
-            category_image:res.category_image,
+            category_image:image,
             is_active:res.is_active})
         },err => console.error(err))
       }
     })
     
+  }
+
+  get is_active_value(){
+    return this.categoryForm.get('is_active').value ? this.categoryForm.get('is_active').value : false;
   }
 
   public fileUpladChange(event){

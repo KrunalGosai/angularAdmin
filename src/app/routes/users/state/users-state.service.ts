@@ -10,21 +10,27 @@ export class UsersStateService {
   private users: BehaviorSubject<userListResponse> = new BehaviorSubject({});
   private editUserDetails: BehaviorSubject<userDetails> = new BehaviorSubject({});
 
+  // flags
+  public isUserSet:boolean = false;
+  public isUserDetailsSet:boolean = false;
+
   constructor() { }
 
-  getUsers():Observable<userListResponse>{
+  public getUsers():Observable<userListResponse>{
     return this.users.asObservable();
   }
 
-  setUsers(users:userListResponse){
+  public setUsers(users:userListResponse){
+    this.isUserSet = true;
     this.users.next(users);
   }
 
-  getEditUserDetails():Observable<userDetails>{
+  public getEditUserDetails():Observable<userDetails>{
     return this.editUserDetails.asObservable();
   }
 
-  setEditUserDetails(user:userDetails){
+  public setEditUserDetails(user:userDetails){
+    this.isUserDetailsSet = true;
     this.editUserDetails.next(user);
   }
 

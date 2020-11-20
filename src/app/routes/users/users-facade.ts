@@ -14,13 +14,14 @@ export class UsersFacade {
     private usersstate:UsersStateService,
     private toster: ToastrService) { }
 
-  loadUsers(currentPage = 1,currentPageSize = 5,searchByName = ''){
+  public loadUsers(currentPage = 1,currentPageSize = 5,searchByName = ''){
     this.api.getUsers(currentPage,currentPageSize,searchByName).subscribe(res => {
         this.usersstate.setUsers(res)
     })
   }
 
-  getUsers(){
+  public getUsers(currentPage = 1,currentPageSize = 5,searchByName = ''){
+    if(!this.usersstate.isUserSet) this.loadUsers(currentPage,currentPageSize,searchByName);
     return this.usersstate.getUsers().pipe(tap(res => res))
   }
 
@@ -49,6 +50,10 @@ export class UsersFacade {
   }
 
   public newUser(user:userEntity){
+    if(user.country_id.trim() == "") user.country_id = null;
+    if(user.state_id.trim() == "") user.state_id = null;
+    if(user.city_id.trim() == "") user.city_id = null;
+    if(user.area_id.trim() == "") user.area_id = null;
     return this.api.newUser(user).toPromise().then( res => {
       this.loadUsers();
       this.toster.success('User Successfully Created',"Success",{timeOut:3000})
@@ -64,6 +69,10 @@ export class UsersFacade {
   }
 
   public updateUser(user:userEntity){
+    if(user.country_id.trim() == "") user.country_id = null;
+    if(user.state_id.trim() == "") user.state_id = null;
+    if(user.city_id.trim() == "") user.city_id = null;
+    if(user.area_id.trim() == "") user.area_id = null;
     return this.api.updateUser(user).toPromise().then( res => {
       this.loadUsers();
       this.toster.success('User Successfully Updated',"Success",{timeOut:3000})
@@ -78,7 +87,8 @@ export class UsersFacade {
     }).catch(err => {console.error('api call error from load banner Details',err); throw err });
   }
 
-  public getUserDetails(){
+  public getUserDetails(id){
+    if(!this.usersstate.isUserDetailsSet) this.loadUserDetails(id);
     return this.usersstate.getEditUserDetails().pipe(tap(res => res))
   }
 

@@ -19,7 +19,8 @@ export class ItemsFacadeService {
   }
 
 
-  public getItemList(){
+  public getItemList(currentPage = 1,currentPageSize = 200, searchItemType= ''){
+    if(!this.state.isItemsSet) this.loadItemList(currentPage,currentPageSize,searchItemType)
     return this.state.getItemList().pipe(tap(cate => cate))
   }
 
@@ -39,7 +40,8 @@ export class ItemsFacadeService {
     }).catch(err => {console.error('api call error from Delete Item',err); throw err })
   }
 
-  public getItemDetails(){
+  public getItemDetails(id){
+    if(!this.state.isItemDetailsSet) this.loadItemDetails(id);
     return this.state.getEditItem().pipe(tap(item => item))
   }
 
