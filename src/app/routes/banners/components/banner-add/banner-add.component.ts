@@ -47,8 +47,8 @@ export class BannersBannerAddComponent implements OnInit {
       this.categoryList = parent;
     })
     if(this.isEditMode){
-      this.bannerFacade.getBannerDetails().subscribe(res => {
-        let category:any = res.category_id;
+      this.bannerFacade.getBannerDetails(this.activeEditId).subscribe(res => {
+        let category:any = res.category_id ? res.category_id : {_id:''};
         this.bannerForm.patchValue({
           name:res.name,
           banner_image_url: res.banner_image_url,
@@ -60,6 +60,10 @@ export class BannersBannerAddComponent implements OnInit {
         })
       },err => console.error(err))
     }
+  }
+
+  get is_active_value(){
+    return this.bannerForm.get('is_active').value ? this.bannerForm.get('is_active').value : false;
   }
 
   // public fileUpladChange(event){

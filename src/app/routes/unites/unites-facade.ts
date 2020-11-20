@@ -19,7 +19,8 @@ export class UnitesFacadeService {
     },err => console.error('api call error from load Unit',err))
   }
 
-  public getUnites():Observable<unitResponse>{
+  public getUnites(currentPage = 1,currentPageSize = 200,searchedName = ''):Observable<unitResponse>{
+    if(!this.state.isUnitesSet) this.loadUnites(currentPage,currentPageSize,searchedName)
     return this.state.getUnit().pipe(tap(unit => unit))
   }
 
@@ -56,7 +57,8 @@ export class UnitesFacadeService {
     }).catch(err => {console.error('api call error from load category Details',err); throw err });
   }
 
-  public getUnitDetails(){
+  public getUnitDetails(id){
+    if(!this.state.isUnitDetailsSet) this.loadUnitDetails(id);
     return this.state.getEditUnit().pipe(tap(cate => cate))
   }
 

@@ -10,6 +10,9 @@ export class CategoriesStateService {
   private parentCategories:BehaviorSubject<any> = new BehaviorSubject([]);
   private editCategory:BehaviorSubject<categoryDetail> = new BehaviorSubject({});
 
+  public isCategoriesSet:boolean = false;
+  public isCategoryDetailsSet:boolean = false;
+
   constructor() { }
 
   public getCategories():Observable<categoryListResponse>{
@@ -17,6 +20,7 @@ export class CategoriesStateService {
   }
 
   public setCategories(categories){
+    this.isCategoriesSet = true;
     this.categories.next(categories);
   }
 
@@ -33,6 +37,7 @@ export class CategoriesStateService {
   }
 
   public setEditCategory(category:categoryDetail){
+    this.isCategoryDetailsSet = true;
     this.editCategory.next(category);
   }
 }

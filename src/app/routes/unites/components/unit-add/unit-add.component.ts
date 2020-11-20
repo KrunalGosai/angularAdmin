@@ -56,7 +56,7 @@ export class UnitesComponentsUnitAddComponent implements OnInit {
   ngOnInit() {
     this.loadBaseUnitNItem();
     if(this.isEditMode){
-      this.unitFacade.getUnitDetails().subscribe(res => {
+      this.unitFacade.getUnitDetails(this.activeEditId).subscribe(res => {
         let base_unit:any = res.base_unit;
         this.unitForm.patchValue({
           name:res.name,
@@ -78,7 +78,9 @@ export class UnitesComponentsUnitAddComponent implements OnInit {
     }
   }
 
-
+  get is_active_value(){
+    return this.unitForm.get('is_active').value ? this.unitForm.get('is_active').value : false;
+  }
 
   public onFormSubmit(event){
     // console.log('form value ', this.unitForm.value,this.unitForm.valid,this.unitForm)

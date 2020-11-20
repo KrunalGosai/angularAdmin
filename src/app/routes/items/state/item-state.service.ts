@@ -9,7 +9,12 @@ export class ItemStateService {
 
   private items:BehaviorSubject<itemListResponse> = new BehaviorSubject({});
   private editItem:BehaviorSubject<itemDetail> = new BehaviorSubject({});
-  private itemTypes:BehaviorSubject<string[]> = new BehaviorSubject(['SELLABLE','PACKAGING_MATERIAL','RAW_MATERIAL'])
+  private itemTypes:BehaviorSubject<any[]> = new BehaviorSubject([
+    {name:'Sellable',value:'SELLABLE'},{name:'Packaging Material', value:'PACKAGING_MATERIAL'},{name:'Raw Material', value:'RAW_MATERIAL'}])
+
+  // flags
+  public isItemsSet:boolean = false;
+  public isItemDetailsSet:boolean = false;
 
   constructor() { }
 
@@ -18,6 +23,7 @@ export class ItemStateService {
   }
 
   public setItemList(itemList:itemListResponse){
+    this.isItemsSet = true;
     this.items.next(itemList);
   }
 
@@ -26,6 +32,7 @@ export class ItemStateService {
   }
 
   public setEditItem(item:itemDetail){
+    this.isItemDetailsSet = true;
     this.editItem.next(item);
   }
 

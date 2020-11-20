@@ -60,6 +60,10 @@ export class AddressComponentsStatesComponent implements OnInit {
     })
   }
 
+  get is_active_value(){
+    return this.stateForm.get('is_active').value ? this.stateForm.get('is_active').value : false;
+  }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

@@ -44,7 +44,7 @@ export class BannersBannerListComponent implements OnInit {
   ngOnInit() {
     this.bannerFacade.loadBanners();
     // this.bannerFacade.loadParentCategories();
-    this.bannerFacade.getBanners().subscribe(banner => {
+    this.bannerFacade.getBanners(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.bannerNameFilter).subscribe(banner => {
       this.dataSource = new MatTableDataSource(banner.data);
       // this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -64,7 +64,7 @@ export class BannersBannerListComponent implements OnInit {
   public pageEvent(event:PageEvent){
     this.pageDetails.itemsPerPage = event.pageSize;
     this.pageDetails.currentPage = event.pageIndex+1;
-    this.bannerFacade.loadBanners(this.pageDetails.currentPage,event.pageSize,'');
+    this.bannerFacade.loadBanners(this.pageDetails.currentPage,event.pageSize,this.bannerNameFilter);
   }
 
   public deleteIcon(id) {

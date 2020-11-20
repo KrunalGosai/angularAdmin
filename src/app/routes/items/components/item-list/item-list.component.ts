@@ -37,7 +37,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
 
   ngOnInit() {
     this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType);
-    this.facade.getItemList().subscribe(items => {
+    this.facade.getItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType).subscribe(items => {
       this.dataSource = new MatTableDataSource(items.data);
       // this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;

@@ -8,7 +8,9 @@ import { bannerDetails, bannerResponse } from '../Entities';
 export class BannerStateService {
   private banners:BehaviorSubject<bannerResponse> = new BehaviorSubject({});
   private editBanner:BehaviorSubject<bannerDetails> = new BehaviorSubject({});
-  // private parentCategories:BehaviorSubject<any> = new BehaviorSubject([]);
+
+  public isBannersSet:boolean = false;
+  public isBannerDetailsSet:boolean = false
 
   constructor() { }
 
@@ -17,6 +19,7 @@ export class BannerStateService {
   }
 
   public setBanner(banner:bannerResponse){
+    this.isBannersSet = true;
     this.banners.next(banner);
   }
 
@@ -25,14 +28,8 @@ export class BannerStateService {
   }
 
   public setEditBanner(banner:bannerDetails){
+    this.isBannerDetailsSet = true;
     this.editBanner.next(banner);
   }
 
-  // public getParentCategories(){
-  //   return this.parentCategories.asObservable();
-  // }
-
-  // public setParentCategories(categories){
-  //   this.parentCategories.next(categories);
-  // }
 }

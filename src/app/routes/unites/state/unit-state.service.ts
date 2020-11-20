@@ -10,6 +10,9 @@ export class UnitStateService {
   private editUnit:BehaviorSubject<unitDetails> = new BehaviorSubject({});
   private items:BehaviorSubject<itemResponse> = new BehaviorSubject({});
 
+  public isUnitesSet:boolean = false;
+  public isUnitDetailsSet:boolean = false;
+
   constructor() { }
 
   public getUnit():Observable<unitResponse>{
@@ -17,6 +20,7 @@ export class UnitStateService {
   }
 
   public setUnit(unites:unitResponse){
+    this.isUnitesSet = true;
     this.unites.next(unites);
   }
 
@@ -25,6 +29,7 @@ export class UnitStateService {
   }
 
   public setEditUnit(unit:unitDetails){
+    this.isUnitDetailsSet = true;
     this.editUnit.next(unit);
   }
 

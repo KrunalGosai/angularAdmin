@@ -15,11 +15,12 @@ export class BannersFacadeService {
   public loadBanners(currentPage = 1,currentPageSize = 200, searchByName= ''){
     this.api.getAllBanner(currentPage,currentPageSize,searchByName).subscribe(banner => {
       this.state.setBanner(banner);
-    },err => console.error('api call error from load banners ',err))
+    },err => console.error('api call error from load banners',err))
   }
 
 
-  public getBanners(){
+  public getBanners(currentPage = 1,currentPageSize = 200, searchByName= ''){
+    if(!this.state.isBannersSet) this.loadBanners(currentPage,currentPageSize,searchByName);
     return this.state.getBanner().pipe(tap(cate => cate))
   }
 
@@ -39,7 +40,8 @@ export class BannersFacadeService {
     }).catch(err => {console.error('api call error from Delete baner ',err); throw err })
   }
 
-  public getBannerDetails(){
+  public getBannerDetails(id){
+    if(!this.state.isBannerDetailsSet) this.loadBannerDetails(id)
     return this.state.getEditBanner().pipe(tap(cate => cate))
   }
 

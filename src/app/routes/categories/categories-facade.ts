@@ -27,7 +27,8 @@ export class CategoriesFacadeService {
     },err => console.error('api call error from load parent categories ',err))
   }
 
-  public getCategories():Observable<categoryListResponse>{
+  public getCategories(currentPage = 1,currentPageSize = 200,paretCategoryId = '',categoryName = ''):Observable<categoryListResponse>{
+    if(!this.state.isCategoriesSet) this.loadCategories(currentPage,currentPageSize,paretCategoryId, categoryName)
     return this.state.getCategories().pipe(tap(cate => cate))
   }
 
@@ -59,7 +60,8 @@ export class CategoriesFacadeService {
     }).catch(err => {console.error('api call error from load category Details',err); throw err });
   }
 
-  public getCategoryDetails(){
+  public getCategoryDetails(id){
+    if(!this.state.isCategoryDetailsSet) this.loadCategoryDetails(id);
     return this.state.getEditCategory().pipe(tap(cate => cate))
   }
 

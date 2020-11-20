@@ -65,7 +65,7 @@ export class ItemsComponentsItemAddComponent implements OnInit {
     this.categoryFacade.getParentCategories().subscribe(parent => {
       this.categoryList = parent;
     })
-    this.categoryFacade.getCategories().subscribe(categories => {
+    this.categoryFacade.getCategories(1,200,'','').subscribe(categories => {
       this.subCategoryList = categories.data;
     })
     this.unitFacde.getUnites().subscribe(units => {
@@ -75,13 +75,16 @@ export class ItemsComponentsItemAddComponent implements OnInit {
       this.itemTypeList = types;
     })
     if(this.isEditMode){
-      this.facade.getItemDetails().subscribe(res => {
+      this.facade.getItemDetails(this.activeEditId).subscribe(res => {
         let item:any = {...res};
         this.itemForm.patchValue(res)
-        this.itemForm.patchValue({item_type:item.type,recommended_items:item.recommended_items})
-
+        this.itemForm.patchValue({item_type:item.type})
       },err => console.error(err))
     }
+  }
+
+  get is_active_value(){
+    return this.itemForm.get('is_active').value ? this.itemForm.get('is_active').value : false;
   }
 
   public onFormSubmit(event){
