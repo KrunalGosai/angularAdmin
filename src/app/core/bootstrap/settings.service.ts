@@ -27,7 +27,6 @@ export interface User {
     _id?: string;
     type?: string;
   }   
-       
 }
 
 @Injectable({
@@ -58,7 +57,7 @@ export class SettingsService {
 
   /** User information */
 
-  get user() {
+  get user():User{
     return this.store.get(USER_KEY);
   }
 

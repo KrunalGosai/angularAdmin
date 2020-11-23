@@ -1,3 +1,4 @@
+import { availabilityStatus } from './../../entities/index';
 import { ConfirmService } from './../../../../shared/services/confirm.service';
 import { ItemsFacadeService } from './../../items-facade.service';
 import { Router } from '@angular/router';
@@ -6,6 +7,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
 import { itemList } from '../../entities';
+import { SettingsService } from '@core';
+import { UserRole } from '@shared/entities';
 
 @Component({
   selector: 'app-items-components-item-list',
@@ -14,11 +17,14 @@ import { itemList } from '../../entities';
 })
 export class ItemsComponentsItemListComponent implements OnInit {
 
-  displayedColumns: string[] = ['position', 'name', 'secondary_name', 'thumbnail', 'type', 'price', 'is_active', 'item_volume', 'controls'];
+  displayedColumns: string[] = [];
   dataSource: MatTableDataSource<itemList>;
-  parentCategoryList;
   itemTypeList:string[] = [];
+  itemTypes:any= {SELLABLE:'Sellable',PACKAGING_MATERIAL:'Packaging Material',RAW_MATERIAL:'Raw Material'};
   searchItemType:string = ''
+  availabilityStatus:availabilityStatus = null;
+  availabilityList = [{name:'Available',value:availabilityStatus.available},{name:'Not Available',value:availabilityStatus.notAvailable},{name:'Notify',value:availabilityStatus.notify}]
+  currentRole = this.settingService.user.role_id.type || 'User';
 
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -32,12 +38,13 @@ export class ItemsComponentsItemListComponent implements OnInit {
   
   constructor(
     private router:Router,
+    private settingService:SettingsService,
     private facade:ItemsFacadeService,
     private confirmService:ConfirmService) { }
 
   ngOnInit() {
-    this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType);
-    this.facade.getItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType).subscribe(items => {
+    this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus);
+    this.facade.getItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,availabilityStatus).subscribe(items => {
       this.dataSource = new MatTableDataSource(items.data);
       // this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -46,6 +53,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
     this.facade.getItemTypes().subscribe(types => {
       this.itemTypeList = types;
     })
+    this.setRoleBasedColumn();
   }
 
   applyFilter(event: Event) {
@@ -60,14 +68,14 @@ export class ItemsComponentsItemListComponent implements OnInit {
   public pageEvent(event:PageEvent){
     this.pageDetails.itemsPerPage = event.pageSize;
     this.pageDetails.currentPage = event.pageIndex+1;
-    this.facade.loadItemList(this.pageDetails.currentPage,event.pageSize,this.searchItemType);
+    this.facade.loadItemList(this.pageDetails.currentPage,event.pageSize,this.searchItemType,this.availabilityStatus);
   }
 
   public deleteIcon(id) {
     this.confirmService.confirm('Are you sure want to delete this Item?','Confirm').subscribe(result => {
       if(result == true){
         this.facade.deleteItem(id)
-          .then(res => this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType))
+          .then(res => this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus))
       }
     })
   }
@@ -79,18 +87,39 @@ export class ItemsComponentsItemListComponent implements OnInit {
   }
 
   public filterItem(){
-    this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType)
+    this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus)
   }
 
   public resetFilter(){
     this.searchItemType = '';
+    this.availabilityStatus = null;
   }
 
   public changeActivationStatus(row){
     let rowcopy = {...row};
     this.facade.changeActivationStatus(rowcopy).then(res => {
-      this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType);
+      this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus);
     });
+  }
+
+  private setRoleBasedColumn(){
+
+    //['thumbnail', 'position', 'name', 'type','is_active','category', 'item_volume','price', 'controls'];
+    switch (this.currentRole) {
+      case UserRole.ADMIN:
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'price', 'type','is_active','category', 'controls'];
+        break;
+      case UserRole.DEPO:
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'price', 'controls'];
+        break;
+      case UserRole.HAWKER:
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'price', 'controls'];
+        break;
+      default:
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'category'];
+        break;
+    }
+   
   }
 
 }

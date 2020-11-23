@@ -36,14 +36,14 @@
       </div>
 
       <div fxFlex="34" fxFlex.lt-sm="100">
-        <mat-slide-toggle formControlName="is_active" color="primary">
+        <mat-slide-toggle formControlName="is_active" style="margin-top: 20px;" color="primary">
           {{is_active_value ? 'Active' : 'Inactive'}}
         </mat-slide-toggle>
       </div>
 
       <div fxFlex="100" fxFlex.lt-sm="100">
         <button mat-raised-button color="primary" type="submit" style="margin-right: 5px;" class="m-t-8">Save</button>
-        <button mat-raised-button type="button" type="reset"  class="m-t-8">Reset</button>
+        <button mat-raised-button type="button" (click)="resetForm()" class="m-t-8">Reset</button>
       </div>
     </div>
   </form>
