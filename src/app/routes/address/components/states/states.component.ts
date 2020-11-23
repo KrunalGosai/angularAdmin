@@ -96,13 +96,13 @@ export class AddressComponentsStatesComponent implements OnInit {
       this.facade.updateState(value).then(res => {
         this.facade.loadStateList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName)
         this.expansionPanel.close();
-        this.activeEditId.reset();
+        this.resetForm();
       })
     }else{
       this.facade.newState(this.stateForm.value).then(res => {
         this.facade.loadStateList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName)
         this.expansionPanel.close();
-        this.stateForm.reset();
+        this.resetForm()
       })
     }
   }
@@ -123,6 +123,13 @@ export class AddressComponentsStatesComponent implements OnInit {
 
   public resetFilter(){
     this.searchByName = '';
+  }
+
+  public resetForm(){
+    this.stateForm.reset();
+    this.stateForm.get('is_active').setValue(true);
+    this.isEditMode = false;
+    this.activeEditId = null;
   }
 
   public changeActivationStatus(row){

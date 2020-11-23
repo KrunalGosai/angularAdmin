@@ -8,6 +8,7 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { category } from 'app/routes/categories/entities';
 import { UnitesFacadeService } from 'app/routes/unites/unites-facade';
 import { unit } from 'app/routes/unites/entities';
+import { itemList } from '../../entities';
 
 @Component({
   selector: 'app-items-components-item-add',
@@ -18,6 +19,7 @@ export class ItemsComponentsItemAddComponent implements OnInit {
 
   categoryList: any[];
   subCategoryList: category[];
+  recommendedList:itemList[] = [];
   unitList:unit[];
   itemTypeList:string[];
   itemForm: FormGroup;
@@ -36,7 +38,7 @@ export class ItemsComponentsItemAddComponent implements OnInit {
         secondary_name: [''],
         price:[0],
         is_active: [true],
-        item_volume:[0],
+        // item_volume:[0],
         category_id:[''],
         unit_id:[''],
         item_type:[''],
@@ -60,12 +62,11 @@ export class ItemsComponentsItemAddComponent implements OnInit {
 
   ngOnInit() {
     this.categoryFacade.loadParentCategories();
-    this.categoryFacade.loadCategories(1,500);
     this.unitFacde.loadUnites(1,500)
     this.categoryFacade.getParentCategories().subscribe(parent => {
       this.categoryList = parent;
     })
-    this.categoryFacade.getCategories(1,200,'','').subscribe(categories => {
+    this.categoryFacade.getCategoriesByParentId().subscribe(categories => {
       this.subCategoryList = categories.data;
     })
     this.unitFacde.getUnites().subscribe(units => {
@@ -73,6 +74,9 @@ export class ItemsComponentsItemAddComponent implements OnInit {
     })
     this.facade.getItemTypes().subscribe(types => {
       this.itemTypeList = types;
+    })
+    this.facade.getSallableItemList().subscribe(types => {
+      this.recommendedList = types.data;
     })
     if(this.isEditMode){
       this.facade.getItemDetails(this.activeEditId).subscribe(res => {
@@ -163,6 +167,29 @@ export class ItemsComponentsItemAddComponent implements OnInit {
       pictures.splice(index,1);
       this.itemForm.get('picture').setValue(pictures)
     }
+  }
+
+
+  cateTagValues:string[] = [];
+  subCateTagValues:string[] = [];
+  public onCategorySelectionChange(){
+    this.cateTagValues = [];
+    let cate_id = this.itemForm.get('category_id').value;
+    this.categoryList.filter(item => {if(cate_id == item._id) this.cateTagValues.push(item.name) })
+    this.itemForm.patchValue({category_tags:[].concat(...this.cateTagValues)})
+    this.itemForm.get('subCategory_ids').setValue([]);
+    this.loadSubCategories(cate_id);
+  }
+
+  public onSubCategorySelectionChange(){
+    this.subCateTagValues = [];
+    let subcate_ids = this.itemForm.get('subCategory_ids').value;
+    this.subCategoryList.filter(item => {if(subcate_ids.indexOf(item._id) >= 0) this.subCateTagValues.push(item.name)})
+    this.itemForm.patchValue({category_tags:[].concat(...this.cateTagValues,this.subCateTagValues)})
+  }
+
+  public loadSubCategories(parentId){
+    this.categoryFacade.loadCategories(1,200,parentId,'')
   }
 
 }

@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { itemDetailResponse, itemListResponse } from './../entities/index';
+import { itemDetailResponse, itemListResponse, availabilityStatus } from './../entities/index';
 import { environment } from '@env/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -13,10 +13,12 @@ export class ItemApiService {
 
   private baseURl = environment.SERVER_ORIGIN;
 
-  public getItemList(currentPage = 1,currentPageSize = 5,searchItemType = ''):Observable<itemListResponse>{
+  public getItemList(currentPage = 1,currentPageSize = 5,searchItemType = '',availabilityStatus?:availabilityStatus):Observable<itemListResponse>{
     let url = this.baseURl+`/api/item/get_admin_item_list?currentPage=${currentPage}&currentPageSize=${currentPageSize}`;
     if(searchItemType != undefined && searchItemType !=  null && searchItemType.trim() != '')
       url += `&item_type=${searchItemType}`;
+    if(availabilityStatus != undefined && availabilityStatus !=  null)
+      url += `&availability_status=${availabilityStatus}`;
     return this.http.get<itemListResponse>(url);
   }
 

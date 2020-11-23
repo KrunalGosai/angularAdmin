@@ -52,3 +52,9 @@ export interface itemDetail{
     customer_id?: null,
     category_id?: string
 }
+
+export enum availabilityStatus{ 
+    available ='TRUE',
+    notAvailable='FALSE',
+    notify='NOTIFY'
+}

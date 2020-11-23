@@ -91,13 +91,13 @@ export class AddressComponentsCountriesComponent implements OnInit {
       this.facade.updateCountry(value).then(res => {
         this.facade.loadCountryList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName);
         this.expansionPanel.close();
-        this.activeEditId.reset();
+        this.resetForm();
       })
     }else{
       this.facade.newCountry(this.counryForm.value).then(res => {
         this.facade.loadCountryList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName);
         this.expansionPanel.close();
-        this.counryForm.reset();
+        this.resetForm();
       })
     }
   }
@@ -118,6 +118,13 @@ export class AddressComponentsCountriesComponent implements OnInit {
 
   public resetFilter(){
     this.searchByName = '';
+  }
+
+  public resetForm(){
+    this.counryForm.reset();
+    this.counryForm.get('is_active').setValue(true);
+    this.isEditMode = false;
+    this.activeEditId = null;
   }
 
   public changeActivationStatus(row){

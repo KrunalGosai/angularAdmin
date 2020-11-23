@@ -32,6 +32,11 @@ export class CategoriesFacadeService {
     return this.state.getCategories().pipe(tap(cate => cate))
   }
 
+  public getCategoriesByParentId(paretCategoryId = ''):Observable<categoryListResponse>{
+    if(!this.state.isCategoriesSet && paretCategoryId != '') this.loadCategories(1,200,paretCategoryId)
+    return this.state.getCategories().pipe(tap(cate => cate))
+  }
+
   public getParentCategories(){
     return this.state.getParentCategories().pipe(tap(cate => cate))
   }

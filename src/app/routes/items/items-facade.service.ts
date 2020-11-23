@@ -12,16 +12,20 @@ export class ItemsFacadeService {
 
   constructor(private api:ItemApiService, private state:ItemStateService, private toster: ToastrService) { }
 
-  public loadItemList(currentPage = 1,currentPageSize = 200, searchItemType= ''){
-    this.api.getItemList(currentPage,currentPageSize,searchItemType).subscribe(items => {
+  public loadItemList(currentPage = 1,currentPageSize = 200, searchItemType= '',availabilityStatus = null){
+    this.api.getItemList(currentPage,currentPageSize,searchItemType,availabilityStatus).subscribe(items => {
       this.state.setItemList(items);
     },err => console.error('api call error from load items ',err))
   }
 
 
-  public getItemList(currentPage = 1,currentPageSize = 200, searchItemType= ''){
-    if(!this.state.isItemsSet) this.loadItemList(currentPage,currentPageSize,searchItemType)
+  public getItemList(currentPage = 1,currentPageSize = 200, searchItemType= '',availabilityStatus){
+    if(!this.state.isItemsSet) this.loadItemList(currentPage,currentPageSize,searchItemType,availabilityStatus)
     return this.state.getItemList().pipe(tap(cate => cate))
+  }
+
+  public getSallableItemList(){
+    return this.api.getItemList(1,200,'SELLABLE').pipe(tap(cate => cate))
   }
 
 

@@ -41,7 +41,13 @@
                 </mat-form-field>
             </div>
 
-            <div fxFlex="25" fxFlex.lt-sm="100">
+            <div fxFlex="25" fxFlex.lt-sm="100" >
+              <mat-slide-toggle formControlName="is_active" style="margin-top: 20px;" color="primary">
+                {{is_active_value ? 'Active' : 'Inactive'}}
+              </mat-slide-toggle>
+            </div>
+
+            <!-- <div fxFlex="25" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Item Volume</mat-label>
                   <input matInput placeholder="Item Volume" formControlName="item_volume"
@@ -50,12 +56,12 @@
                     {{'validations.required' | translate}}
                   </mat-error>
                 </mat-form-field>
-            </div>
+            </div> -->
 
             <div fxFlex="25" fxFlex.lt-sm="100">
               <mat-form-field>
                 <mat-label>Category</mat-label>
-                <mat-select formControlName="category_id" placeholder="Category" required>
+                <mat-select formControlName="category_id" (selectionChange)="onCategorySelectionChange()" placeholder="Category" required>
                     <mat-option *ngFor="let cate of categoryList" [value]="cate._id">{{cate.name}}</mat-option>
                 </mat-select>
                 <mat-error *ngIf="itemForm.get('category_id').invalid">
@@ -67,7 +73,7 @@
             <div fxFlex="25" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Sub Category</mat-label>
-                  <mat-select formControlName="subCategory_ids" placeholder="Sub Category" required multiple>
+                  <mat-select formControlName="subCategory_ids" (selectionChange)="onSubCategorySelectionChange()" placeholder="Sub Category" required multiple>
                       <mat-option *ngFor="let cate of subCategoryList" [value]="cate._id">{{cate.name}}</mat-option>
                   </mat-select>
                   <mat-error *ngIf="itemForm.get('subCategory_ids').invalid">
@@ -98,9 +104,32 @@
                       {{'validations.required' | translate}}
                     </mat-error>
                 </mat-form-field>
-              </div>
+            </div>
 
-            <div fxFlex="33" fxFlex.lt-sm="100">
+            <div fxFlex="50" fxFlex.lt-sm="100">
+              <mat-form-field>
+                <mat-label>Recommendation</mat-label>
+                <mat-select formControlName="recommended_items" placeholder="Recommendation" multiple required>
+                    <mat-option *ngFor="let item of recommendedList" [value]="item._id">{{item.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="itemForm.get('recommended_items').invalid">
+                    {{'validations.required' | translate}}
+                  </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="50" fxFlex.lt-sm="100">
+              <mat-form-field>
+                <mat-label>Thumbnail</mat-label>
+                <input matInput placeholder="Thumbnail" formControlName="thumbnail"
+                        required>
+                <mat-error *ngIf="itemForm.get('thumbnail').invalid">
+                  {{'validations.required' | translate}}
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="50" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Tags</mat-label>
                   <mat-chip-list #chipList  aria-label="Tags">
@@ -121,57 +150,30 @@
                 </mat-form-field>
             </div>
 
-            <div fxFlex="33" fxFlex.lt-sm="100">
-                <mat-form-field>
-                  <mat-label>Recommendation</mat-label>
-                  <mat-select formControlName="recommended_items" placeholder="Recommendation" multiple required>
-                      <mat-option *ngFor="let cate of categoryList" [value]="cate._id">{{cate.name}}</mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="itemForm.get('recommended_items').invalid">
-                      {{'validations.required' | translate}}
-                    </mat-error>
-                </mat-form-field>
-            </div>
-
-            <div fxFlex="34" fxFlex.lt-sm="100">
-              <mat-slide-toggle formControlName="is_active" color="primary">
-                {{is_active_value ? 'Active' : 'Inactive'}}
-              </mat-slide-toggle>
-            </div>
-
             <div fxFlex="50" fxFlex.lt-sm="100">
-                <mat-form-field>
-                  <mat-label>Thumbnail</mat-label>
-                  <input matInput placeholder="Thumbnail" formControlName="thumbnail"
-                         required>
-                  <mat-error *ngIf="itemForm.get('thumbnail').invalid">
-                    {{'validations.required' | translate}}
-                  </mat-error>
-                </mat-form-field>
+              <mat-form-field>
+                <mat-label>Pictures</mat-label>
+                <!-- <input matInput placeholder="Pictures" 
+                       required> -->
+                <mat-chip-list #picList aria-label="Pictures">
+                <mat-chip *ngFor="let picitem of itemForm.get('picture').value" selectable="true"
+                          removable="true" (removed)="removepic(picitem)">
+                  {{picitem}}
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Pictures"
+                        [matChipInputFor]="picList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="true"
+                        (matChipInputTokenEnd)="addpic($event)">
+                </mat-chip-list>
+                <mat-error *ngIf="itemForm.get('picture').invalid">
+                  {{'validations.required' | translate}}
+                </mat-error>
+              </mat-form-field>
             </div>
 
-            <div fxFlex="50" fxFlex.lt-sm="100">
-                <mat-form-field>
-                  <mat-label>Pictures</mat-label>
-                  <!-- <input matInput placeholder="Pictures" 
-                         required> -->
-                  <mat-chip-list #picList aria-label="Pictures">
-                  <mat-chip *ngFor="let picitem of itemForm.get('picture').value" selectable="true"
-                            removable="true" (removed)="removepic(picitem)">
-                    {{picitem}}
-                    <mat-icon matChipRemove>cancel</mat-icon>
-                  </mat-chip>
-                  <input placeholder="Pictures"
-                          [matChipInputFor]="picList"
-                          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                          [matChipInputAddOnBlur]="true"
-                          (matChipInputTokenEnd)="addpic($event)">
-                  </mat-chip-list>
-                  <mat-error *ngIf="itemForm.get('picture').invalid">
-                    {{'validations.required' | translate}}
-                  </mat-error>
-                </mat-form-field>
-            </div>
+            
 
             <div fxFlex="50" fxFlex.lt-sm="100">
                 <mat-form-field>
