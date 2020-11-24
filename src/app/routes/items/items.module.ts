@@ -3,6 +3,7 @@ import { SharedModule } from '@shared/shared.module';
 import { ItemsRoutingModule } from './items-routing.module';
 import { ItemsComponentsItemListComponent } from './components/item-list/item-list.component';
 import { ItemsComponentsItemAddComponent } from './components/item-add/item-add.component';
+import { ItemViewComponent } from './components/item-view/item-view.component';
 
 const COMPONENTS = [ItemsComponentsItemListComponent, ItemsComponentsItemAddComponent];
 const COMPONENTS_DYNAMIC = [];
@@ -14,7 +15,8 @@ const COMPONENTS_DYNAMIC = [];
   ],
   declarations: [
     ...COMPONENTS,
-    ...COMPONENTS_DYNAMIC
+    ...COMPONENTS_DYNAMIC,
+    ItemViewComponent
   ],
   entryComponents: COMPONENTS_DYNAMIC
 })

@@ -13,12 +13,17 @@ export class ItemApiService {
 
   private baseURl = environment.SERVER_ORIGIN;
 
-  public getItemList(currentPage = 1,currentPageSize = 5,searchItemType = '',availabilityStatus?:availabilityStatus):Observable<itemListResponse>{
+  public getItemList(currentPage = 1,currentPageSize = 5,searchItemType = '',availabilityStatus?:availabilityStatus,userId:string = '',filterCategoryId:string = ''):Observable<itemListResponse>{
     let url = this.baseURl+`/api/item/get_admin_item_list?currentPage=${currentPage}&currentPageSize=${currentPageSize}`;
     if(searchItemType != undefined && searchItemType !=  null && searchItemType.trim() != '')
       url += `&item_type=${searchItemType}`;
     if(availabilityStatus != undefined && availabilityStatus !=  null)
       url += `&availability_status=${availabilityStatus}`;
+    if(userId != undefined && userId !=  null && userId.trim() != '')
+      url += `&user_id=${userId}`;
+    if(filterCategoryId != undefined && filterCategoryId !=  null && filterCategoryId.trim() != '')
+      url += `&category_id=${filterCategoryId}`;
+      
     return this.http.get<itemListResponse>(url);
   }
 
