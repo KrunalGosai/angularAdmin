@@ -12,15 +12,15 @@ export class ItemsFacadeService {
 
   constructor(private api:ItemApiService, private state:ItemStateService, private toster: ToastrService) { }
 
-  public loadItemList(currentPage = 1,currentPageSize = 200, searchItemType= '',availabilityStatus = null){
-    this.api.getItemList(currentPage,currentPageSize,searchItemType,availabilityStatus).subscribe(items => {
+  public loadItemList(currentPage = 1,currentPageSize = 200, searchItemType= '',availabilityStatus = null,userId = '',filterCategoryId:string = ''){
+    this.api.getItemList(currentPage,currentPageSize,searchItemType,availabilityStatus,userId,filterCategoryId).subscribe(items => {
       this.state.setItemList(items);
     },err => console.error('api call error from load items ',err))
   }
 
 
-  public getItemList(currentPage = 1,currentPageSize = 200, searchItemType= '',availabilityStatus){
-    if(!this.state.isItemsSet) this.loadItemList(currentPage,currentPageSize,searchItemType,availabilityStatus)
+  public getItemList(currentPage = 1,currentPageSize = 200, searchItemType= '',availabilityStatus,userId = '',filterCategoryId:string = ''){
+    if(!this.state.isItemsSet) this.loadItemList(currentPage,currentPageSize,searchItemType,availabilityStatus, userId,filterCategoryId)
     return this.state.getItemList().pipe(tap(cate => cate))
   }
 

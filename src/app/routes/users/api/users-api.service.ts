@@ -12,10 +12,12 @@ export class UsersApiService {
   private baseUrl:string = environment.SERVER_ORIGIN;
   constructor(private http:HttpClient) { }
 
-  public getUsers(currentPage = 1,currentPageSize = 5,searchByName = ''):Observable<userListResponse>{
+  public getUsers(currentPage = 1,currentPageSize = 5,searchByName = '',searchByType = ''):Observable<userListResponse>{
     let url = this.baseUrl+`/api/user/list?currentPage=${currentPage}&currentPageSize=${currentPageSize}`;
     if(searchByName != undefined && searchByName !=  null && searchByName.trim() != '')
       url += `&searchByuserName=${searchByName}`;
+    if(searchByType != undefined && searchByType !=  null && searchByType.trim() != '')
+      url += `&role_type=${searchByType}`;
     return this.http.get(url);
   }
 
