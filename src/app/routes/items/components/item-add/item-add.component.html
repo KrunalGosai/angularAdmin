@@ -109,12 +109,12 @@
             <div fxFlex="50" fxFlex.lt-sm="100">
               <mat-form-field>
                 <mat-label>Recommendation</mat-label>
-                <mat-select formControlName="recommended_items" placeholder="Recommendation" multiple required>
+                <mat-select formControlName="recommended_items" placeholder="Recommendation" multiple>
                     <mat-option *ngFor="let item of recommendedList" [value]="item._id">{{item.name}}</mat-option>
                 </mat-select>
-                <mat-error *ngIf="itemForm.get('recommended_items').invalid">
+                <!-- <mat-error *ngIf="itemForm.get('recommended_items').invalid">
                     {{'validations.required' | translate}}
-                  </mat-error>
+                  </mat-error> -->
               </mat-form-field>
             </div>
 

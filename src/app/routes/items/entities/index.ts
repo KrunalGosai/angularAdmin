@@ -53,6 +53,22 @@ export interface itemDetail{
     category_id?: string
 }
 
+export interface itemUnit{
+    price?:number,
+    is_customer_show?:boolean,
+    unit_id?:string,
+    _id?:string
+}
+
+export interface updateItemDepoPrice{
+    user_id?:string,
+    item_id?:string,
+    item_units?:itemUnit[],
+    position?:number,
+    is_active?:boolean,
+    availability_status?:string
+}
+
 export enum availabilityStatus{ 
     available ='TRUE',
     notAvailable='FALSE',

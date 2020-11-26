@@ -1,0 +1,48 @@
+<h1 mat-dialog-title>Item Units</h1>
+
+<mat-dialog-content class="mat-typography" style="min-width: 30%;">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef> Price </th>
+          <td mat-cell *matCellDef="let element"> 
+            <!-- {{element.price}}  -->
+            <input type="number" 
+            [ngModelOptions]="{standalone: true}" 
+            (change)="changePrice(element)" 
+            style="max-width: 70px;" [(ngModel)]="element.price" />
+          </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="qty">
+          <th mat-header-cell *matHeaderCellDef> item Quantity </th>
+          <td mat-cell *matCellDef="let element"> {{element.item_quantity}} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="unit">
+          <th mat-header-cell *matHeaderCellDef> Unit </th>
+          <td mat-cell *matCellDef="let element"> {{element.unit_id}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="is_customer_show">
+          <th mat-header-cell *matHeaderCellDef> Is Customer Show </th>
+          <td mat-cell *matCellDef="let element"> 
+            <!-- {{element.is_customer_show}} -->
+            <mat-radio-group>
+              <mat-radio-button name="is_customer_show" [checked]="element.is_customer_show" [value]="element">
+                {{''}}
+              </mat-radio-button>
+            </mat-radio-group>
+           </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <br>
+    <!-- <p>{{data|json}}</p> -->
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+    <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Save</button> -->
+</mat-dialog-actions>
