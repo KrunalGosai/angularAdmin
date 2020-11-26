@@ -24,6 +24,8 @@ export class SlotComponentsSlotAddComponent implements OnInit {
     { name: "Rewa", id: "sdfdfsdf" },
   ];
 
+  isChecked:boolean = true;
+  
   constructor() {}
 
   ngOnInit() {}
