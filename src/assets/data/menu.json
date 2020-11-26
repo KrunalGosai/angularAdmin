@@ -41,11 +41,17 @@
       "type": "link"
     },
     {
+      "route": "slot",
+      "name": "slot",
+      "type": "link"
+    },
+    {
       "route": "address",
       "name": "address",
       "type": "sub",
       "icon": "map",
-      "children": [{
+      "children": [
+        {
           "route": "areas",
           "name": "areas",
           "type": "link"
@@ -67,12 +73,14 @@
         }
       ]
     },
+
     {
       "route": "sessions",
       "name": "sessions",
       "type": "sub",
       "icon": "question_answer",
-      "children": [{
+      "children": [
+        {
           "route": "403",
           "name": "403",
           "type": "link"
