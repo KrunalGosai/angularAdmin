@@ -4,6 +4,7 @@ import { ItemsRoutingModule } from './items-routing.module';
 import { ItemsComponentsItemListComponent } from './components/item-list/item-list.component';
 import { ItemsComponentsItemAddComponent } from './components/item-add/item-add.component';
 import { ItemViewComponent } from './components/item-view/item-view.component';
+import { ItemUnitViewComponent } from './components/item-unit-view/item-unit-view.component';
 
 const COMPONENTS = [ItemsComponentsItemListComponent, ItemsComponentsItemAddComponent];
 const COMPONENTS_DYNAMIC = [];
@@ -16,7 +17,8 @@ const COMPONENTS_DYNAMIC = [];
   declarations: [
     ...COMPONENTS,
     ...COMPONENTS_DYNAMIC,
-    ItemViewComponent
+    ItemViewComponent,
+    ItemUnitViewComponent
   ],
   entryComponents: COMPONENTS_DYNAMIC
 })

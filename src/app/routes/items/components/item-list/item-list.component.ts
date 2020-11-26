@@ -2,7 +2,6 @@ import { ItemViewComponent } from './../item-view/item-view.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CategoriesFacadeService } from './../../../categories/categories-facade';
 import { UsersFacade } from './../../../users/users-facade';
-import { availabilityStatus } from './../../entities/index';
 import { ConfirmService } from './../../../../shared/services/confirm.service';
 import { ItemsFacadeService } from './../../items-facade.service';
 import { Router } from '@angular/router';
@@ -10,9 +9,12 @@ import { MatSort } from '@angular/material/sort';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
-import { itemList } from '../../entities';
+import { itemList,availabilityStatus, updateItemDepoPrice } from '../../entities';
 import { SettingsService } from '@core';
 import { UserRole } from '@shared/entities';
+import { SidebarNoticeService } from '@theme/sidebar-notice/sidebar-notice.service';
+import { userrole } from 'app/routes/users/enums';
+import { ItemUnitViewComponent } from '../item-unit-view/item-unit-view.component';
 
 @Component({
   selector: 'app-items-components-item-list',
@@ -32,6 +34,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
   searchItemType:string = ''
   searchUserId:string ='';
   filterCategoryId:string = '';
+  isDepoUserSearched:boolean = false;
   availabilityStatus:availabilityStatus = null;
   availabilityList = [{name:'Available',value:availabilityStatus.available},{name:'Not Available',value:availabilityStatus.notAvailable},{name:'Notify',value:availabilityStatus.notify}]
   currentRole = this.settingService.user.role_id.type || 'User';
@@ -52,11 +55,12 @@ export class ItemsComponentsItemListComponent implements OnInit {
     private usersFacade:UsersFacade,
     private categoryFacade:CategoriesFacadeService,
     private facade:ItemsFacadeService,
-    public itemViewDialog: MatDialog,
+    private sidebarNoticeService:SidebarNoticeService,
+    public itemUnitViewDialog: MatDialog,
     private confirmService:ConfirmService) { }
 
   ngOnInit() {
-    this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchUserId,this.filterCategoryId);
+    this.filterItem()
     this.facade.getItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,availabilityStatus,this.searchUserId,this.filterCategoryId).subscribe(items => {
       this.dataSource = new MatTableDataSource(items.data);
       // this.dataSource.paginator = this.paginator;
@@ -78,7 +82,14 @@ export class ItemsComponentsItemListComponent implements OnInit {
       let roles:any = res;
       this.filterRoleList = roles.data;
     })
-    this.setRoleBasedColumn();
+  }
+
+  get isDepoView(){
+    return this.isDepoUserSearched || this.currentRole == UserRole.DEPO ? true : false;
+  }
+
+  get isDepoRole(){
+    return this.currentRole == UserRole.DEPO ? true : false;
   }
 
   applyFilter(event: Event) {
@@ -113,6 +124,10 @@ export class ItemsComponentsItemListComponent implements OnInit {
 
   public filterItem(){
     this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchUserId,this.filterCategoryId)
+    if(this.searchRoleName == userrole.DEPO && this.searchUserId && this.searchUserId != '' ){
+      this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'controls'];
+      this.isDepoUserSearched = true;
+    }else{this.setRoleBasedColumn(); this.isDepoUserSearched = false;}
   }
 
   public resetFilter(){
@@ -126,9 +141,23 @@ export class ItemsComponentsItemListComponent implements OnInit {
 
   public changeActivationStatus(row){
     let rowcopy = {...row};
-    this.facade.changeActivationStatus(rowcopy).then(res => {
-      this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchUserId,this.filterCategoryId);
-    });
+    if(!this.isDepoView){
+      this.facade.changeActivationStatus(rowcopy).then(res => {
+        this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchUserId,this.filterCategoryId);
+      });
+    }else{
+      this.updateItemDepoPrice(row);
+    }
+  }
+
+  public changePosition(row){
+    let rowcopy = {...row};
+    rowcopy.item_type = rowcopy.type;
+    if(this.isDepoView){
+      this.updateItemDepoPrice(rowcopy)
+    }else{
+      this.facade.updateItem(rowcopy);
+    }
   }
 
   public filterRoleChanged(){
@@ -147,7 +176,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
         this.displayedColumns = ['thumbnail', 'position', 'name', 'price', 'type','is_active','category', 'controls'];
         break;
       case UserRole.DEPO:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'price', 'controls'];
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'controls'];
         break;
       case UserRole.HAWKER:
         this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'price', 'controls'];
@@ -159,10 +188,36 @@ export class ItemsComponentsItemListComponent implements OnInit {
   }
 
   public openItemViewDialog(row:itemList){
-      const dialogRef = this.itemViewDialog.open(ItemViewComponent, {data:row});
-      // dialogRef.afterClosed().subscribe(result => {
-      //   console.log(`Dialog result: ${result}`);
-      // });
+    this.sidebarNoticeService.setComponent(ItemViewComponent);
+    this.sidebarNoticeService.setIsOpened(true);
+    this.facade.setItemViewData(row);
+      
+  }
+
+  private updateItemDepoPrice(row:itemList){
+    let data:any = row;
+    let body:updateItemDepoPrice = {
+      item_id:row._id,
+      user_id:this.searchUserId,
+      position:row.position,
+      is_active:row.is_active,
+      availability_status:data.availability_status,
+      item_units:data.all_item_units
+    }
+    body.item_units.map(unit => {
+      if(unit.is_customer_show == true){
+        unit.price = row.price;
+      }
+    })
+    this.facade.updateItemDepoPrice(body).then(res => {this.filterItem()})
+  }
+
+  public viewItemUnit(row:itemList){
+    const dialogRef = this.itemUnitViewDialog.open(ItemUnitViewComponent, {data:row});
+      dialogRef.afterClosed().subscribe(result => {
+        // console.log(`Dialog result: ${result}`);
+        this.filterItem();
+      });
   }
 
 }

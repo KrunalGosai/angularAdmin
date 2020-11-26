@@ -19,10 +19,12 @@ import { BrandingComponent } from './header/widgets/branding.component';
 import { NotificationComponent } from './header/widgets/notification.component';
 import { TranslateComponent } from './header/widgets/translate.component';
 import { UserComponent } from './header/widgets/user.component';
+import { SidebarNoticeDirective } from './sidebar-notice/sidebar-notice.directive';
 
 
 @NgModule({
   declarations: [
+    SidebarNoticeDirective,
     AdminLayoutComponent,
     AuthLayoutComponent,
     SidebarComponent,

@@ -1,3 +1,4 @@
+import { SidebarNoticeService } from '@theme/sidebar-notice/sidebar-notice.service';
 import {
   Component,
   OnInit,
@@ -32,11 +33,13 @@ const MONITOR_MEDIAQUERY = 'screen and (min-width: 960px)';
 })
 export class AdminLayoutComponent implements OnInit, OnDestroy {
   @ViewChild('sidenav', { static: true }) sidenav: MatSidenav;
+  @ViewChild('sidenavNotice', { static: true }) sidenavNotice: MatSidenav;
   @ViewChild('content', { static: true }) content: MatSidenavContent;
 
   options = this.settings.getOptions();
 
   private layoutChangesSubscription: Subscription;
+  private sidebarChangesSubscription: Subscription;
 
   private isMobileScreen = false;
   get isOver(): boolean {
@@ -66,6 +69,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     private breakpointObserver: BreakpointObserver,
     private overlay: OverlayContainer,
     private element: ElementRef,
+    private sidebarNoticeService:SidebarNoticeService,
     private settings: SettingsService,
     @Optional() @Inject(DOCUMENT) private document: Document,
     @Inject(Directionality) public dir: AppDirectionality
@@ -83,6 +87,8 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
         this.options.sidenavCollapsed = state.breakpoints[TABLET_MEDIAQUERY];
         this.contentWidthFix = state.breakpoints[MONITOR_MEDIAQUERY];
       });
+    
+
 
     // TODO: Scroll top to container
     this.router.events.subscribe(evt => {
@@ -97,10 +103,14 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     setTimeout(() => (this.contentWidthFix = this.collapsedWidthFix = false));
+    this.sidebarChangesSubscription = this.sidebarNoticeService.getIsOpened().subscribe(value => {
+      this.sidenavNotice.toggle(value)
+    })
   }
 
   ngOnDestroy() {
     this.layoutChangesSubscription.unsubscribe();
+    this.sidebarChangesSubscription.unsubscribe();
   }
 
   toggleCollapsed() {

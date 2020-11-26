@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { itemDetailResponse, itemListResponse, availabilityStatus } from './../entities/index';
+import { itemDetailResponse, itemListResponse, availabilityStatus, updateItemDepoPrice } from './../entities/index';
 import { environment } from '@env/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -52,6 +52,11 @@ export class ItemApiService {
 
   public updateItem(item){
     let url = this.baseURl + `/api/item/update/${item._id}`;
+    return this.http.put(url,item);
+  }
+
+  public updateItemDepoPrice(item:updateItemDepoPrice){
+    let url = this.baseURl + `/api/item/update_itemdepo_price`;
     return this.http.put(url,item);
   }
 

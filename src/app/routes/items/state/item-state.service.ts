@@ -11,6 +11,7 @@ export class ItemStateService {
   private editItem:BehaviorSubject<itemDetail> = new BehaviorSubject({});
   private itemTypes:BehaviorSubject<any[]> = new BehaviorSubject([
     {name:'Sellable',value:'SELLABLE'},{name:'Packaging Material', value:'PACKAGING_MATERIAL'},{name:'Raw Material', value:'RAW_MATERIAL'}])
+  private itemViewData:BehaviorSubject<itemList> = new BehaviorSubject({});
 
   // flags
   public isItemsSet:boolean = false;
@@ -38,5 +39,13 @@ export class ItemStateService {
 
   public getItemTypes(){
     return this.itemTypes.asObservable()
+  }
+
+  public setItemViewData(viewData:itemList){
+    this.itemViewData.next(viewData);
+  }
+
+  public getItemViewData(){
+    return this.itemViewData.asObservable();
   }
 }

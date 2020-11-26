@@ -3,7 +3,7 @@ import { ItemStateService } from './state/item-state.service';
 import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { ItemApiService } from './api/item-api.service';
-import { itemList } from './entities';
+import { itemList, updateItemDepoPrice } from './entities';
 
 @Injectable({
   providedIn: 'root'
@@ -73,5 +73,20 @@ export class ItemsFacadeService {
 
   public getItemTypes(){
     return this.state.getItemTypes().pipe(tap(item => item))
+  }
+  
+  public setItemViewData(viewData:itemList){
+    this.state.setItemViewData(viewData);
+  }
+
+  public getItemViewData(){
+    return this.state.getItemViewData().pipe(tap(item => item))
+  }
+
+  public updateItemDepoPrice(item:updateItemDepoPrice){
+    return this.api.updateItemDepoPrice(item).toPromise().then(res => {
+      this.toster.success('Item Depo Successfully Updated',"Success",{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from updateItemDepoPrice',err ); throw err  })
   }
 }
