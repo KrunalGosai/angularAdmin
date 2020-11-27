@@ -41,7 +41,7 @@
       "type": "link"
     },
     {
-      "route": "slot",
+      "route": "slots",
       "name": "slot",
       "type": "link"
     },
