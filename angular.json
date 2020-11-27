@@ -138,5 +138,8 @@
       }
     }
   },
-  "defaultProject": "ecomm-admin"
+  "defaultProject": "ecomm-admin",
+  "cli": {
+    "analytics": false
+  }
 }
