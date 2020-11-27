@@ -63,9 +63,8 @@ export class ItemsComponentsItemListComponent implements OnInit {
     this.filterItem()
     this.facade.getItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,availabilityStatus,this.searchUserId,this.filterCategoryId).subscribe(items => {
       this.dataSource = new MatTableDataSource(items.data);
-      // this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      // this.totalBanner = items.data.length;
+      this.pageDetails.totalRecords = items.totalCount;
     })
     this.facade.getItemTypes().subscribe(types => {
       this.itemTypeList = types;
@@ -104,14 +103,14 @@ export class ItemsComponentsItemListComponent implements OnInit {
   public pageEvent(event:PageEvent){
     this.pageDetails.itemsPerPage = event.pageSize;
     this.pageDetails.currentPage = event.pageIndex+1;
-    this.facade.loadItemList(this.pageDetails.currentPage,event.pageSize,this.searchItemType,this.availabilityStatus,this.searchUserId,this.filterCategoryId);
+    this.filterItem()
   }
 
   public deleteIcon(id) {
     this.confirmService.confirm('Are you sure want to delete this Item?','Confirm').subscribe(result => {
       if(result == true){
         this.facade.deleteItem(id)
-          .then(res => this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchUserId,this.filterCategoryId))
+          .then(res => this.filterItem())
       }
     })
   }
@@ -143,7 +142,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
     let rowcopy = {...row};
     if(!this.isDepoView){
       this.facade.changeActivationStatus(rowcopy).then(res => {
-        this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchUserId,this.filterCategoryId);
+        this.filterItem()
       });
     }else{
       this.updateItemDepoPrice(row);
@@ -152,7 +151,13 @@ export class ItemsComponentsItemListComponent implements OnInit {
 
   public changePosition(row){
     let rowcopy = {...row};
+    let subcats = [];
+    rowcopy.subCategory_ids.map(sub => {
+      subcats.push(sub._id);
+    })
     rowcopy.item_type = rowcopy.type;
+    rowcopy.category_id = rowcopy.category_id._id
+    rowcopy.subCategory_ids = subcats;
     if(this.isDepoView){
       this.updateItemDepoPrice(rowcopy)
     }else{
