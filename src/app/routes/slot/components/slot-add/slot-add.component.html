@@ -21,7 +21,7 @@
         </div>
 
         <div fxFlex="20" fxFlex.lt-sm="100">
-          <mat-form-field appearance="fill">
+          <mat-form-field>
             <mat-label>Days</mat-label>
             <mat-select multiple>
               <mat-option *ngFor="let day of days" [value]="day">{{
@@ -32,7 +32,7 @@
         </div>
 
         <div fxFlex="20" fxFlex.lt-sm="100">
-          <mat-form-field appearance="fill">
+          <mat-form-field>
             <mat-label>Depos</mat-label>
             <mat-select multiple>
               <mat-option *ngFor="let depo of depoList" [value]="depo.id">{{
@@ -46,8 +46,7 @@
           <mat-slide-toggle
             style="margin-top: 20px"
             color="primary"
-            [(ngModel)]="isChecked"
-          >
+            [(ngModel)]="isChecked">
             Active
           </mat-slide-toggle>
         </div>
@@ -58,16 +57,14 @@
         color="primary"
         type="submit"
         style="margin-right: 5px"
-        class="m-t-8"
-      >
+        class="m-t-8">
         Save
       </button>
       <button
         mat-raised-button
         type="button"
         [routerLink]="['/slots']"
-        class="m-t-8"
-      >
+        class="m-t-8">
         Back
       </button>
       <!-- </form> -->
