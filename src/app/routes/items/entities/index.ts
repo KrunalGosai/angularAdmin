@@ -19,7 +19,8 @@ export interface itemList{
 
 export interface itemListResponse{
     message?:string,
-    data?:itemList[]
+    data?:itemList[],
+    totalCount?:number
 }
 
 export interface itemDetailResponse{

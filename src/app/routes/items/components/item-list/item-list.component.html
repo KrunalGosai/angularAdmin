@@ -15,39 +15,38 @@
       <mat-card>
         <mat-card-title>Filter</mat-card-title>
   
-        <form>
-          <div class="matero-row">
-          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" *ngIf="!isDepoRole" class="matero-col">
+        <form class="form-field-full">
+          <div fxLayout="row wrap" fxLayoutGap="8px grid">
+
+          <mat-form-field fxFlex="50" fxFlex.lt-sm="100" *ngIf="!isDepoRole" class="matero-col">
             <mat-label>User Role</mat-label>
             <mat-select  placeholder="User Role" (selectionChange)="filterRoleChanged()" [(ngModel)]="searchRoleName" name="searchRoleName">
                 <mat-option *ngFor="let role of filterRoleList" [value]="role.type">{{role.name}}</mat-option>
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" *ngIf="!isDepoRole" class="matero-col">
+          <mat-form-field fxFlex="50" fxFlex.lt-sm="100" *ngIf="!isDepoRole" class="matero-col">
             <mat-label>User</mat-label>
             <mat-select  placeholder="User" [(ngModel)]="searchUserId" name="searchUserId">
                 <mat-option *ngFor="let user of filterUserList" [value]="user._id">{{user.first_name}}</mat-option>
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field fxFlex="33" fxFlex.lt-sm="100" class="matero-col">
             <mat-label>Item Type</mat-label>
             <mat-select  placeholder="Item Type" [(ngModel)]="searchItemType" name="filterType">
                 <mat-option *ngFor="let type of itemTypeList" [value]="type.value">{{type.name}}</mat-option>
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field fxFlex="33" fxFlex.lt-sm="100" class="matero-col">
             <mat-label>Category</mat-label>
             <mat-select  placeholder="Category" [(ngModel)]="filterCategoryId" name="filterType">
                 <mat-option *ngFor="let cate of filterCategoryList" [value]="cate._id">{{cate.name}}</mat-option>
             </mat-select>
           </mat-form-field>
-          </div>
-          <div class="matero-row">
           
-          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field fxFlex="34" fxFlex.lt-sm="100" class="matero-col">
             <mat-label>Availability</mat-label>
             <mat-select  placeholder="Type" [(ngModel)]="availabilityStatus" name="filterCategoryId">
                 <mat-option *ngFor="let availability of availabilityList" [value]="availability.value">{{availability.name}}</mat-option>
