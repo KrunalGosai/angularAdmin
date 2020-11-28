@@ -11,9 +11,12 @@ import { ItemsFacadeService } from '../../items-facade.service';
 })
 export class ItemUnitViewComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data:any,
+  constructor(@Inject(MAT_DIALOG_DATA) public viewdata:any,
     private facade:ItemsFacadeService) {}
 
+  isAnyChange:boolean = false;
+  data:any
+  searchUserId:string = '';
   itemTypes:any= {SELLABLE:'Sellable',PACKAGING_MATERIAL:'Packaging Material',RAW_MATERIAL:'Raw Material'};
   displayedColumns: string[] = ['price', 'qty', 'unit' ,'is_customer_show'];
   dataSource:any[] = [];
@@ -21,6 +24,8 @@ export class ItemUnitViewComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.data = this.viewdata.row;
+    this.searchUserId = this.viewdata.searchUserId;
     let units:any[] = this.data.all_item_units
     this.dataSource =  this.data.all_item_units || [];
     let defaultunits:any = units.filter(item =>  item.is_customer_show == true)
@@ -35,9 +40,10 @@ export class ItemUnitViewComponent implements OnInit {
       is_active:updatedata.is_active,
       availability_status:updatedata.availability_status,
       item_units:this.dataSource,
-      user_id:'5fbf5b9f5724111c6f29e903',
+      user_id:this.searchUserId,
     }
     this.facade.updateItemDepoPrice(body);
+    this.isAnyChange = true;
   }
 
   public radioChange(event){
@@ -50,7 +56,7 @@ export class ItemUnitViewComponent implements OnInit {
       position:updatedata.position,
       is_active:updatedata.is_active,
       availability_status:updatedata.availability_status,
-      user_id:'5fbf5b9f5724111c6f29e903',
+      user_id:this.searchUserId,
     }
 
     //update default item unit
@@ -62,6 +68,7 @@ export class ItemUnitViewComponent implements OnInit {
     body.item_units = updatedDatasource;
     this.dataSource = updatedDatasource;
     this.facade.updateItemDepoPrice(body);
+    this.isAnyChange = true;
   }
 
 }
