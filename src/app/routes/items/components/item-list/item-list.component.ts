@@ -124,7 +124,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
   public filterItem(){
     this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchUserId,this.filterCategoryId)
     if(this.searchRoleName == userrole.DEPO && this.searchUserId && this.searchUserId != '' ){
-      this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'controls'];
+      this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id', 'controls'];
       this.isDepoUserSearched = true;
     }else{this.setRoleBasedColumn(); this.isDepoUserSearched = false;}
   }
@@ -181,7 +181,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
         this.displayedColumns = ['thumbnail', 'position', 'name', 'price', 'type','is_active','category', 'controls'];
         break;
       case UserRole.DEPO:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'controls'];
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id', 'controls'];
         break;
       case UserRole.HAWKER:
         this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'price', 'controls'];
@@ -218,10 +218,12 @@ export class ItemsComponentsItemListComponent implements OnInit {
   }
 
   public viewItemUnit(row:itemList){
-    const dialogRef = this.itemUnitViewDialog.open(ItemUnitViewComponent, {data:row});
+    let viewData = {row,searchUserId: this.searchUserId}
+    const dialogRef = this.itemUnitViewDialog.open(ItemUnitViewComponent, {data:viewData});
       dialogRef.afterClosed().subscribe(result => {
         // console.log(`Dialog result: ${result}`);
-        this.filterItem();
+        if(result)
+          this.filterItem();
       });
   }
 
