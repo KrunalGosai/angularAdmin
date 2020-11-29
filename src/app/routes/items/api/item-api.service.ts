@@ -3,6 +3,7 @@ import { itemDetailResponse, itemListResponse, availabilityStatus, updateItemDep
 import { environment } from '@env/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { UserRole } from '@shared/entities';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,14 @@ export class ItemApiService {
 
   private baseURl = environment.SERVER_ORIGIN;
 
-  public getItemList(currentPage = 1,currentPageSize = 5,searchItemType = '',availabilityStatus?:availabilityStatus,userId:string = '',filterCategoryId:string = ''):Observable<itemListResponse>{
+  public getItemList(currentPage = 1,currentPageSize = 5,searchItemType = '',availabilityStatus?:availabilityStatus,searchRoleName = null, userId:string = '',filterCategoryId:string = ''):Observable<itemListResponse>{
     let url = this.baseURl+`/api/item/get_admin_item_list?currentPage=${currentPage}&currentPageSize=${currentPageSize}`;
     if(searchItemType != undefined && searchItemType !=  null && searchItemType.trim() != '')
       url += `&item_type=${searchItemType}`;
     if(availabilityStatus != undefined && availabilityStatus !=  null)
       url += `&availability_status=${availabilityStatus}`;
+    if(searchRoleName != undefined && searchRoleName !=  null && searchRoleName.trim() != '')
+      url += `&user_type=${searchRoleName}`;
     if(userId != undefined && userId !=  null && userId.trim() != '')
       url += `&user_id=${userId}`;
     if(filterCategoryId != undefined && filterCategoryId !=  null && filterCategoryId.trim() != '')

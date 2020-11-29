@@ -4,6 +4,7 @@ import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { ItemApiService } from './api/item-api.service';
 import { itemList, updateItemDepoPrice } from './entities';
+import { UserRole } from '@shared/entities';
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +13,15 @@ export class ItemsFacadeService {
 
   constructor(private api:ItemApiService, private state:ItemStateService, private toster: ToastrService) { }
 
-  public loadItemList(currentPage = 1,currentPageSize = 200, searchItemType= '',availabilityStatus = null,userId = '',filterCategoryId:string = ''){
-    this.api.getItemList(currentPage,currentPageSize,searchItemType,availabilityStatus,userId,filterCategoryId).subscribe(items => {
+  public loadItemList(currentPage = 1,currentPageSize = 200, searchItemType= '',availabilityStatus = null,searchRoleName = null, userId = '',filterCategoryId:string = ''){
+    this.api.getItemList(currentPage,currentPageSize,searchItemType,availabilityStatus,searchRoleName,userId,filterCategoryId).subscribe(items => {
       this.state.setItemList(items);
     },err => console.error('api call error from load items ',err))
   }
 
 
-  public getItemList(currentPage = 1,currentPageSize = 200, searchItemType= '',availabilityStatus,userId = '',filterCategoryId:string = ''){
-    if(!this.state.isItemsSet) this.loadItemList(currentPage,currentPageSize,searchItemType,availabilityStatus, userId,filterCategoryId)
+  public getItemList(currentPage = 1,currentPageSize = 200, searchItemType= '',availabilityStatus,searchRoleName = null,userId = '',filterCategoryId:string = ''){
+    if(!this.state.isItemsSet) this.loadItemList(currentPage,currentPageSize,searchItemType,availabilityStatus, searchRoleName,userId,filterCategoryId)
     return this.state.getItemList().pipe(tap(cate => cate))
   }
 
