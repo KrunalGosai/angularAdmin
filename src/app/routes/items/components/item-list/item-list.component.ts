@@ -61,7 +61,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
 
   ngOnInit() {
     this.filterItem()
-    this.facade.getItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,availabilityStatus,this.searchUserId,this.filterCategoryId).subscribe(items => {
+    this.facade.getItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchRoleName, this.searchUserId,this.filterCategoryId).subscribe(items => {
       this.dataSource = new MatTableDataSource(items.data);
       this.dataSource.sort = this.sort;
       this.pageDetails.totalRecords = items.totalCount;
@@ -122,9 +122,9 @@ export class ItemsComponentsItemListComponent implements OnInit {
   }
 
   public filterItem(){
-    this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchUserId,this.filterCategoryId)
+    this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchRoleName, this.searchUserId,this.filterCategoryId)
     if(this.searchRoleName == userrole.DEPO && this.searchUserId && this.searchUserId != '' ){
-      this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id', 'controls'];
+      this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id'];
       this.isDepoUserSearched = true;
     }else{this.setRoleBasedColumn(); this.isDepoUserSearched = false;}
   }
@@ -181,7 +181,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
         this.displayedColumns = ['thumbnail', 'position', 'name', 'price', 'type','is_active','category', 'controls'];
         break;
       case UserRole.DEPO:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id', 'controls'];
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id'];
         break;
       case UserRole.HAWKER:
         this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'price', 'controls'];
@@ -200,7 +200,10 @@ export class ItemsComponentsItemListComponent implements OnInit {
   }
 
   private updateItemDepoPrice(row:itemList){
-    let data:any = row;
+    let data:any = {...row};
+    data.all_item_units.map(unit => {
+      unit.unit_id = unit.unit_id ? unit.unit_id._id : '';
+    });
     let body:updateItemDepoPrice = {
       item_id:row._id,
       user_id:this.searchUserId,
@@ -211,7 +214,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
     }
     body.item_units.map(unit => {
       if(unit.is_customer_show == true){
-        unit.price = row.price;
+        unit.price = data.user_price;
       }
     })
     this.facade.updateItemDepoPrice(body).then(res => {this.filterItem()})

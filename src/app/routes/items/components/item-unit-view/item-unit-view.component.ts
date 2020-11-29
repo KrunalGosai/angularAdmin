@@ -33,40 +33,49 @@ export class ItemUnitViewComponent implements OnInit {
   }
 
   public changePrice(){
-    let updatedata = {...this.data}
-    let body:updateItemDepoPrice = {
-      item_id:updatedata._id,
-      position:updatedata.position,
-      is_active:updatedata.is_active,
-      availability_status:updatedata.availability_status,
-      item_units:this.dataSource,
-      user_id:this.searchUserId,
-    }
-    this.facade.updateItemDepoPrice(body);
-    this.isAnyChange = true;
+    this.updateItemDepo(false);
   }
 
   public radioChange(event){
     let value = event.value
-    let updatedata = {...this.data}
+    this.updateItemDepo(true,value)
+  }
 
-    //get row details
+  public updateItemDepo(isRadioChange:boolean = false,value = ''){
+    let updatedata = {...this.data}
+    
+    let updatedDatasource = [];
+
+    if(isRadioChange && isRadioChange == true){
+      this.dataSource.map(unit => {
+        updatedDatasource.push({
+          _id: unit._id,
+          is_customer_show: unit._id == value ? true : false,
+          item_quantity: unit.item_quantity, 
+          price: unit.price,
+          unit_id: unit.unit_id ? unit.unit_id._id : ''
+        })
+      })
+    }else{
+      this.dataSource.map(unit => {
+        updatedDatasource.push({
+          _id: unit._id,
+          is_customer_show: unit.is_customer_show,
+          item_quantity: unit.item_quantity, 
+          price: unit.price,
+          unit_id: unit.unit_id ? unit.unit_id._id : ''
+        })
+      })
+    }
+
     let body:updateItemDepoPrice = {
       item_id:updatedata._id,
       position:updatedata.position,
       is_active:updatedata.is_active,
       availability_status:updatedata.availability_status,
+      item_units:updatedDatasource,
       user_id:this.searchUserId,
     }
-
-    //update default item unit
-    let updatedDatasource = [...this.dataSource];
-    updatedDatasource.map(unit => {
-      if(unit._id == value){ unit.is_customer_show = true}
-      else {unit.is_customer_show = false;}
-    })
-    body.item_units = updatedDatasource;
-    this.dataSource = updatedDatasource;
     this.facade.updateItemDepoPrice(body);
     this.isAnyChange = true;
   }
