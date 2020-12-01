@@ -36,7 +36,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
   filterCategoryId:string = '';
   isDepoUserSearched:boolean = false;
   availabilityStatus:availabilityStatus = null;
-  availabilityList = [{name:'Available',value:availabilityStatus.available},{name:'Not Available',value:availabilityStatus.notAvailable},{name:'Notify',value:availabilityStatus.notify}]
+  availabilityList = [{name:'Available',value:"TRUE"},{name:'Notify',value:"NOTIFY"}]
   currentRole = this.settingService.user.role_id.type || 'User';
 
   // @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -79,7 +79,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
     })
     this.usersFacade.getRoleList().subscribe(res => {
       let roles:any = res;
-      this.filterRoleList = roles.data;
+      this.filterRoleList = roles.data.filter(role => role.type != 'ADMIN' && role.type != 'CUSTOMER' && role.type != 'DELIVERY_BOY' );
     })
   }
 
