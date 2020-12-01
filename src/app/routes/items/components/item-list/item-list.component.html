@@ -156,8 +156,8 @@
         <th mat-header-cell *matHeaderCellDef > Availability Status </th>
         <form>
         <td mat-cell *matCellDef="let row" >
-          <mat-select  placeholder="Type" (selectionChange)="updateItemDepoPrice(row)" [(ngModel)]="row.availability_status" name="availability_status">
-              <mat-option *ngFor="let availability of availabilityList" [value]="availability.value">{{availability.name}}</mat-option>
+          <mat-select  placeholder="Type" (selectionChange)="updateItemDepoPrice(row)" [ngModelOptions]="{standalone: true}" [(ngModel)]="row.availability_status" name="availability_status">
+              <mat-option *ngFor="let aStatus of availabilityList" [value]="aStatus.value">{{aStatus.name}}</mat-option>
           </mat-select>
         </td>
         </form>
