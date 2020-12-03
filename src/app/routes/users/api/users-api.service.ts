@@ -34,16 +34,16 @@ export class UsersApiService {
     return this.http.get(this.baseUrl+'/api/country');
   }
 
-  public getStateList(){
-    return this.http.get(this.baseUrl+'/api/state');
+  public getStateList(countryId){
+    return this.http.get(this.baseUrl+`/api/state?searchBycountryId=${countryId}`);
   }
 
-  public getCityList(){
-    return this.http.get(this.baseUrl+'/api/city');
+  public getCityList(stateId){
+    return this.http.get(this.baseUrl+`/api/city?searchByStateId=${stateId}`);
   }
 
-  public getAreaList(){
-    return this.http.get(this.baseUrl+'/api/area');
+  public getAreaList(cityId){
+    return this.http.get(this.baseUrl+`/api/area?searchByCityId=${cityId}`);
   }
   
   public getVehicleList(){

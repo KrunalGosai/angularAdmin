@@ -49,7 +49,7 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
       ],
       contact_2: [
         "",
-        [Validators.required, Validators.pattern("[6-9]{1}[0-9]{9}")],
+        [ Validators.pattern("[6-9]{1}[0-9]{9}")],
       ],
       role_id: ["", [Validators.required]],
       gender: [""],
@@ -145,34 +145,49 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
       (err) => console.error(err)
     );
 
-    this.usersFacade.getStateList().subscribe(
+    this.usersFacade.getVehicleList().subscribe(
+      (res) => {
+        let data: any = res;
+        this.vehicleList = data.data;
+      },
+      (err) => console.error(err)
+    );
+  }
+
+  public countryChange(){
+    this.stateList = [];
+    this.cityList = [];
+    this.areaList= [];
+    let country_id = this.userForm.get("country_id").value;
+    this.usersFacade.getStateList(country_id).subscribe(
       (res) => {
         let data: any = res;
         this.stateList = data.data;
       },
       (err) => console.error(err)
     );
+  }
 
-    this.usersFacade.getCityList().subscribe(
+  public stateChange(){
+    this.cityList = [];
+    this.areaList= [];
+    let stateId = this.userForm.get("state_id").value;
+    this.usersFacade.getCityList(stateId).subscribe(
       (res) => {
         let data: any = res;
         this.cityList = data.data;
       },
       (err) => console.error(err)
     );
+  }
 
-    this.usersFacade.getAreaList().subscribe(
+  public cityChange(){
+    this.areaList= [];
+    let cityId = this.userForm.get("city_id").value;
+    this.usersFacade.getAreaList(cityId).subscribe(
       (res) => {
         let data: any = res;
         this.areaList = data.data;
-      },
-      (err) => console.error(err)
-    );
-
-    this.usersFacade.getVehicleList().subscribe(
-      (res) => {
-        let data: any = res;
-        this.vehicleList = data.data;
       },
       (err) => console.error(err)
     );

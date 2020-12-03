@@ -371,10 +371,7 @@
               <div fxFlex="33" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Country</mat-label>
-                  <mat-select
-                    formControlName="country_id"
-                    placeholder="Country"
-                  >
+                  <mat-select formControlName="country_id" placeholder="Country" (selectionChange)="countryChange()">
                     <mat-option
                       *ngFor="let item of countryList"
                       [value]="item._id"
@@ -388,7 +385,7 @@
               <div fxFlex="33" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>State</mat-label>
-                  <mat-select formControlName="state_id" placeholder="State">
+                  <mat-select formControlName="state_id" (selectionChange)="stateChange()" placeholder="State">
                     <mat-option
                       *ngFor="let item of stateList"
                       [value]="item._id"
@@ -402,7 +399,7 @@
               <div fxFlex="34" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>City</mat-label>
-                  <mat-select formControlName="city_id" placeholder="City">
+                  <mat-select formControlName="city_id" (selectionChange)="cityChange()" placeholder="City">
                     <mat-option
                       *ngFor="let item of cityList"
                       [value]="item._id"
