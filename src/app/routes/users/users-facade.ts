@@ -38,16 +38,16 @@ export class UsersFacade {
     return this.api.getCountryList().pipe(tap(res => res))
   }
 
-  public getStateList(){
-    return this.api.getStateList().pipe(tap(res => res))
+  public getStateList(countryId){
+    return this.api.getStateList(countryId).pipe(tap(res => res))
   }
 
-  public getCityList(){
-    return this.api.getCityList().pipe(tap(res => res))
+  public getCityList(stateId){
+    return this.api.getCityList(stateId).pipe(tap(res => res))
   }
 
-  public getAreaList(){
-    return this.api.getAreaList().pipe(tap(res => res))
+  public getAreaList(cityId){
+    return this.api.getAreaList(cityId).pipe(tap(res => res))
   }
 
   public getVehicleList(){

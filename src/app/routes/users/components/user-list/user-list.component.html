@@ -28,6 +28,25 @@
           />
         </mat-form-field>
 
+        <mat-form-field
+            fxFlex="25"
+            fxFlex.lt-sm="100"
+            class="matero-col"
+          >
+            <mat-label>User Role</mat-label>
+            <mat-select
+              placeholder="User Role"
+              [(ngModel)]="searchRoleName"
+              name="searchRoleName"
+            >
+              <mat-option
+                *ngFor="let role of filterRoleList"
+                [value]="role.type"
+                >{{ role.name }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+
         <!-- <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
           <input matInput placeholder="Email" [(ngModel)]="q.email" name="email">
         </mat-form-field> -->

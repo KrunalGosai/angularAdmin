@@ -43,7 +43,8 @@ export class CategoriesApiService {
       parent_categoriesId: category.parent_categoriesId,
       is_active: category.is_active,
       position:category.position,
-      category_image:category.category_image
+      category_image:category.category_image,
+      is_homescreen:category.is_homescreen
     }
 
     return this.http.post(url,body);
@@ -66,7 +67,8 @@ export class CategoriesApiService {
       parent_categoriesId: category.parent_categoriesId,
       is_active: category.is_active,
       position:category.position,
-      category_image:category.category_image
+      category_image:category.category_image,
+      is_homescreen:category.is_homescreen
     }
     return this.http.put(url,body);
   }

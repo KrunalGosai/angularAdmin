@@ -43,7 +43,9 @@ export class UsersUserListComponent implements OnInit {
     itemsPerPage: 5,
     totalRecords: 0,
   };
+  filterRoleList:any[] =[];
   searchByName: string = "";
+  searchRoleName: string = "";
 
   constructor(
     private usersFacade: UsersFacade,
@@ -52,17 +54,17 @@ export class UsersUserListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.usersFacade.loadUsers(
-      this.pageDetails.currentPage,
-      this.pageDetails.itemsPerPage,
-      this.searchByName
-    );
+    this.filterUsers();
     this.usersFacade.getUsers().subscribe((res) => {
       this.dataSource = new MatTableDataSource(res.userList);
       this.pageDetails.totalRecords = res.totalCount;
       // this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
+    this.usersFacade.getRoleList().subscribe(res => {
+      let roles:any = res;
+      this.filterRoleList = roles.data
+    })
   }
 
   public applyFilter(event: Event) {
@@ -82,11 +84,7 @@ export class UsersUserListComponent implements OnInit {
           this.usersFacade
             .deleteUser(row._id)
             .then((res) =>
-              this.usersFacade.loadUsers(
-                this.pageDetails.currentPage,
-                this.pageDetails.itemsPerPage,
-                this.searchByName
-              )
+              this.filterUsers()
             );
         }
       });
@@ -96,22 +94,19 @@ export class UsersUserListComponent implements OnInit {
     console.log(event);
     this.pageDetails.itemsPerPage = event.pageSize;
     this.pageDetails.currentPage = event.pageIndex + 1;
-    this.usersFacade.loadUsers(
-      this.pageDetails.currentPage,
-      event.pageSize,
-      this.searchByName
-    );
+    this.filterUsers();
   }
 
   public resetFilter() {
     this.searchByName = "";
+    this.searchRoleName = "";
   }
 
   public filterUsers() {
     this.usersFacade.loadUsers(
       this.pageDetails.currentPage,
       this.pageDetails.itemsPerPage,
-      this.searchByName
+      this.searchByName,this.searchRoleName
     );
   }
 

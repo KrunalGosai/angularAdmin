@@ -8,7 +8,7 @@
         <form [formGroup]="categoryForm" (submit)="onFormSubmit($event);" class="form-field-full">
           <div fxLayout="row wrap" fxLayoutGap="8px grid">
             
-            <div fxFlex="50" fxFlex.lt-sm="100">
+            <div fxFlex="33" fxFlex.lt-sm="100">
               <mat-form-field>
                 <mat-label>Name</mat-label>
                 <input matInput placeholder="Category Name" formControlName="name"
@@ -19,7 +19,7 @@
               </mat-form-field>
             </div>
   
-            <div fxFlex="50" fxFlex.lt-sm="100">
+            <div fxFlex="33" fxFlex.lt-sm="100">
               <mat-form-field>
                 <mat-label>Parent Category</mat-label>
                 <mat-select formControlName="parent_categoriesId" placeholder="Parent Category">
@@ -28,7 +28,7 @@
               </mat-form-field>
             </div>
 
-            <div fxFlex="25" fxFlex.lt-sm="100">
+            <div fxFlex="34" fxFlex.lt-sm="100">
               <mat-form-field>
                 <mat-label>Position</mat-label>
                 <input matInput placeholder="Position Order" formControlName="position"
@@ -63,9 +63,13 @@
               </a>
             </div>
 
-            <div fxFlex="25" fxFlex.lt-sm="100">
+            <div fxFlex="50" fxFlex.lt-sm="100">
               <mat-slide-toggle formControlName="is_active" style="margin-top: 20px;" color="primary">
                 {{is_active_value ? 'Active' : 'Inactive'}}
+              </mat-slide-toggle>
+              <mat-slide-toggle formControlName="is_homescreen" style="margin-top: 20px;" color="primary">
+                <!-- {{is_homescreen_value ? 'Home Screen' : ''}} -->
+                Is Homescreen ?
               </mat-slide-toggle>
             </div>
   
