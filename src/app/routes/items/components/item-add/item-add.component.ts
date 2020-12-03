@@ -35,8 +35,7 @@ export class ItemsComponentsItemAddComponent implements OnInit {
   ) {
     this.itemForm = this.fb.group({
       name: ["", [Validators.required, Validators.maxLength(50)]],
-      secondary_name: [""],
-      price: [0],
+      price: [0, [Validators.required, Validators.pattern("[1-9]{1}[0-9]*")]],
       is_active: [true],
       // item_volume:[0],
       category_id: [""],
