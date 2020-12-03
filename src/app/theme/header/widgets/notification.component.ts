@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-notification',
+  selector: "app-notification",
   template: `
-    <button mat-icon-button class="matero-toolbar-button" [matMenuTriggerFor]="menu">
+    <button
+      mat-icon-button
+      class="matero-toolbar-button"
+      [matMenuTriggerFor]="menu"
+    >
       <mat-icon>notifications</mat-icon>
       <span class="badge bg-red-500">5</span>
     </button>
@@ -21,5 +25,9 @@ import { Component } from '@angular/core';
   `,
 })
 export class NotificationComponent {
-  messages = ['Server Error Reports', 'Server Error Reports', 'Server Error Reports'];
+  messages = [
+    "Server Error Reports",
+    "Server Error Reports",
+    "Server Error Reports",
+  ];
 }

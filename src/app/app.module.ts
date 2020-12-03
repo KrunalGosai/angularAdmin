@@ -1,25 +1,25 @@
-import { NgModule } from '@angular/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from "@angular/core";
+import { HttpClientModule, HttpClient } from "@angular/common/http";
+import { BrowserModule } from "@angular/platform-browser";
 
-import { CoreModule } from './core/core.module';
-import { ThemeModule } from './theme/theme.module';
-import { RoutesModule } from './routes/routes.module';
-import { SharedModule } from './shared/shared.module';
-import { AppComponent } from './app.component';
+import { CoreModule } from "./core/core.module";
+import { ThemeModule } from "./theme/theme.module";
+import { RoutesModule } from "./routes/routes.module";
+import { SharedModule } from "./shared/shared.module";
+import { AppComponent } from "./app.component";
 
-import { ToastrModule } from 'ngx-toastr';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ToastrModule } from "ngx-toastr";
+import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 // Required for AOT compilation
 export function TranslateHttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 }
 
-import { httpInterceptorProviders } from '@core/interceptors';
-import { appInitializerProviders } from '@core/initializers';
-import { FormlyConfigModule } from './formly-config.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { httpInterceptorProviders } from "@core/interceptors";
+import { appInitializerProviders } from "@core/initializers";
+import { FormlyConfigModule } from "./formly-config.module";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [AppComponent],
