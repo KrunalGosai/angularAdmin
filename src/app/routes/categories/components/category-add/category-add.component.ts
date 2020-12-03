@@ -32,6 +32,7 @@ export class CategoriesComponentsCategoryAddComponent implements OnInit {
       parent_categoriesId: [""],
       position: [1],
       is_active: true,
+      is_homescreen: false,
       category_image: [""],
     });
     // this.activeRoute.params.subscribe(params => {
@@ -66,6 +67,7 @@ export class CategoriesComponentsCategoryAddComponent implements OnInit {
               position: res.position,
               category_image: image,
               is_active: res.is_active,
+              is_homescreen: res.is_homescreen
             });
           },
           (err) => console.error(err)
@@ -77,6 +79,12 @@ export class CategoriesComponentsCategoryAddComponent implements OnInit {
   get is_active_value() {
     return this.categoryForm.get("is_active").value
       ? this.categoryForm.get("is_active").value
+      : false;
+  }
+
+  get is_homescreen_value() {
+    return this.categoryForm.get("is_homescreen").value
+      ? this.categoryForm.get("is_homescreen").value
       : false;
   }
 
