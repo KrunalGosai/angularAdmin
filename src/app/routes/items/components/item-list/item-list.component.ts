@@ -31,6 +31,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
   filterCategoryList:any[] = [];
   filterRoleList:any[] =[];
   searchRoleName:string = this.settingService.user.role_id.type;
+  searchByName:string = '';
   searchItemType:string = ''
   searchUserId:string ='';
   filterCategoryId:string = '';
@@ -61,7 +62,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
 
   ngOnInit() {
     this.filterItem()
-    this.facade.getItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchRoleName, this.searchUserId,this.filterCategoryId).subscribe(items => {
+    this.facade.getItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchRoleName, this.searchUserId,this.filterCategoryId,this.searchByName).subscribe(items => {
       this.dataSource = new MatTableDataSource(items.data);
       this.dataSource.sort = this.sort;
       this.pageDetails.totalRecords = items.totalCount;
@@ -126,7 +127,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
   }
 
   public filterItem(){
-    this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchRoleName, this.searchUserId,this.filterCategoryId)
+    this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchRoleName, this.searchUserId,this.filterCategoryId,this.searchByName)
     if(this.searchRoleName == userrole.DEPO && this.searchUserId && this.searchUserId != '' ){
       this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id'];
       this.isDepoUserSearched = true;
@@ -135,6 +136,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
 
   public resetFilter(){
     this.searchItemType = '';
+    this.searchByName = '';
     this.availabilityStatus = null;
     this.searchRoleName = '';
     this.searchUserId = '';
