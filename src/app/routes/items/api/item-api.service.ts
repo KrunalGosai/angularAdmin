@@ -14,7 +14,7 @@ export class ItemApiService {
 
   private baseURl = environment.SERVER_ORIGIN;
 
-  public getItemList(currentPage = 1,currentPageSize = 5,searchItemType = '',availabilityStatus?:availabilityStatus,searchRoleName = null, userId:string = '',filterCategoryId:string = ''):Observable<itemListResponse>{
+  public getItemList(currentPage = 1,currentPageSize = 5,searchItemType = '',availabilityStatus?:availabilityStatus,searchRoleName = null, userId:string = '',filterCategoryId:string = '',searchByName = ''):Observable<itemListResponse>{
     let url = this.baseURl+`/api/item/get_admin_item_list?currentPage=${currentPage}&currentPageSize=${currentPageSize}`;
     if(searchItemType != undefined && searchItemType !=  null && searchItemType.trim() != '')
       url += `&item_type=${searchItemType}`;
@@ -26,6 +26,8 @@ export class ItemApiService {
       url += `&user_id=${userId}`;
     if(filterCategoryId != undefined && filterCategoryId !=  null && filterCategoryId.trim() != '')
       url += `&category_id=${filterCategoryId}`;
+    if(searchByName != undefined && searchByName != null && searchByName.trim() != '')
+      url += `&name=${searchByName}`
       
     return this.http.get<itemListResponse>(url);
   }
