@@ -58,7 +58,7 @@
         <mat-card-title>Filter</mat-card-title>
   
         <form>
-          <mat-form-field class="m-r-8">
+          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="m-r-8">
             <mat-label>Name</mat-label>
             <input matInput placeholder="Name" [(ngModel)]="searchByName" name="searchByName">
           </mat-form-field>
@@ -92,7 +92,7 @@
       <!-- Name Column -->
       <ng-container matColumnDef="country_id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
-        <td mat-cell *matCellDef="let row"> {{row.country_id}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.country_id ? row.country_id.name : ''}} </td>
       </ng-container>
 
       <!-- active Column -->

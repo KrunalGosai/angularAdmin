@@ -1,3 +1,7 @@
+import { MatExpansionPanel } from '@angular/material/expansion';
+import { FormBuilder } from '@angular/forms';
+import { Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ConfirmService } from './../../../../shared/services/confirm.service';
 import { AddressFacadeService } from './../../address-facade.service';
 import { Router } from '@angular/router';
@@ -17,8 +21,15 @@ export class AddressComponentsAreasComponent implements OnInit {
   displayedColumns: string[] = [ 'name', 'city_id','pincode', 'is_active', 'controls'];
   dataSource: MatTableDataSource<AreaList>;
   searchByName:string = ''
+  areaForm: FormGroup;
+  isEditMode:boolean = false;
+  activeEditId;
+  countryList = [];
+  stateList = [];
+  cityList = [];
 
   // @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatExpansionPanel) expansionPanel: MatExpansionPanel;
   @ViewChild(MatSort) sort: MatSort;
   pageDetails = {
     currentPage:1,
@@ -31,7 +42,17 @@ export class AddressComponentsAreasComponent implements OnInit {
   constructor(
     private router:Router,
     private facade:AddressFacadeService,
-    private confirmService:ConfirmService) { }
+    private fb: FormBuilder,
+    private confirmService:ConfirmService) {
+      this.areaForm = this.fb.group({
+        name: ['', [Validators.required]],
+        country_id:[''],
+        state_id: [''],
+        city_id: [''],
+        pincode:[],
+        is_active: [true]
+      });
+     }
 
   ngOnInit() {
     this.facade.loadAreaList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName);
@@ -42,6 +63,11 @@ export class AddressComponentsAreasComponent implements OnInit {
       this.dataSource.sort = this.sort;
       // this.totalBanner = items.data.length;
     })
+    this.facade.loadCountryList();
+    this.facade.getCountryList().subscribe(country => {
+      this.countryList = country.data;
+    })
+
   }
 
   applyFilter(event: Event) {
@@ -68,10 +94,59 @@ export class AddressComponentsAreasComponent implements OnInit {
     })
   }
 
-  public navigateToEdit(id){
-    // this.facade.loadItemDetails(id).then(item => {
-    //   this.router.navigate(['items','edit',id])
+  public onFormSubmit(event){
+    if(!this.areaForm.valid) return;
+    if(this.isEditMode){
+      let value = this.areaForm.value;
+      value._id = this.activeEditId;
+      this.facade.updateArea(value).then(res => {
+        this.facade.loadAreaList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName)
+        this.expansionPanel.close();
+        this.resetForm()
+      })
+    }else{
+      this.facade.newArea(this.areaForm.value).then(res => {
+        this.facade.loadAreaList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName)
+        this.expansionPanel.close();
+        this.resetForm()
+      })
+    }
+  }
+
+  public navigateToEdit(row){
+    // this.facade.loadAreaDetails(id).then(area => {
+      let city_id = row.city_id._id;
+      this.facade.loadCityDetails(city_id).then(city => {
+        let state_id = city.data.state_id._id;
+        this.areaForm.patchValue({state_id: state_id});
+        this.facade.loadStateDetails(state_id).then(details => {
+          let country_id = details.data.country_id._id;
+          this.areaForm.patchValue({country_id: country_id});
+          this.changeCountry(null);
+          this.changeState(null);
+        })
+      })
+      this.areaForm.patchValue({name:row.name,city_id:row.city_id._id,is_active:row.is_active,pincode:row.pincode});
+      this.isEditMode = true;
+      this.activeEditId = row._id;
+      this.expansionPanel.open();
     // })
+  }
+
+  public changeCountry(event){
+    this.stateList = [];
+    let country_id = this.areaForm.get('country_id').value;
+    this.facade.getStateByCountryId(country_id).then(res => {
+      this.stateList = res.data;
+    })
+  }
+
+  public changeState(event){
+    this.cityList = [];
+    let state_id = this.areaForm.get('state_id').value;
+    this.facade.getCityByStateId(state_id).then(res => {
+      this.cityList = res.data;
+    })
   }
 
   public filterItem(){
@@ -80,6 +155,13 @@ export class AddressComponentsAreasComponent implements OnInit {
 
   public resetFilter(){
     this.searchByName = '';
+  }
+
+  public resetForm(){
+    this.areaForm.reset();
+    this.areaForm.get('is_active').setValue(true);
+    this.isEditMode = false;
+    this.activeEditId = null;
   }
 
   public changeActivationStatus(row){

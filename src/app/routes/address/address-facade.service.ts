@@ -115,6 +115,14 @@ export class AddressFacadeService {
     }).catch(err => {console.error('api call error from load State list',err); throw err });
   }
 
+  public getCityByStateId(stateId){
+    return this.api.getCityByStateId(stateId).toPromise().then(res => {
+      return res
+    }).catch(err => {console.error('api call error from load State list',err); throw err });
+  }
+
+  
+
   
 
   // public getItemDetails(){
