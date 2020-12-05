@@ -93,15 +93,15 @@ export class AddressComponentsCitiesComponent implements OnInit {
       let value = this.cityForm.value;
       value._id = this.activeEditId;
       this.facade.updateCity(value).then(res => {
-        this.facade.loadStateList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName)
+        this.facade.loadCityList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName)
         this.expansionPanel.close();
-        this.activeEditId.reset();
+        this.resetForm()
       })
     }else{
       this.facade.newCity(this.cityForm.value).then(res => {
-        this.facade.loadStateList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName)
+        this.facade.loadCityList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName)
         this.expansionPanel.close();
-        this.cityForm.reset();
+        this.resetForm()
       })
     }
   }
@@ -109,7 +109,13 @@ export class AddressComponentsCitiesComponent implements OnInit {
   public navigateToEdit(id){
     this.facade.loadCityDetails(id).then(city => {
       let res = city;
-      this.cityForm.patchValue(res.data);
+      let stateId = res.data.state_id._id;
+      this.facade.loadStateDetails(stateId).then(details => {
+        let country_id = details.data.country_id._id;
+        this.cityForm.patchValue({country_id: country_id});
+        this.changeCountry(null);
+      })
+      this.cityForm.patchValue({name:res.data.name,state_id:res.data.state_id._id,is_active:res.data.is_active});
       this.isEditMode = true;
       this.activeEditId = id;
       this.expansionPanel.open();
@@ -117,7 +123,6 @@ export class AddressComponentsCitiesComponent implements OnInit {
   }
 
   public changeCountry(event){
-    console.log('test')
     this.stateList = [];
     let country_id = this.cityForm.get('country_id').value;
     this.facade.getStateByCountryId(country_id).then(res => {
@@ -131,6 +136,13 @@ export class AddressComponentsCitiesComponent implements OnInit {
 
   public resetFilter(){
     this.searchByName = '';
+  }
+
+  public resetForm(){
+    this.cityForm.reset();
+    this.cityForm.get('is_active').setValue(true);
+    this.isEditMode = false;
+    this.activeEditId = null;
   }
 
   public changeActivationStatus(row){

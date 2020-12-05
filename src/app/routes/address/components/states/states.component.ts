@@ -110,7 +110,7 @@ export class AddressComponentsStatesComponent implements OnInit {
   public navigateToEdit(id){
     this.facade.loadStateDetails(id).then(state => {
       let res = state;
-      this.stateForm.patchValue(res.data);
+      this.stateForm.patchValue({name:res.data.name,country_id:res.data.country_id._id,is_active:res.data.is_active});
       this.isEditMode = true;
       this.activeEditId = id;
       this.expansionPanel.open();

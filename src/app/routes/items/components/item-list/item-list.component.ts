@@ -30,7 +30,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
   filterUserList:any[] = [];
   filterCategoryList:any[] = [];
   filterRoleList:any[] =[];
-  searchRoleName:string = '';
+  searchRoleName:string = this.settingService.user.role_id.type;
   searchItemType:string = ''
   searchUserId:string ='';
   filterCategoryId:string = '';
@@ -81,6 +81,10 @@ export class ItemsComponentsItemListComponent implements OnInit {
       let roles:any = res;
       this.filterRoleList = roles.data.filter(role => role.type != 'ADMIN' && role.type != 'CUSTOMER' && role.type != 'DELIVERY_BOY' );
     })
+  }
+
+  get isAdmin(){
+    return this.currentRole == UserRole.ADMIN ? true : false;
   }
 
   get isDepoView(){
