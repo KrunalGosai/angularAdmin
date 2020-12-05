@@ -247,7 +247,7 @@
       <th mat-header-cell *matHeaderCellDef>Availability Status</th>
       <form>
         <td mat-cell *matCellDef="let row">
-          <mat-select
+          <mat-select style="max-width: 80px;"
             placeholder="Type"
             (selectionChange)="updateItemDepoPrice(row)"
             [ngModelOptions]="{ standalone: true }"
