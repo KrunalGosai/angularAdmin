@@ -13,37 +13,44 @@
     {
       "route": "users",
       "name": "users",
-      "type": "link"
+      "type": "link",
+      "icon":"person"
     },
     {
       "route": "categories",
       "name": "categories",
-      "type": "link"
+      "type": "link",
+      "icon":"category"
     },
     {
       "route": "banners",
       "name": "banners",
-      "type": "link"
+      "type": "link",
+      "icon":"view_carousel"
     },
     {
       "route": "unites",
       "name": "unit",
-      "type": "link"
+      "type": "link",
+      "icon":"ad_units"
     },
     {
       "route": "items",
       "name": "items",
-      "type": "link"
+      "type": "link",
+      "icon":"add_shopping_cart"
     },
     {
       "route": "products",
       "name": "products",
-      "type": "link"
+      "type": "link",
+      "icon":"shopping_bag"
     },
     {
       "route": "slots",
       "name": "slot",
-      "type": "link"
+      "type": "link",
+      "icon":"date_range"
     },
     {
       "route": "address",
@@ -54,22 +61,26 @@
         {
           "route": "areas",
           "name": "areas",
-          "type": "link"
+          "type": "link",
+          "icon":"home"
         },
         {
           "route": "cities",
           "name": "cities",
-          "type": "link"
+          "type": "link",
+          "icon":"apartment"
         },
         {
           "route": "states",
           "name": "states",
-          "type": "link"
+          "type": "link",
+          "icon":"location_city"
         },
         {
           "route": "countries",
           "name": "countries",
-          "type": "link"
+          "type": "link",
+          "icon":"flag"
         }
       ]
     },
