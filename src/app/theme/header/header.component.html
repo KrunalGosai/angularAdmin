@@ -15,12 +15,7 @@
     <mat-icon>search</mat-icon>
   </button> -->
 
-  <button
-    mat-icon-button
-    class="matero-toolbar-button"
-    fxHide.lt-sm
-    (click)="toggleFullscreen()"
-  >
+  <button mat-icon-button class="matero-toolbar-button" fxHide.lt-sm (click)="toggleFullscreen()">
     <mat-icon>fullscreen</mat-icon>
   </button>
 
@@ -30,12 +25,7 @@
 
   <app-user></app-user>
 
-  <button
-    mat-icon-button
-    class="matero-toolbar-button"
-    fxHide.lt-sm
-    (click)="toggleSidenavNotice.emit()"
-  >
+  <!-- <button mat-icon-button class="matero-toolbar-button"  fxHide.lt-sm (click)="toggleSidenavNotice.emit()">
     <mat-icon>list</mat-icon>
-  </button>
+  </button> -->
 </mat-toolbar>

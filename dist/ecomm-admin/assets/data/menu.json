@@ -41,10 +41,10 @@
       "icon":"add_shopping_cart"
     },
     {
-      "route": "products",
-      "name": "products",
+      "route": "offers",
+      "name": "offers",
       "type": "link",
-      "icon":"shopping_bag"
+      "icon":"local_offer"
     },
     {
       "route": "slots",
@@ -84,7 +84,12 @@
         }
       ]
     },
-
+    {
+      "route": "products",
+      "name": "products",
+      "type": "link",
+      "icon":"shopping_bag"
+    },
     {
       "route": "sessions",
       "name": "sessions",

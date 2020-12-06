@@ -67,9 +67,9 @@ export class ItemsFacadeService {
 
   public changeActivationStatus(row:itemList){
     return this.api.updateActivationStatus(row.is_active,row._id).toPromise().then(res => {
-      this.toster.success('Unit Successfully Updated',"Success",{timeOut:3000})
+      this.toster.success('Item Successfully Updated',"Success",{timeOut:3000})
       return res;
-    }).catch(err => {console.error('api call error from change activation status Unit',err ); throw err  })
+    }).catch(err => {console.error('api call error from change activation status Offer',err ); throw err  })
   }
 
   public getItemTypes(){
