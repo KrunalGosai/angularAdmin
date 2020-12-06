@@ -16,7 +16,7 @@ import { MenuService, SettingsService, TokenService, User } from "@core";
         width="40"
         alt="avatar"
       />
-      <span class="matero-username" fxHide.lt-sm>{{ user.name }}</span>
+      <span class="matero-username" fxHide.lt-sm>{{ user.first_name }}</span>
     </button>
 
     <mat-menu #menu="matMenu">
