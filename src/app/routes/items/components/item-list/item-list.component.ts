@@ -30,7 +30,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
   filterUserList:any[] = [];
   filterCategoryList:any[] = [];
   filterRoleList:any[] =[];
-  searchRoleName:string = this.settingService.user.role_id.type;
+  searchRoleName:string = '';
   searchByName:string = '';
   searchItemType:string = ''
   searchUserId:string ='';
@@ -38,7 +38,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
   isDepoUserSearched:boolean = false;
   availabilityStatus:availabilityStatus = null;
   availabilityList = [{name:'Available',value:"TRUE"},{name:'Notify',value:"NOTIFY"}]
-  currentRole = this.settingService.user.role_id.type || 'User';
+  currentRole = this.settingService.user.role_id.type || 'CUSTOMER';
 
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -82,10 +82,16 @@ export class ItemsComponentsItemListComponent implements OnInit {
       let roles:any = res;
       this.filterRoleList = roles.data.filter(role => role.type != 'ADMIN' && role.type != 'CUSTOMER' && role.type != 'DELIVERY_BOY' );
     })
+    if(!this.isAdmin && !this.isManufaturingPlant){
+      this.searchRoleName = this.settingService.user.role_id.type
+    }
   }
 
   get isAdmin(){
     return this.currentRole == UserRole.ADMIN ? true : false;
+  }
+  get isManufaturingPlant(){
+    return this.settingService.isManufaturingPlant
   }
 
   get isDepoView(){
@@ -129,7 +135,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
   public filterItem(){
     this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchRoleName, this.searchUserId,this.filterCategoryId,this.searchByName)
     if(this.searchRoleName == userrole.DEPO && this.searchUserId && this.searchUserId != '' ){
-      this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id'];
+      this.displayedColumns = ['thumbnail', 'position', 'name','type', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id'];
       this.isDepoUserSearched = true;
     }else{this.setRoleBasedColumn(); this.isDepoUserSearched = false;}
   }
@@ -186,14 +192,17 @@ export class ItemsComponentsItemListComponent implements OnInit {
       case UserRole.ADMIN:
         this.displayedColumns = ['thumbnail', 'position', 'name', 'price', 'type','is_active','category', 'controls'];
         break;
+      case UserRole.MANUFACTURING_PLANT:
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'price', 'type','is_active','category', 'controls'];
+        break;
       case UserRole.DEPO:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id'];
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id'];
         break;
       case UserRole.HAWKER:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'category', 'item_volume', 'price', 'controls'];
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'price', 'controls'];
         break;
       default:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'category'];
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category'];
         break;
     }
   }

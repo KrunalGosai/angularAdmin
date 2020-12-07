@@ -29,28 +29,26 @@
           <mat-form-field
             fxFlex="33"
             fxFlex.lt-sm="100"
-            *ngIf="isAdmin"
-            class="matero-col"
-          >
+            *ngIf="isAdmin || isManufaturingPlant"
+            class="matero-col">
             <mat-label>User Role</mat-label>
             <mat-select
               placeholder="User Role"
               (selectionChange)="filterRoleChanged()"
               [(ngModel)]="searchRoleName"
-              name="searchRoleName"
-            >
+              name="searchRoleName">
               <mat-option
                 *ngFor="let role of filterRoleList"
-                [value]="role.type"
-                >{{ role.name }}</mat-option
-              >
+                [value]="role.type">
+                {{ role.name }}
+              </mat-option>
             </mat-select>
           </mat-form-field>
 
           <mat-form-field
             fxFlex="33"
             fxFlex.lt-sm="100"
-            *ngIf="isAdmin"
+            *ngIf="isAdmin || isManufaturingPlant"
             class="matero-col"
           >
             <mat-label>User</mat-label>
@@ -72,8 +70,7 @@
             <mat-select
               placeholder="Item Type"
               [(ngModel)]="searchItemType"
-              name="filterType"
-            >
+              name="filterType">
               <mat-option
                 *ngFor="let type of itemTypeList"
                 [value]="type.value"
@@ -296,21 +293,12 @@
               </button>
             </mat-grid-tile> -->
           <mat-grid-tile *ngIf="!isDepoView">
-            <button
-              mat-icon-button
-              aria-label="View"
-              (click)="openItemViewDialog(row)"
-            >
+            <button mat-icon-button  aria-label="View" (click)="openItemViewDialog(row)" >
               <mat-icon color="primary">visibility</mat-icon>
             </button>
           </mat-grid-tile>
-          <mat-grid-tile *ngIf="isAdmin">
-            <button
-              mat-icon-button
-              aria-label="Edit"
-              (click)="navigateToEdit(row._id)"
-              [routerLink]="[]"
-            >
+          <mat-grid-tile *ngIf="isAdmin || isManufaturingPlant">
+            <button mat-icon-button aria-label="Edit" (click)="navigateToEdit(row._id)" [routerLink]="[]">
               <mat-icon color="primary">create</mat-icon>
             </button>
           </mat-grid-tile>

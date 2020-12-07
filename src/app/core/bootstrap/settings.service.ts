@@ -1,3 +1,4 @@
+import { UserRole } from '@shared/entities';
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from '@shared/services/storage.service';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -78,5 +79,41 @@ export class SettingsService {
   setLanguage(lang: string) {
     this.options.language = lang;
     this.notify$.next({ lang });
+  }
+
+  get isAdmin(){
+    return this.user.role_id.type == UserRole.ADMIN;
+  }
+
+  get isDepo(){
+    return this.user.role_id.type == UserRole.DEPO;
+  }
+
+  get isDeliveryBoy(){
+    return this.user.role_id.type == UserRole.DELIVERY_BOY;
+  }
+
+  get isRetailer(){
+    return this.user.role_id.type == UserRole.RETAILER;
+  }
+
+  get isPurchaseManager(){
+    return this.user.role_id.type == UserRole.PURCHASE_MANAGER;
+  }
+
+  get isCustomer(){
+    return this.user.role_id.type == UserRole.CUSTOMER;
+  }
+
+  get isManufaturingPlant(){
+    return this.user.role_id.type == UserRole.MANUFACTURING_PLANT;
+  }
+
+  get isSupplier(){
+    return this.user.role_id.type == UserRole.SUPPLIER;
+  }
+
+  get isHawker(){
+    return this.user.role_id.type == UserRole.HAWKER;
   }
 }
