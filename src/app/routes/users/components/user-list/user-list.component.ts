@@ -1,3 +1,4 @@
+import { SettingsService } from '@core';
 import { Router } from "@angular/router";
 import { ConfirmService } from "./../../../../shared/services/confirm.service";
 import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
@@ -50,6 +51,7 @@ export class UsersUserListComponent implements OnInit {
   constructor(
     private usersFacade: UsersFacade,
     private router: Router,
+    private settingSvc:SettingsService,
     private confirmService: ConfirmService
   ) {}
 
@@ -64,6 +66,8 @@ export class UsersUserListComponent implements OnInit {
     this.usersFacade.getRoleList().subscribe(res => {
       let roles:any = res;
       this.filterRoleList = roles.data
+      this.roleDepoFilter();
+      this.roleMPlantPManagerFilter()
     })
   }
 
@@ -108,6 +112,16 @@ export class UsersUserListComponent implements OnInit {
       this.pageDetails.itemsPerPage,
       this.searchByName,this.searchRoleName
     );
+  }
+
+  private roleDepoFilter(){
+    if(this.settingSvc.isDepo)
+      this.filterRoleList = this.filterRoleList.filter(role => role.type == "DELIVERY_BOY" || role.type == "HAWKER");
+  }
+
+  private roleMPlantPManagerFilter(){
+    if(this.settingSvc.isPurchaseManager || this.settingSvc.isManufaturingPlant)
+      this.filterRoleList = this.filterRoleList.filter(role => role.type == "SUPPLIER");
   }
 
   public navigateToEdit(id) {
