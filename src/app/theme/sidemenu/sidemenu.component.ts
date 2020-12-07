@@ -48,7 +48,7 @@ export class SidemenuComponent implements OnInit {
   }
 
   private userMenuFitler(){
-    if(this.settingsService.isAdmin || this.settingsService.isManufaturingPlant || this.settingsService.isDepo) return;
+    if(this.settingsService.isAdmin || this.settingsService.isPurchaseManager || this.settingsService.isManufaturingPlant || this.settingsService.isDepo) return;
     this.menus = this.menus.filter(menuItem => 
       menuItem.name != "menu.users")
   }
@@ -56,6 +56,6 @@ export class SidemenuComponent implements OnInit {
   private purchaseManagerMenuFilter(){
     if(this.settingsService.isPurchaseManager)
       this.menus = this.menus.filter(menuItem => 
-        menuItem.name != "menu.users" && menuItem.name != "menu.items")
+         menuItem.name != "menu.items")
   }
 }

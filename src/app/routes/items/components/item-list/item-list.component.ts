@@ -34,6 +34,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
   searchByName:string = '';
   searchItemType:string = ''
   searchUserId:string ='';
+  viewName:string = '';
   filterCategoryId:string = '';
   isDepoUserSearched:boolean = false;
   availabilityStatus:availabilityStatus = null;
@@ -84,6 +85,9 @@ export class ItemsComponentsItemListComponent implements OnInit {
     })
     if(!this.isAdmin && !this.isManufaturingPlant){
       this.searchRoleName = this.settingService.user.role_id.type
+      this.viewName = 'Admin'
+    }else{
+      this.viewName = 'User'
     }
   }
 
