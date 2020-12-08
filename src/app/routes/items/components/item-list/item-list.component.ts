@@ -34,12 +34,13 @@ export class ItemsComponentsItemListComponent implements OnInit {
   searchByName:string = '';
   searchItemType:string = ''
   searchUserId:string ='';
-  viewName:string = '';
   filterCategoryId:string = '';
   isDepoUserSearched:boolean = false;
   availabilityStatus:availabilityStatus = null;
   availabilityList = [{name:'Available',value:"TRUE"},{name:'Notify',value:"NOTIFY"}]
   currentRole = this.settingService.user.role_id.type || 'CUSTOMER';
+  defaultNavPath = ["Home","Items"]
+  navPath:string[] = [...this.defaultNavPath]
 
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -83,11 +84,8 @@ export class ItemsComponentsItemListComponent implements OnInit {
       let roles:any = res;
       this.filterRoleList = roles.data.filter(role => role.type != 'ADMIN' && role.type != 'CUSTOMER' && role.type != 'DELIVERY_BOY' );
     })
-    if(!this.isAdmin && !this.isManufaturingPlant){
+    if(!this.isAdmin){
       this.searchRoleName = this.settingService.user.role_id.type
-      this.viewName = 'Admin'
-    }else{
-      this.viewName = 'User'
     }
   }
 
@@ -141,7 +139,31 @@ export class ItemsComponentsItemListComponent implements OnInit {
     if(this.searchRoleName == userrole.DEPO && this.searchUserId && this.searchUserId != '' ){
       this.displayedColumns = ['thumbnail', 'position', 'name','type', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id'];
       this.isDepoUserSearched = true;
-    }else{this.setRoleBasedColumn(); this.isDepoUserSearched = false;}
+    }else{
+      this.setRoleBasedColumn(); this.isDepoUserSearched = false;
+    }
+    this.setHeaderPath();
+  }
+
+  public setHeaderPath(){
+    if(this.settingService.isAdmin){
+      this.navPath = [... this.defaultNavPath];
+      this.navPath.push("Admin")
+      if(this.searchRoleName && this.searchRoleName.trim() != ''){
+        let rolename = this.filterRoleList.filter(role => role.type == this.searchRoleName)
+        if(rolename && rolename.length> 0)
+        this.navPath.push(rolename[0].name)
+      }
+      if(this.searchUserId && this.searchUserId.trim() != ''){
+        let username = this.filterUserList.filter(user => user._id == this.searchUserId);
+        if(username && username.length > 0)
+        this.navPath.push(username[0].first_name)
+      }
+    }else{
+      this.navPath = [... this.defaultNavPath];
+      this.navPath.push(this.settingService.user.role_id.type.toLowerCase())
+      this.navPath.push(this.settingService.user.first_name);
+    }
   }
 
   public resetFilter(){
