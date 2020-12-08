@@ -43,4 +43,42 @@ export class OfferFacadeService {
       return res;
     }).catch(err => {console.error('api call error from change activation status Offer',err ); throw err  })
   }
+
+  public newOffer(newOffer){
+    if(newOffer.offer_on_ids == null) newOffer.offer_on_ids = [];
+    if(newOffer.user_id == null) newOffer.user_id = [];
+    let expiry = new Date(newOffer.expiry)
+    newOffer.expiry = expiry.getTime();
+    return this.api.newOffer(newOffer).toPromise().then( res => {
+      this.loadOfferList();
+      this.toster.success('Offer Successfully Created',"Success",{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from new Offer ',err); throw err })
+  }
+
+  public updateOffer(offer){
+    if(offer.offer_on_ids == null) offer.offer_on_ids = [];
+    if(offer.user_id == null) offer.user_id = [];
+    let expiry = new Date(offer.expiry)
+    offer.expiry = expiry.getTime();
+    return this.api.updateOffer(offer).toPromise().then( res => {
+      this.loadOfferList();
+      this.toster.success('Offer Successfully Updated',"Success",{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from update Offer ',err); throw err })
+  }
+
+  public loadOfferDetails(offerId){
+    return this.api.getOfferDetailsById(offerId).toPromise().then(res => {
+      this.state.setEditOfferDetails(res.data)
+      return res
+    }).catch(err => {console.error('api call error from load offer Details',err); throw err });
+  }
+
+  public getOfferDetails(offerId){
+    if(!this.state.isEditOfferSet) this.loadOfferDetails(offerId)
+    return this.state.getEditOfferDetails().pipe(tap(cate => cate))
+  }
+
+
 }

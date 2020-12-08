@@ -14,11 +14,17 @@ export class CategoriesApiService {
   private baseURl = environment.SERVER_ORIGIN;
 
   public getAllCategories(currentPage = 1,currentPageSize = 5,paretCategoryId = '', categoryName = ''){
-    let url = this.baseURl+`/api/category/allCategoryList?currentPage=${currentPage}&currentPageSize=${currentPageSize}`;
+    let url = this.baseURl+`/api/category/allCategoryList?`;
+    if(currentPage != undefined && currentPage != null && currentPage != 0)
+      url += `&currentPage=${currentPage}`
+    if(currentPageSize != undefined && currentPageSize != null && currentPageSize != 0)
+      url += `&currentPageSize=${currentPageSize}`
     if(paretCategoryId != undefined && paretCategoryId !=  null && paretCategoryId.trim() != '')
       url += `&paretCategoryId=${paretCategoryId}`;
     if(categoryName != undefined && categoryName !=  null && categoryName.trim() != '')
       url += `&searchByName=${categoryName}`;
+
+    url = url.replace('?&','?')
     return this.http.get(url);
   }
 

@@ -14,8 +14,12 @@ export class ItemApiService {
 
   private baseURl = environment.SERVER_ORIGIN;
 
-  public getItemList(currentPage = 1,currentPageSize = 5,searchItemType = '',availabilityStatus?:availabilityStatus,searchRoleName = null, userId:string = '',filterCategoryId:string = '',searchByName = ''):Observable<itemListResponse>{
-    let url = this.baseURl+`/api/item/get_admin_item_list?currentPage=${currentPage}&currentPageSize=${currentPageSize}`;
+  public getItemList(currentPage = 0,currentPageSize = 0,searchItemType = '',availabilityStatus?:availabilityStatus,searchRoleName = null, userId:string = '',filterCategoryId:string = '',searchByName = ''):Observable<itemListResponse>{
+    let url = this.baseURl+`/api/item/get_admin_item_list?`;
+    if(currentPage != undefined && currentPage != null && currentPage != 0)
+      url += `&currentPage=${currentPage}`
+    if(currentPageSize != undefined && currentPageSize != null && currentPageSize != 0)
+      url += `&currentPageSize=${currentPageSize}`
     if(searchItemType != undefined && searchItemType !=  null && searchItemType.trim() != '')
       url += `&item_type=${searchItemType}`;
     if(availabilityStatus != undefined && availabilityStatus !=  null)
@@ -28,6 +32,8 @@ export class ItemApiService {
       url += `&category_id=${filterCategoryId}`;
     if(searchByName != undefined && searchByName != null && searchByName.trim() != '')
       url += `&name=${searchByName}`
+    
+    url = url.replace('?&','?')
       
     return this.http.get<itemListResponse>(url);
   }

@@ -18,7 +18,6 @@ export class OffersOfferListComponent implements OnInit {
   offerTypeList:any[] = [{name:"Order",value:"ORDER"},{name:"Category",value:"CATEGORY"},{name:"Item",value:"ITEM"},{name:"Age",value:"AGE"},{name:"Gender",value:"GENDER"}]
   searchOfferType = ''
 
-  // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   pageDetails = {
     currentPage:1,
@@ -46,35 +45,8 @@ export class OffersOfferListComponent implements OnInit {
       this.dataSource.sort = this.sort;
       this.pageDetails.totalRecords = offer.totalCount;
     })
-    // this.facade.getItemTypes().subscribe(types => {
-    //   this.itemTypeList = types;
-    // })
-    // this.usersFacade.getUsersByType(1,2000).subscribe(res => {
-    //   this.filterUserList = res.userList;
-    // });
-
-    // this.categoryFacade.loadParentCategories();
-    // this.categoryFacade.getParentCategories().subscribe(res => {
-    //   this.filterCategoryList = res;
-    // })
-    // this.usersFacade.getRoleList().subscribe(res => {
-    //   let roles:any = res;
-    //   this.filterRoleList = roles.data.filter(role => role.type != 'ADMIN' && role.type != 'CUSTOMER' && role.type != 'DELIVERY_BOY' );
-    // })
+    
   }
-
-  get isAdmin(){
-    return true
-    // return this.currentRole == UserRole.ADMIN ? true : false;
-  }
-
-  // get isDepoView(){
-  //   return this.isDepoUserSearched || this.currentRole == UserRole.DEPO ? true : false;
-  // }
-
-  // get isDepoRole(){
-  //   return this.currentRole == UserRole.DEPO ? true : false;
-  // }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -101,9 +73,9 @@ export class OffersOfferListComponent implements OnInit {
   }
 
   public navigateToEdit(id){
-    // this.facade.loadItemDetails(id).then(item => {
-    //   this.router.navigate(['items','edit',id])
-    // })
+    this.facade.loadOfferDetails(id).then(item => {
+      this.router.navigate(['offers','edit',id])
+    })
   }
 
   public filterOffer(){

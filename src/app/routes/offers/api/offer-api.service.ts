@@ -45,4 +45,20 @@ export class OfferApiService {
     }
     return this.http.patch(url,body);
   }
+
+  public newOffer(offer){
+    let url = this.baseUrl + '/api/offers';
+    return this.http.post(url,offer);
+  }
+
+  public getOfferDetailsById(offerId):Observable<any>{
+    let url = this.baseUrl+`/api/offers/details?offer_id=${offerId}`
+    return this.http.get(url);
+  }
+
+  public updateOffer(offer){
+    let url = this.baseUrl + `/api/offers/edit/${offer._id}`;
+    return this.http.put(url,offer);
+  }
+
 }

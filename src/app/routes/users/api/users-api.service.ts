@@ -13,11 +13,18 @@ export class UsersApiService {
   constructor(private http:HttpClient) { }
 
   public getUsers(currentPage = 1,currentPageSize = 5,searchByName = '',searchByType = ''):Observable<userListResponse>{
-    let url = this.baseUrl+`/api/user/list?currentPage=${currentPage}&currentPageSize=${currentPageSize}`;
+    let url = this.baseUrl+`/api/user/list?`;
+    
+    if(currentPage != undefined && currentPage != null && currentPage != 0)
+      url += `&currentPage=${currentPage}`
+    if(currentPageSize != undefined && currentPageSize != null && currentPageSize != 0)
+      url += `&currentPageSize=${currentPageSize}`
     if(searchByName != undefined && searchByName !=  null && searchByName.trim() != '')
       url += `&searchByuserName=${searchByName}`;
     if(searchByType != undefined && searchByType !=  null && searchByType.trim() != '')
       url += `&role_type=${searchByType}`;
+
+    url = url.replace('?&','?')
     return this.http.get(url);
   }
 
