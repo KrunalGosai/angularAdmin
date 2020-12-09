@@ -1,12 +1,8 @@
 <page-header title="Items" [nav]="navPath"></page-header>
 
 <section>
-  <a
-    mat-raised-button
-    aria-label="View basic sidenav example"
-    color="primary"
-    routerLink="new"
-  >
+  <a mat-raised-button aria-label="View basic sidenav example" color="primary" 
+    *ngIf="!isManufaturingPlant" routerLink="new">
     Add New
   </a>
 </section>

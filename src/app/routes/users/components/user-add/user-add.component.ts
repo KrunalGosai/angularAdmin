@@ -128,7 +128,8 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
         let data: any = res;
         this.roleList = data.data;
         this.roleDepoFilter();
-        this.mPlantPManagerFilter();
+        this.roleMPlantFilter();
+        this.rolePManagerFilter();
       },
       (err) => console.error(err)
     );
@@ -139,9 +140,15 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
       this.roleList = this.roleList.filter(role => role.type == "DELIVERY_BOY" || role.type == "HAWKER");
   }
 
-  private mPlantPManagerFilter(){
-    if(this.settingSvc.isPurchaseManager || this.settingSvc.isManufaturingPlant)
+  private rolePManagerFilter(){
+    if(this.settingSvc.isPurchaseManager)
       this.roleList = this.roleList.filter(role => role.type == "SUPPLIER");
+  }
+
+  private roleMPlantFilter(){
+    if(this.settingSvc.isManufaturingPlant){
+      this.roleList = this.roleList.filter(role => role.type == "SUPPLIER" || role.type == "MANUFACTURING_PLANT");
+    }
   }
  
 
