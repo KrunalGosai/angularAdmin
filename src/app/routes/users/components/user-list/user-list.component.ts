@@ -67,7 +67,8 @@ export class UsersUserListComponent implements OnInit {
       let roles:any = res;
       this.filterRoleList = roles.data
       this.roleDepoFilter();
-      this.roleMPlantPManagerFilter()
+      this.rolePManagerFilter();
+      this.roleMPlantFilter();
     })
   }
 
@@ -119,9 +120,15 @@ export class UsersUserListComponent implements OnInit {
       this.filterRoleList = this.filterRoleList.filter(role => role.type == "DELIVERY_BOY" || role.type == "HAWKER");
   }
 
-  private roleMPlantPManagerFilter(){
-    if(this.settingSvc.isPurchaseManager || this.settingSvc.isManufaturingPlant)
+  private rolePManagerFilter(){
+    if(this.settingSvc.isPurchaseManager)
       this.filterRoleList = this.filterRoleList.filter(role => role.type == "SUPPLIER");
+  }
+
+  private roleMPlantFilter(){
+    if(this.settingSvc.isManufaturingPlant){
+      this.filterRoleList = this.filterRoleList.filter(role => role.type == "SUPPLIER" || role.type == "MANUFACTURING_PLANT");
+    }
   }
 
   public navigateToEdit(id) {

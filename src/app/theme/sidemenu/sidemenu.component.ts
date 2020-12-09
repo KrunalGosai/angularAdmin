@@ -44,7 +44,7 @@ export class SidemenuComponent implements OnInit {
     this.menus = this.menus.filter(menuItem => 
       menuItem.name != "menu.categories" && menuItem.name != "menu.banners" &&
       menuItem.name != "menu.unit" && menuItem.name != "menu.slot" &&
-      menuItem.name != 'menu.address')
+      menuItem.name != 'menu.address' && menuItem.name != 'menu.offers')
   }
 
   private userMenuFitler(){
