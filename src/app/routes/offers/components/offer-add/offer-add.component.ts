@@ -88,6 +88,7 @@ export class OffersComponentsOfferAddComponent implements OnInit {
           this.offerForm.patchValue({ user_role: offer.user_role && offer.user_role.length > 0 ? offer.user_role[0]:'',
           expiry:new Date(offer.expiry)
          });
+         this.offerTypeChanged();
         },
         (err) => console.error(err)
       );
@@ -133,8 +134,6 @@ export class OffersComponentsOfferAddComponent implements OnInit {
       default:
         break;
     }
-    console.log(this.offerOnItem);
-
   }
 
 
