@@ -13,13 +13,13 @@ export class UnitesFacadeService {
 
   constructor(private api:UnitApiService, private state:UnitStateService, private toster: ToastrService) { }
 
-  public loadUnites(currentPage = 1,currentPageSize = 200,searchedName = ''){
+  public loadUnites(currentPage = 0,currentPageSize = 0,searchedName = ''){
     this.api.getAllUnit(currentPage,currentPageSize,searchedName).subscribe(unit => {
       this.state.setUnit(unit);
     },err => console.error('api call error from load Unit',err))
   }
 
-  public getUnites(currentPage = 1,currentPageSize = 200,searchedName = ''):Observable<unitResponse>{
+  public getUnites(currentPage = 0,currentPageSize = 0,searchedName = ''):Observable<unitResponse>{
     if(!this.state.isUnitesSet) this.loadUnites(currentPage,currentPageSize,searchedName)
     return this.state.getUnit().pipe(tap(unit => unit))
   }

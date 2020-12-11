@@ -37,6 +37,7 @@ const routes: Routes = [
   { path: 'address', loadChildren: () => import('./address/address.module').then(m => m.AddressModule) },
   { path: 'slots', loadChildren: () => import('./slot/slot.module').then(m => m.SlotModule) },
   { path: 'offers', loadChildren: () => import('./offers/offers.module').then(m => m.OffersModule) },
+  { path: 'processing-units', loadChildren: () => import('./processing-units/processing-units.module').then(m => m.ProcessingUnitsModule) },
     ],
   },
   {

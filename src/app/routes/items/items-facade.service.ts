@@ -26,7 +26,15 @@ export class ItemsFacadeService {
   }
 
   public getSallableItemList(){
-    return this.api.getItemList(1,200,'SELLABLE').pipe(tap(cate => cate))
+    return this.api.getItemList(0,0,'SELLABLE').pipe(tap(cate => cate))
+  }
+
+  public getPackagingItemList(){
+    return this.api.getItemList(0,0,'PACKAGING_MATERIAL').pipe(tap(cate => cate))
+  }
+
+  public getRawItemList(){
+    return this.api.getItemList(0,0,'RAW_MATERIAL').pipe(tap(cate => cate))
   }
 
 

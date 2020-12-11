@@ -13,10 +13,17 @@ export class UnitApiService {
 
   private baseURl = environment.SERVER_ORIGIN;
 
-  public getAllUnit(currentPage = 1,currentPageSize = 5,searchByName = ''):Observable<unitResponse>{
-    let url = this.baseURl+`/api/units?currentPage=${currentPage}&currentPageSize=${currentPageSize}`;
+  public getAllUnit(currentPage = 0,currentPageSize = 0,searchByName = ''):Observable<unitResponse>{
+    let url = this.baseURl+`/api/units?`;
+    if(currentPage != undefined && currentPage != null && currentPage != 0)
+      url += `&currentPage=${currentPage}`
+    if(currentPageSize != undefined && currentPageSize != null && currentPageSize != 0)
+      url += `&currentPageSize=${currentPageSize}`
     if(searchByName != undefined && searchByName !=  null && searchByName.trim() != '')
       url += `&searchByName=${searchByName}`;
+
+    url = url.replace('?&','?')
+
     return this.http.get<unitResponse>(url);
   }
 
