@@ -25,12 +25,26 @@
                 </mat-form-field>
             </div>
 
+            <div fxFlex="25" fxFlex.lt-sm="100">
+              <mat-form-field>
+                  <mat-label>User Role</mat-label>
+                  <mat-select formControlName="user_role" (selectionChange)="userRoleChanged()"
+                      placeholder="User Role" required>
+                      <mat-option value="DEPO">Depo</mat-option>
+                      <mat-option value="CUSTOMER">Customer</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="offerForm.get('user_role').invalid">
+                      {{ "validations.required" | translate }}
+                  </mat-error>
+              </mat-form-field>
+            </div>
+
             <div fxFlex="25" *ngIf="isTypeItemCategory" fxFlex.lt-sm="100">
                 <mat-form-field>
                     <mat-label>Offer On</mat-label>
                     <mat-select formControlName="offer_on_ids"
-                        placeholder="Offer On" required>
-                        <mat-option *ngFor="let item of offerOnItem" [value]="item._id" >
+                        placeholder="Offer On" multiple>
+                        <mat-option *ngFor="let item of offerOnItem" [value]="item._id">
                             {{ item.name }}
                         </mat-option>
                     </mat-select>
@@ -41,21 +55,21 @@
             </div>
 
             <div fxFlex="25" fxFlex.lt-sm="100">
-                <mat-form-field>
-                  <mat-label>Min Value</mat-label>
-                  <input matInput placeholder="Min Value" formControlName="min_value"
-                         required type="number">
-                  <mat-error *ngIf="offerForm.get('min_value').invalid">
-                    {{'validations.required' | translate}}
-                  </mat-error>
-                </mat-form-field>
-            </div>
-
-            <div fxFlex="25" fxFlex.lt-sm="100">
                 <mat-slide-toggle formControlName="is_active" style="margin-top: 20px" color="primary" >
                   {{ is_active_value ? "Active" : "Inactive" }}
                 </mat-slide-toggle>
             </div>
+
+            <div fxFlex="25" fxFlex.lt-sm="100">
+              <mat-form-field>
+                <mat-label>Min Value</mat-label>
+                <input matInput placeholder="Min Value" formControlName="min_value"
+                       required type="number">
+                <mat-error *ngIf="offerForm.get('min_value').invalid">
+                  {{'validations.required' | translate}}
+                </mat-error>
+              </mat-form-field>
+          </div>
 
             <div fxFlex="25" fxFlex.lt-sm="100">
                 <mat-form-field>
@@ -106,7 +120,7 @@
                 </mat-form-field>
             </div>
 
-            <div fxFlex="25" fxFlex.lt-sm="100">
+            <div fxFlex="25" *ngIf="!isTypeItemCategory" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Coupon Code</mat-label>
                   <input matInput placeholder="Coupon Code" formControlName="coupon_code" required />
@@ -115,22 +129,8 @@
                   </mat-error>
                 </mat-form-field>
             </div>
-            
-            <div fxFlex="25" fxFlex.lt-sm="100">
-                <mat-form-field>
-                    <mat-label>User Role</mat-label>
-                    <mat-select formControlName="user_role" (selectionChange)="userRoleChanged()"
-                        placeholder="User Role" required>
-                        <mat-option value="DEPO">Depo</mat-option>
-                        <mat-option value="CUSTOMER">Customer</mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="offerForm.get('user_role').invalid">
-                        {{ "validations.required" | translate }}
-                    </mat-error>
-                </mat-form-field>
-            </div>
 
-            <div fxFlex="25" fxFlex.lt-sm="100">
+            <div fxFlex="25" *ngIf="!isTypeItemCategory" fxFlex.lt-sm="100">
                 <mat-form-field>
                     <mat-label>User</mat-label>
                     <mat-select formControlName="user_id"

@@ -53,6 +53,12 @@
       "icon":"date_range"
     },
     {
+      "route": "processing-units",
+      "name": "processing",
+      "type": "link",
+      "icon": "memory"
+    },
+    {
       "route": "address",
       "name": "address",
       "type": "sub",
