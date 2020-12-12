@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { tap } from 'rxjs/operators';
 import { ProcessingStateService } from './state/processing-state.service';
 import { ProcessingApiService } from './api/processing-api.service';
@@ -8,7 +9,7 @@ import { Injectable } from '@angular/core';
 })
 export class ProcessingFacadeService {
 
-  constructor(private api:ProcessingApiService,private state:ProcessingStateService) { }
+  constructor(private api:ProcessingApiService,private state:ProcessingStateService,private toster: ToastrService) { }
 
   public loadProcessingUnitsList(currentPage = 0,currentPageSize = 0){
     this.api.getProcessingUnitsList(currentPage,currentPageSize).subscribe(pro => {
@@ -20,5 +21,19 @@ export class ProcessingFacadeService {
   public getProcessingUnitsList(currentPage = 0,currentPageSize = 0){
     if(!this.state.isProcessingSet) this.loadProcessingUnitsList(currentPage,currentPageSize)
     return this.state.getProcessingListList().pipe(tap(cate => cate))
+  }
+
+  public newProcessingUnit(processingUnit){
+    return this.api.newProcesingUnit(processingUnit).toPromise().then( res => {
+      this.toster.success('Processing Successfully Created',"Success",{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from new Procesing Unit ',err); throw err })
+  }
+
+  public cancelProcessingUnit(processingUnitId){
+    return this.api.cancelProcessingUnit(processingUnitId).toPromise().then(res => {
+      this.toster.success('Processing Unit Successfully Canceled','Success',{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from Cancel Processing Unit',err); throw err })
   }
 }
