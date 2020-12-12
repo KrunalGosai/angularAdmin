@@ -24,36 +24,14 @@ export class ProcessingApiService {
     return this.http.get<any>(url);
   }
 
-  public deleteProcesingUnits(itemId){
-    let url = this.baseURl+`/api/item/delete_Item/${itemId}`;
-    return this.http.delete(url);
+  public cancelProcessingUnit(processingUnitId){
+    let url = this.baseURl+`/api/item/cancel_processing_detail_form/${processingUnitId}`;
+    return this.http.put(url,null);
   }
 
-  // add body
-//   {
-//     "items": [
-//         {
-//             "raw_item_id": "5fc8ed4b86184a48fa58ee81",
-//             "sellable_item_id":"5fc7535b2034130b6d3f9c61",
-//             "production_unit_ids":
-//                 [
-//                     {
-//                         "production_quantity":  10,
-//                         "unit_id":"5fbf66535724111c6f29e913"  
-//                     }
-//                 ],
-//             "consumed_quantity": 5,
-//             "consumed_unit_id": "5fbf66535724111c6f29e913",
-//             "wastage_quantity": 5,
-//             "wastage_unit_id": "5fbf66535724111c6f29e913",
-//             "packaging_material": [{
-//                 "item_id": "5fc8eca486184a48fa58ee80",
-//                 "consumed_quantity": 10,
-//                 "consumed_unit_id": "5fbf66535724111c6f29e913",
-//                 "wastage_quantity": 12,
-//                 "wastage_unit_id": "5fbf66535724111c6f29e913"
-//             }]
-//         }]  
-   
-// }
+  public newProcesingUnit(processingUnit){
+    let url = this.baseURl+`/api/item/add_processing_form`;
+    return this.http.post(url,processingUnit);
+  }
+
 }

@@ -16,6 +16,8 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   itemList:any[] = [];
   packingItemList:any[] = [];
   unitList:any[] = [];
+  sellableItemList:any[] = [];
+  rawItemList:any[] = [];
  
   //forms
   processingForm: FormGroup;
@@ -28,9 +30,10 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
 
   //tables 
   packagingMaterial:any[] = [];
-  packagingMaterialColumn:string[] = ["item_id","consumed_unit_id","consumed_quantity","wastage_unit_id","wastage_quantity"]
+  packagingMaterialColumn:string[] = ["item_id","consumed_unit_id","consumed_quantity","wastage_unit_id","wastage_quantity", "controls"]
   production:any[] = [];
-  productionColumn:string[] = ["consumed_unit_id","consumed_quantity"]
+  productionColumn:string[] = ["consumed_unit_id","consumed_quantity","controls"]
+  processingUnits:any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -41,12 +44,15 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     private facade: ProcessingFacadeService,
   ) {
     this.processingForm = this.fb.group({
-        item_type:[""],
-        raw_item_id:["",[Validators.required]],
-        consumed_unit_id:["",[Validators.required]],
+        item_type:["",[Validators.required]],
+        raw_item_id:[""],
+        sellable_item_id:[""],
+        consumed_unit_id:[""],
         consumed_quantity:[0],
-        wastage_unit_id:["",[Validators.required]],
-        wastage_quantity:[0]
+        wastage_unit_id:[""],
+        wastage_quantity:[0],
+        production_unit_ids:[[]],
+        packaging_material:[[]]
       });
 
     this.productionForm = this.fb.group({
@@ -62,9 +68,6 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
         wastage_quantity:[0]
     })
 
-
-
-    
     this.activeRoute.params.subscribe((params) => {
       if (params.id != undefined && params.id != null && params.id != "") {
         this.isEditMode = true;
@@ -100,24 +103,72 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     this.itemFacade.getPackagingItemList().subscribe(list => {
       this.packingItemList = list.data;
     })
-    this.getItemList("RAW_MATERIAL");
-  }
-
-  public itemTypeChanged(){
-    let value = this.processingForm.get('item_type').value;
-    this.getItemList(value);
-  }
-
-  public getItemList(type:string){
-    this.itemFacade.getItemList(0,0,type).subscribe(list => {
-      this.itemList = list.data;      
+    this.itemFacade.getSallableItemList().subscribe(list => {
+      this.sellableItemList = list.data;      
     })
+    this.itemFacade.getRawItemList().subscribe(list => {
+      this.rawItemList = list.data;
+      this.itemList = this.rawItemList;
+    })
+  }
+
+  // public itemTypeChanged(){
+  //   let value = this.processingForm.get('item_type').value;
+  //   this.getItemList(value);
+  // }
+
+  // public getItemList(type:string){
+  //   if(type == "SELLABLE")
+  //     this.itemList = [...this.sellableItemList];
+  //   else if(type == "RAW_MATERIAL")
+  //     this.itemList = [...this.rawItemList];
+  // }
+
+  get isSallable(){
+    return this.processingForm.get('item_type').value == "SELLABLE";
+  }
+
+  public onProcessingFormSubmit(event){
+    if (!this.processingForm.valid){
+      if(this.isSallable){
+        if(this.processingForm.get('item_type').valid && this.processingForm.get('sellable_item_id').valid
+            && this.processingForm.get('wastage_unit_id').valid && this.processingForm.get('wastage_quantity').valid){}
+        else{
+          return
+        }
+      }else{
+        return;
+      }
+    }
+    this.processingUnits = [this.processingForm.value];
+    // this.processingForm.reset();
+    this.onFormSubmit(null);
+  }
+
+  public onProductionFormSubmit(event){
+    if(!this.productionForm.valid) return;
+    let oldValue:any = this.processingForm.get('production_unit_ids').value || [];
+    let value = this.productionForm.value;
+    let newValue = [...oldValue];
+    newValue.push(value);
+    this.processingForm.get('production_unit_ids').setValue(newValue);
+    this.productionForm.reset();
+  }
+
+  public onPackingFormSubmit(event){
+    if(!this.packingForm.valid) return;
+    let oldValue:any = this.processingForm.get('packaging_material').value || [];
+    let value = this.packingForm.value;
+    let newValue = [...oldValue];
+    newValue.push(value);
+    this.processingForm.get('packaging_material').setValue(newValue);
+    this.packingForm.reset();
   }
 
 
   public onFormSubmit(event) {
     console.log("form value ", this.processingForm.value, this.processingForm.valid);
-    if (!this.processingForm.valid) return;
+    if (!this.processingUnits && this.processingUnits.length <= 0) return;
     if (this.isEditMode) {
       let value = this.processingForm.value;
       value._id = this.activeEditId;
@@ -126,10 +177,12 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
       //   this.router.navigate(["offers"]);
       // });
     } else {
-      // this.facade.newOffer(this.processingForm.value).then((res) => {
-      //   this.processingForm.reset();
-      //   this.router.navigate(["offers"]);
-      // });
+      let body = {items:[...this.processingUnits]}
+      this.facade.newProcessingUnit(body).then((res) => {
+        this.facade.loadProcessingUnitsList();
+        this.processingForm.reset();
+        this.router.navigate(["processing-units"]);
+      });
     }
   }
 

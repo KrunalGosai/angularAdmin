@@ -13,7 +13,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 })
 export class ProcessingUnitsProcessingListComponent implements OnInit {
 
-  displayedColumns: string[] = ["position","offer_type","min_value","discount_type","discount_value","coupon_code","expiry","is_active", "created_at","controls"];
+  displayedColumns: string[] = ["batchNumber","status","raw_item_id","sellable_item_id", "controls"];
   dataSource: MatTableDataSource<any>;
   offerTypeList:any[] = [{name:"Order",value:"ORDER"},{name:"Category",value:"CATEGORY"},{name:"Item",value:"ITEM"},{name:"Age",value:"AGE"},{name:"Gender",value:"GENDER"}]
   searchOfferType = ''
@@ -33,7 +33,7 @@ export class ProcessingUnitsProcessingListComponent implements OnInit {
     private confirmService:ConfirmService) { }
 
   ngOnInit() {
-    // this.filterProcessingUnis()
+    this.filterProcessingUnis()
     this.facade.getProcessingUnitsList().subscribe(offer => {
       console.log(offer)
       this.dataSource = new MatTableDataSource(offer.data);
@@ -59,10 +59,10 @@ export class ProcessingUnitsProcessingListComponent implements OnInit {
   }
 
   public deleteIcon(id) {
-    this.confirmService.confirm('Are you sure want to delete this offer?','Confirm').subscribe(result => {
+    this.confirmService.confirm('Are you sure want to cancel this processing unit?','Confirm').subscribe(result => {
       if(result == true){
-        // this.facade.deleteOffer(id)
-        //   .then(res => this.filterOffer())
+        this.facade.cancelProcessingUnit(id)
+          .then(res => this.filterProcessingUnis())
       }
     })
   }
@@ -74,18 +74,12 @@ export class ProcessingUnitsProcessingListComponent implements OnInit {
   }
 
   public filterProcessingUnis(){
-    // this.facade.loadProcessingUnitsList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage)
+    this.facade.loadProcessingUnitsList()
   }
 
   public resetFilter(){
     this.searchOfferType = '';
   }
 
-  public changeActivationStatus(row){
-    let rowcopy = {...row};
-    // this.facade.changeActivationStatus(rowcopy).then(res => {
-    //   this.filterOffer()
-    // });
-  }
 
 }
