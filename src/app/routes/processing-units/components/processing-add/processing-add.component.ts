@@ -1,9 +1,13 @@
+import { SettingsService } from './../../../../core/bootstrap/settings.service';
 import { ProcessingFacadeService } from './../../processing-facade.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { ItemsFacadeService } from 'app/routes/items/items-facade.service';
 import { UnitesFacadeService } from 'app/routes/unites/unites-facade';
+import { UsersFacade } from 'app/routes/users/users-facade';
+import { UserRole } from '@shared/entities';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-processing-units-components-processing-add',
@@ -18,6 +22,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   unitList:any[] = [];
   sellableItemList:any[] = [];
   rawItemList:any[] = [];
+  userList = []
  
   //forms
   processingForm: FormGroup;
@@ -31,19 +36,25 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   //tables 
   packagingMaterial:any[] = [];
   packagingMaterialColumn:string[] = ["item_id","consumed_unit_id","consumed_quantity","wastage_unit_id","wastage_quantity", "controls"]
-  production:any[] = [];
+  packagingMaterialSource:MatTableDataSource<any>;
+  production:any = [];
+  productionSource:MatTableDataSource<any>;
   productionColumn:string[] = ["consumed_unit_id","consumed_quantity","controls"]
   processingUnits:any[] = [];
+  
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private settingSvc: SettingsService,
     private activeRoute: ActivatedRoute,
     private itemFacade: ItemsFacadeService,
     private unitFacade: UnitesFacadeService,
+    private usersFacade: UsersFacade,
     private facade: ProcessingFacadeService,
   ) {
     this.processingForm = this.fb.group({
+        user_id:[''],
         item_type:["",[Validators.required]],
         raw_item_id:[""],
         sellable_item_id:[""],
@@ -79,20 +90,58 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   ngOnInit() {
     
     if (this.isEditMode) {
-      // this.facade.getOfferDetails(this.activeEditId).subscribe(
-      //   (res) => {
-      //     let offer: any = { ...res };
-      //     console.log(offer)
-      //     this.processingForm.patchValue(offer);
-      //     this.processingForm.patchValue({ user_role: offer.user_role && offer.user_role.length > 0 ? offer.user_role[0]:'',
-      //     expiry:new Date(offer.expiry)
-      //    });
-      //    this.offerTypeChanged();
-      //   },
-      //   (err) => console.error(err)
-      // );
+      
+      this.facade.getProcessingUnitDetail().subscribe(
+        (res) => {
+          let data: any = { ...res };
+          let item = data.items[0];
+          this.production = this.productionEditList(item.production_unit_ids);
+          this.packagingMaterial = this.packingEditList(item.packaging_material);
+          this.processingForm.patchValue({
+            user_id:data.user_id,
+            item_type:item.raw_item_id ? 'RAW_MATERIAL' : 'SELLABLE',
+            raw_item_id:item.raw_item_id ? item.raw_item_id._id : '',
+            sellable_item_id:item.sellable_item_id ? item.sellable_item_id._id : '',
+            consumed_unit_id:item.consumed_unit_id ? item.consumed_unit_id._id : '',
+            consumed_quantity:item.consumed_quantity,
+            wastage_unit_id:item.wastage_unit_id ? item.wastage_unit_id._id : '',
+            wastage_quantity:item.wastage_quantity,
+            production_unit_ids:this.production,
+            packaging_material:this.packagingMaterial
+          });
+          this.reloadProductionTable();
+          this.reloadPackingTable()
+        },(err) => console.error(err)
+      );
     }
     this.loadDropdowns()
+  }
+
+  private productionEditList(sourceList){
+    if(!sourceList || sourceList.length <= 0) return [];
+    let list = [];
+    sourceList.map(item => {
+      list.push({
+        unit_id:item.unit_id ? item.unit_id._id : '',
+        production_quantity: item.production_quantity
+      })
+    })
+    return list;
+  }
+
+  private packingEditList(sourceList){
+    if(!sourceList || sourceList.length <= 0) return [];
+    let list = [];
+    sourceList.map(item => {
+      list.push({
+        item_id:item.item_id ? item.item_id._id : '',
+        consumed_unit_id:item.consumed_unit_id ? item.consumed_unit_id._id : '',
+        consumed_quantity:item.consumed_quantity,
+        wastage_unit_id:item.consumed_unit_id ? item.consumed_unit_id._id : '',
+        wastage_quantity:item.wastage_quantity
+      })
+    })
+    return list;
   }
 
   private loadDropdowns(){
@@ -110,22 +159,31 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
       this.rawItemList = list.data;
       this.itemList = this.rawItemList;
     })
+    this.usersFacade.getUsersByType(0,0,'',UserRole.MANUFACTURING_PLANT).subscribe(users => {
+      this.userList = users.userList;
+    })
   }
-
-  // public itemTypeChanged(){
-  //   let value = this.processingForm.get('item_type').value;
-  //   this.getItemList(value);
-  // }
-
-  // public getItemList(type:string){
-  //   if(type == "SELLABLE")
-  //     this.itemList = [...this.sellableItemList];
-  //   else if(type == "RAW_MATERIAL")
-  //     this.itemList = [...this.rawItemList];
-  // }
 
   get isSallable(){
     return this.processingForm.get('item_type').value == "SELLABLE";
+  }
+
+  get isAdmin(){
+    return this.settingSvc.isAdmin;
+  }
+
+  public getUnit(id){
+    if(!this.unitList || this.unitList.length <= 0 ) return ''
+    let unit = this.unitList.filter(unit => unit._id == id);
+    if(unit && unit.length> 0) return unit[0].name;
+    else return ''
+  }
+
+  public getItem(id){
+    if(!this.packingItemList || this.packingItemList.length <= 0 ) return ''
+    let items = this.packingItemList.filter(items => items._id == id);
+    if(items && items.length> 0) return items[0].name;
+    else return ''
   }
 
   public onProcessingFormSubmit(event){
@@ -140,6 +198,8 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
         return;
       }
     }
+    this.processingForm.get('production_unit_ids').setValue(this.production);
+    this.processingForm.get('packaging_material').setValue(this.packagingMaterial);
     this.processingUnits = [this.processingForm.value];
     // this.processingForm.reset();
     this.onFormSubmit(null);
@@ -147,35 +207,36 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
 
   public onProductionFormSubmit(event){
     if(!this.productionForm.valid) return;
-    let oldValue:any = this.processingForm.get('production_unit_ids').value || [];
+    let oldValue:any = this.production;
     let value = this.productionForm.value;
     let newValue = [...oldValue];
     newValue.push(value);
-    this.processingForm.get('production_unit_ids').setValue(newValue);
+    this.production = newValue;
+    this.reloadProductionTable();
     this.productionForm.reset();
   }
 
   public onPackingFormSubmit(event){
     if(!this.packingForm.valid) return;
-    let oldValue:any = this.processingForm.get('packaging_material').value || [];
+    let oldValue:any = this.packagingMaterial;
     let value = this.packingForm.value;
     let newValue = [...oldValue];
     newValue.push(value);
-    this.processingForm.get('packaging_material').setValue(newValue);
+    this.packagingMaterial = newValue;
+    this.reloadPackingTable();
     this.packingForm.reset();
   }
 
-
   public onFormSubmit(event) {
-    console.log("form value ", this.processingForm.value, this.processingForm.valid);
     if (!this.processingUnits && this.processingUnits.length <= 0) return;
     if (this.isEditMode) {
-      let value = this.processingForm.value;
-      value._id = this.activeEditId;
-      // this.facade.updateOffer(value).then((res) => {
-      //   this.processingForm.reset();
-      //   this.router.navigate(["offers"]);
-      // });
+      let body:any = {items:[...this.processingUnits]}
+      // let value = this.processingForm.value;
+      body.processing_id = this.activeEditId;
+      this.facade.newProcessingUnit(body).then((res) => {
+        this.processingForm.reset();
+        this.router.navigate(["processing-units"]);
+      });
     } else {
       let body = {items:[...this.processingUnits]}
       this.facade.newProcessingUnit(body).then((res) => {
@@ -186,4 +247,25 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     }
   }
 
+  public deleteProductionItem(ind){
+    let data = [...this.production];
+    data.splice(ind,1);
+    this.production = [...data];
+    this.reloadProductionTable();
+  }
+
+  public deletePackagingItem(ind){
+    let data = [...this.packagingMaterial];
+    data.splice(ind,1);
+    this.packagingMaterial = [...data];
+    this.reloadPackingTable();
+  }
+
+  reloadProductionTable(){
+    this.productionSource = new MatTableDataSource(this.production);
+  }
+
+  reloadPackingTable(){
+    this.packagingMaterialSource = new MatTableDataSource(this.packagingMaterial);
+  }
 }

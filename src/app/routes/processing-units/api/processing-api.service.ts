@@ -12,12 +12,14 @@ export class ProcessingApiService {
 
   private baseURl = environment.SERVER_ORIGIN;
 
-  public getProcessingUnitsList(currentPage = 0,currentPageSize = 0):Observable<any>{
+  public getProcessingUnitsList(currentPage = 0,currentPageSize = 0, searchUserId =''):Observable<any>{
     let url = this.baseURl+`/api/item/processing_detail_form_list?`;
     if(currentPage != undefined && currentPage != null && currentPage != 0)
       url += `&currentPage=${currentPage}`
     if(currentPageSize != undefined && currentPageSize != null && currentPageSize != 0)
       url += `&currentPageSize=${currentPageSize}`
+    if(searchUserId != undefined && searchUserId != null && searchUserId.trim() != '')
+      url += `&user_id=${searchUserId}`
     
     url = url.replace('?&','?')
       
@@ -33,5 +35,8 @@ export class ProcessingApiService {
     let url = this.baseURl+`/api/item/add_processing_form`;
     return this.http.post(url,processingUnit);
   }
+
+
+  // "processing_id":"5fd5e014853d300155e73e65"    
 
 }

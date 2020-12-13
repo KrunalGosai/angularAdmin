@@ -25,7 +25,7 @@ export class UsersFacade {
     return this.usersstate.getUsers().pipe(tap(res => res))
   }
 
-  public getUsersByType(currentPage = 1,currentPageSize = 5,searchByName = '',searchByType = ''){
+  public getUsersByType(currentPage = 0,currentPageSize = 0,searchByName = '',searchByType = ''){
     if(!this.usersstate.isUserSet && searchByType != '') this.loadUsers(currentPage,currentPageSize,searchByName,searchByType);
     return this.usersstate.getUsers().pipe(tap(res => res))
   }
