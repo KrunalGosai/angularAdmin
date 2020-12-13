@@ -12,7 +12,7 @@ export class UsersApiService {
   private baseUrl:string = environment.SERVER_ORIGIN;
   constructor(private http:HttpClient) { }
 
-  public getUsers(currentPage = 1,currentPageSize = 5,searchByName = '',searchByType = ''):Observable<userListResponse>{
+  public getUsers(currentPage = 0,currentPageSize = 0,searchByName = '',searchByType = ''):Observable<userListResponse>{
     let url = this.baseUrl+`/api/user/list?`;
     
     if(currentPage != undefined && currentPage != null && currentPage != 0)

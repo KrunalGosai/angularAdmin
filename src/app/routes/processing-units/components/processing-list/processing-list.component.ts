@@ -1,3 +1,5 @@
+import { SettingsService } from './../../../../core/bootstrap/settings.service';
+import { UserRole } from './../../../../shared/entities/index';
 import { PageEvent } from '@angular/material/paginator';
 import { ConfirmService } from './../../../../shared/services/confirm.service';
 import { ProcessingFacadeService } from './../../processing-facade.service';
@@ -5,6 +7,9 @@ import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { SidebarNoticeService } from '@theme/sidebar-notice/sidebar-notice.service';
+import { ProcessingViewComponent } from '../processing-view/processing-view.component';
+import { UsersFacade } from 'app/routes/users/users-facade';
 
 @Component({
   selector: 'app-processing-units-processing-list',
@@ -15,8 +20,8 @@ export class ProcessingUnitsProcessingListComponent implements OnInit {
 
   displayedColumns: string[] = ["batchNumber","status","raw_item_id","sellable_item_id", "controls"];
   dataSource: MatTableDataSource<any>;
-  offerTypeList:any[] = [{name:"Order",value:"ORDER"},{name:"Category",value:"CATEGORY"},{name:"Item",value:"ITEM"},{name:"Age",value:"AGE"},{name:"Gender",value:"GENDER"}]
-  searchOfferType = ''
+  filterUserList = [];
+  searchUserId = '';
 
   @ViewChild(MatSort) sort: MatSort;
   pageDetails = {
@@ -30,17 +35,26 @@ export class ProcessingUnitsProcessingListComponent implements OnInit {
   constructor(
     private router:Router,
     private facade:ProcessingFacadeService,
+    private usersFacade:UsersFacade,
+    private settingSvc:SettingsService,
+    private sidebarNoticeService:SidebarNoticeService,
     private confirmService:ConfirmService) { }
 
   ngOnInit() {
     this.filterProcessingUnis()
-    this.facade.getProcessingUnitsList().subscribe(offer => {
-      console.log(offer)
-      this.dataSource = new MatTableDataSource(offer.data);
+    this.facade.getProcessingUnitsList().subscribe(processingUnits => {
+      this.dataSource = new MatTableDataSource(processingUnits.data);
       this.dataSource.sort = this.sort;
-      this.pageDetails.totalRecords = offer.totalCount;
+      this.pageDetails.totalRecords = processingUnits.totalCount;
+    })
+    this.usersFacade.getUsersByType(0,0,'',UserRole.MANUFACTURING_PLANT).subscribe(users => {
+      this.filterUserList = users.userList;
     })
     
+  }
+
+  get isAdmin(){
+    return this.settingSvc.isAdmin;
   }
 
   applyFilter(event: Event) {
@@ -67,18 +81,23 @@ export class ProcessingUnitsProcessingListComponent implements OnInit {
     })
   }
 
-  public navigateToEdit(id){
-    // this.facade.loadOfferDetails(id).then(item => {
-    //   this.router.navigate(['offers','edit',id])
-    // })
+  public navigateToEdit(row){
+    this.facade.loadProcessigUnitDetail(row)
+    this.router.navigate(['processing-units','edit',row._id])
   }
 
   public filterProcessingUnis(){
-    this.facade.loadProcessingUnitsList()
+    this.facade.loadProcessingUnitsList(0,0,this.searchUserId)
   }
 
   public resetFilter(){
-    this.searchOfferType = '';
+    this.searchUserId = '';
+  }
+
+  public openItemViewDialog(row){
+    this.sidebarNoticeService.setComponent(ProcessingViewComponent);
+    this.sidebarNoticeService.setIsOpened(true);
+    this.facade.setProcessingUnitViewData(row);  
   }
 
 
