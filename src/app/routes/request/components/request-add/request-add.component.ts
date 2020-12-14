@@ -78,6 +78,7 @@ export class AddRequestComponents implements OnInit {
 		this.requestForm.controls['sourceUserId'].valueChanges.subscribe((value) => {
 			
 			if(this.requestForm.controls['requestOrderType'].value === 'PURCHASE_ORDER'){
+				this.searchUserId = null;
 				this.getItem('RAW_MATERIAL');
 			}
 			if(this.requestForm.controls['requestOrderType'].value === 'TRANSFER_ORDER'){
@@ -264,6 +265,7 @@ export class AddRequestComponents implements OnInit {
 					}
 				}
 			}else{
+				//console.log("ocean",items);
 				this.itemList = items;
 				this.dataSource = new MatTableDataSource(this.itemList['data']);
 				this.pageDetails.totalRecords = this.itemList['totalCount'];
