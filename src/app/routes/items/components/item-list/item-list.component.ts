@@ -72,9 +72,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
     this.facade.getItemTypes().subscribe(types => {
       this.itemTypeList = types;
     })
-    this.usersFacade.getUsersByType(1,2000).subscribe(res => {
-      this.filterUserList = res.userList;
-    });
+    this.filterRoleChanged();
 
     this.categoryFacade.loadParentCategories();
     this.categoryFacade.getParentCategories().subscribe(res => {
@@ -204,11 +202,11 @@ export class ItemsComponentsItemListComponent implements OnInit {
   }
 
   public filterRoleChanged(){
-    if(this.searchRoleName.trim() == '') {
-      this.filterUserList = []; 
-      return;
-    }
-    this.usersFacade.loadUsers(1,200,'',this.searchRoleName)
+    if(!this.searchRoleName || this.searchRoleName.trim() == '') return;
+    this.filterUserList = []; 
+    this.usersFacade.getUsersByType(0,0,'',this.searchRoleName).subscribe(res => {
+      this.filterUserList = res.userList;
+    });
   }
 
   private setRoleBasedColumn(){
