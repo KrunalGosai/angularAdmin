@@ -1,6 +1,7 @@
 <h1 mat-dialog-title>Item Units</h1>
 
 <mat-dialog-content class="mat-typography" style="min-width: 30%;">
+    <p>Note: Discounted will get affected autometiclly.</p>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         
         <ng-container matColumnDef="price">
@@ -12,6 +13,18 @@
             (change)="changePrice(element)" 
             style="max-width: 65px;" [(ngModel)]="element.price" />
           </td>
+        </ng-container>
+
+        <ng-container matColumnDef="discount_value">
+          <th mat-header-cell *matHeaderCellDef> Discount </th>
+          <td mat-cell *matCellDef="let element" style="padding-left: 10px;"> 
+            {{element.discount_value + (discount_type == 'FLAT' ? '' : '%')}} 
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="discounted_price">
+          <th mat-header-cell *matHeaderCellDef> Discounted Price </th>
+          <td mat-cell *matCellDef="let element" style="padding-left: 10px;"> {{element.discounted_price}} </td>
         </ng-container>
       
         <ng-container matColumnDef="qty">
