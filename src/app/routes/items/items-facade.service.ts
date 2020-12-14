@@ -13,20 +13,28 @@ export class ItemsFacadeService {
 
   constructor(private api:ItemApiService, private state:ItemStateService, private toster: ToastrService) { }
 
-  public loadItemList(currentPage = 1,currentPageSize = 200, searchItemType= '',availabilityStatus = null,searchRoleName = null, userId = '',filterCategoryId:string = '',searchByName = ''){
+  public loadItemList(currentPage = 0,currentPageSize = 0, searchItemType= '',availabilityStatus = null,searchRoleName = null, userId = '',filterCategoryId:string = '',searchByName = ''){
     this.api.getItemList(currentPage,currentPageSize,searchItemType,availabilityStatus,searchRoleName,userId,filterCategoryId,searchByName).subscribe(items => {
       this.state.setItemList(items);
     },err => console.error('api call error from load items ',err))
   }
 
 
-  public getItemList(currentPage = 1,currentPageSize = 200, searchItemType= '',availabilityStatus,searchRoleName = null,userId = '',filterCategoryId:string = '',searchByName =''){
+  public getItemList(currentPage = 0,currentPageSize = 0, searchItemType= '',availabilityStatus = null,searchRoleName = null,userId = '',filterCategoryId:string = '',searchByName =''){
     if(!this.state.isItemsSet) this.loadItemList(currentPage,currentPageSize,searchItemType,availabilityStatus, searchRoleName,userId,filterCategoryId,searchByName)
     return this.state.getItemList().pipe(tap(cate => cate))
   }
 
   public getSallableItemList(){
-    return this.api.getItemList(1,200,'SELLABLE').pipe(tap(cate => cate))
+    return this.api.getItemList(0,0,'SELLABLE').pipe(tap(cate => cate))
+  }
+
+  public getPackagingItemList(){
+    return this.api.getItemList(0,0,'PACKAGING_MATERIAL').pipe(tap(cate => cate))
+  }
+
+  public getRawItemList(){
+    return this.api.getItemList(0,0,'RAW_MATERIAL').pipe(tap(cate => cate))
   }
 
 

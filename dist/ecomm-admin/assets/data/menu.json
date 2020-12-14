@@ -32,7 +32,7 @@
       "route": "unites",
       "name": "unit",
       "type": "link",
-      "icon":"ad_units"
+      "icon":"straighten"
     },
     {
       "route": "items",
@@ -51,6 +51,12 @@
       "name": "slot",
       "type": "link",
       "icon":"date_range"
+    },
+    {
+      "route": "processing-units",
+      "name": "processing",
+      "type": "link",
+      "icon": "memory"
     },
     {
       "route": "address",
@@ -81,35 +87,6 @@
           "name": "countries",
           "type": "link",
           "icon":"flag"
-        }
-      ]
-    },
-    {
-      "route": "products",
-      "name": "products",
-      "type": "link",
-      "icon":"shopping_bag"
-    },
-    {
-      "route": "sessions",
-      "name": "sessions",
-      "type": "sub",
-      "icon": "question_answer",
-      "children": [
-        {
-          "route": "403",
-          "name": "403",
-          "type": "link"
-        },
-        {
-          "route": "404",
-          "name": "404",
-          "type": "link"
-        },
-        {
-          "route": "500",
-          "name": "500",
-          "type": "link"
         }
       ]
     }

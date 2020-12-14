@@ -1,12 +1,8 @@
-<page-header></page-header>
+<page-header title="Items" [nav]="navPath"></page-header>
 
 <section>
-  <a
-    mat-raised-button
-    aria-label="View basic sidenav example"
-    color="primary"
-    routerLink="new"
-  >
+  <a mat-raised-button aria-label="View basic sidenav example" color="primary" 
+    *ngIf="!isManufaturingPlant" routerLink="new">
     Add New
   </a>
 </section>
@@ -30,20 +26,18 @@
             fxFlex="33"
             fxFlex.lt-sm="100"
             *ngIf="isAdmin"
-            class="matero-col"
-          >
+            class="matero-col">
             <mat-label>User Role</mat-label>
             <mat-select
               placeholder="User Role"
               (selectionChange)="filterRoleChanged()"
               [(ngModel)]="searchRoleName"
-              name="searchRoleName"
-            >
+              name="searchRoleName">
               <mat-option
                 *ngFor="let role of filterRoleList"
-                [value]="role.type"
-                >{{ role.name }}</mat-option
-              >
+                [value]="role.type">
+                {{ role.name }}
+              </mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -72,8 +66,7 @@
             <mat-select
               placeholder="Item Type"
               [(ngModel)]="searchItemType"
-              name="filterType"
-            >
+              name="filterType">
               <mat-option
                 *ngFor="let type of itemTypeList"
                 [value]="type.value"
@@ -296,21 +289,12 @@
               </button>
             </mat-grid-tile> -->
           <mat-grid-tile *ngIf="!isDepoView">
-            <button
-              mat-icon-button
-              aria-label="View"
-              (click)="openItemViewDialog(row)"
-            >
+            <button mat-icon-button  aria-label="View" (click)="openItemViewDialog(row)" >
               <mat-icon color="primary">visibility</mat-icon>
             </button>
           </mat-grid-tile>
           <mat-grid-tile *ngIf="isAdmin">
-            <button
-              mat-icon-button
-              aria-label="Edit"
-              (click)="navigateToEdit(row._id)"
-              [routerLink]="[]"
-            >
+            <button mat-icon-button aria-label="Edit" (click)="navigateToEdit(row._id)" [routerLink]="[]">
               <mat-icon color="primary">create</mat-icon>
             </button>
           </mat-grid-tile>
@@ -339,6 +323,6 @@
     (page)="pageEvent($event)"
     [length]="pageDetails.totalRecords"
     [pageSize]="pageDetails.itemsPerPage"
-    [pageSizeOptions]="[5, 10, 25]"
-  ></mat-paginator>
+    [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
+  
 </div>

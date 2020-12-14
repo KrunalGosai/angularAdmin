@@ -14,7 +14,7 @@ export class CategoriesFacadeService {
 
   constructor(private api:CategoriesApiService, private state:CategoriesStateService, private toster: ToastrService) { }
 
-  public loadCategories(currentPage = 1,currentPageSize = 200,paretCategoryId = '',categoryName = ''){
+  public loadCategories(currentPage = 0,currentPageSize = 0,paretCategoryId = '',categoryName = ''){
     this.api.getAllCategories(currentPage,currentPageSize,paretCategoryId, categoryName).subscribe(cate => {
       this.state.setCategories(cate);
     },err => console.error('api call error from load categories ',err))
@@ -27,7 +27,7 @@ export class CategoriesFacadeService {
     },err => console.error('api call error from load parent categories ',err))
   }
 
-  public getCategories(currentPage = 1,currentPageSize = 200,paretCategoryId = '',categoryName = ''):Observable<categoryListResponse>{
+  public getCategories(currentPage = 0,currentPageSize = 0,paretCategoryId = '',categoryName = ''):Observable<categoryListResponse>{
     if(!this.state.isCategoriesSet) this.loadCategories(currentPage,currentPageSize,paretCategoryId, categoryName)
     return this.state.getCategories().pipe(tap(cate => cate))
   }
