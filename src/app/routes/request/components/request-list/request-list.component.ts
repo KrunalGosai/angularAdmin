@@ -1,0 +1,147 @@
+import { PageEvent } from '@angular/material/paginator';
+import { ConfirmService } from '../../../../shared/services/confirm.service';
+import { Router } from '@angular/router';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { RequestFacadeService } from '../../request-facade.service';
+import { UsersFacade } from './../../../users/users-facade';
+import { SettingsService } from '@core';
+
+@Component({
+  selector: 'app-request-list',
+  templateUrl: './request-list.component.html',
+  styleUrls: ['./request-list.component.scss']
+})
+export class RequestListComponent implements OnInit {
+
+  displayedColumns: string[] = ["request_no","type","source","destination","total_items","date_time","status","controls"];
+  dataSource: MatTableDataSource<any>;
+  offerTypeList:any[] = [{name:"Order",value:"ORDER"},{name:"Category",value:"CATEGORY"},{name:"Item",value:"ITEM"},{name:"Age",value:"AGE"},{name:"Gender",value:"GENDER"}]
+  searchRequestNumber:string = '';
+  filterRoleList:any;
+  filterUserList:any;
+  orderType:string[] = ['PURCHASE_ORDER', 'TRANSFER_ORDER'];
+  status:string[] = ['PENDING' ,'REJECTED' ,'CANCELLED', 'CONFIRMED'];
+  searchRoleName:string = this.settingService.user.role_id.type;
+  searchUserId:string ='';
+  //@ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  pageDetails = {
+    currentPage:1,
+    itemsPerPage:10,
+    totalPages:3,
+    totalRecords:200
+  }
+  totalBanner:number = 0;
+  
+  constructor(
+    private router:Router,
+    private settingService:SettingsService,
+    private usersFacade:UsersFacade,
+    // private categoryFacade:CategoriesFacadeService,
+    private facade:RequestFacadeService,
+    // private sidebarNoticeService:SidebarNoticeService,
+    // public itemUnitViewDialog: MatDialog,
+    private confirmService:ConfirmService) { }
+
+  ngOnInit() {
+    //this.facade.loadReuestList(1,2000);
+    //this.filterOffer()
+    
+    this.facade.getRequestList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchRequestNumber).subscribe((requestList:any) => {
+      console.log("requestList",requestList);
+      if(requestList){
+        this.dataSource = new MatTableDataSource(requestList.message);
+        this.dataSource.sort = this.sort;
+        this.pageDetails.totalRecords = requestList.totalcount;
+      }
+    })
+    // this.facade.getItemTypes().subscribe(types => {
+    //   this.itemTypeList = types;
+    // })
+    this.usersFacade.getUsersByType(1,2000).subscribe(res => {
+      this.filterUserList = res.userList;
+    });
+
+    // this.categoryFacade.loadParentCategories();
+    // this.categoryFacade.getParentCategories().subscribe(res => {
+    //   this.filterCategoryList = res;
+    // })
+    this.usersFacade.getRoleList().subscribe(res => {
+      let roles:any = res;
+      this.filterRoleList = roles.data.filter(role => role.type != 'ADMIN' && role.type != 'CUSTOMER' && role.type != 'DELIVERY_BOY' );
+    })
+  }
+
+  get isAdmin(){
+    return true
+    // return this.currentRole == UserRole.ADMIN ? true : false;
+  }
+
+  // get isDepoView(){
+  //   return this.isDepoUserSearched || this.currentRole == UserRole.DEPO ? true : false;
+  // }
+
+  // get isDepoRole(){
+  //   return this.currentRole == UserRole.DEPO ? true : false;
+  // }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  public pageEvent(event:PageEvent){
+    this.pageDetails.itemsPerPage = event.pageSize;
+    this.pageDetails.currentPage = event.pageIndex+1;
+    this.filterOffer()
+  }
+
+  public deleteIcon(id) {
+    this.confirmService.confirm('Are you sure want to delete this offer?','Confirm').subscribe(result => {
+      if(result == true){
+        this.facade.deleteOffer(id)
+          .then(res => this.filterOffer())
+      }
+    })
+  }
+
+  public navigateToEdit(id){
+    // this.facade.loadItemDetails(id).then(item => {
+    //   this.router.navigate(['items','edit',id])
+    // })
+  }
+
+  public filterOffer(){
+    this.facade.getRequestList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchRequestNumber)
+  }
+
+  public resetFilter(){
+    //this.searchOfferType = '';
+  }
+  public filterRoleChanged(){
+    if(this.searchRoleName.trim() == '') {
+      this.filterUserList = []; 
+      return;
+    }
+    this.usersFacade.loadUsers(1,200,'',this.searchRoleName)
+  }
+  public changeActivationStatus(row){
+    let rowcopy = {...row};
+    // this.facade.changeActivationStatus(rowcopy).then(res => {
+    //   this.filterOffer()
+    // });
+  }
+
+  public changePosition(row){
+    let rowcopy = {...row};
+    // this.facade.changePosition(rowcopy).then(res => {
+    //   this.filterOffer()
+    // });
+  }
+}
