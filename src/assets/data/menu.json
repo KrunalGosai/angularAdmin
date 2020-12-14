@@ -59,6 +59,12 @@
       "icon": "memory"
     },
     {
+      "route": "request",
+      "name": "request",
+      "type": "link",
+      "icon":"vertical_align_bottom"
+    },
+    {
       "route": "address",
       "name": "address",
       "type": "sub",
