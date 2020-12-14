@@ -8,6 +8,7 @@
     "slot": "Slots",
     "unit": "Units",
     "items": "Items",
+    "request":"Request",
     "offers":"Offers",
     "address": "Address",
     "address.areas": "Areas",

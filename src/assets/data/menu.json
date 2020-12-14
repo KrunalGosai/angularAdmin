@@ -91,6 +91,12 @@
       "icon":"shopping_bag"
     },
     {
+      "route": "request",
+      "name": "request",
+      "type": "link",
+      "icon":"shopping_bag"
+    },
+    {
       "route": "sessions",
       "name": "sessions",
       "type": "sub",
