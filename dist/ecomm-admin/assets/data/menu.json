@@ -65,6 +65,34 @@
       "icon":"vertical_align_bottom"
     },
     {
+      "route": "orders",
+      "name": "orders",
+      "type": "sub",
+      "icon":"border_all",
+      "children": [
+        {
+          "route": "PURCHASE_ORDER",
+          "name": "purchaseorder",
+          "type": "link"
+        },
+        {
+          "route": "TRANSFER_ORDER",
+          "name": "transferorder",
+          "type": "link"
+        },
+        {
+          "route": "CUSTOMER_ORDER",
+          "name": "customerorder",
+          "type": "link"
+        },
+        {
+          "route": "HAWKER_CUSTOMER_ORDER",
+          "name": "hawkercustomerorder",
+          "type": "link"
+        }
+        ]
+    },
+    {
       "route": "address",
       "name": "address",
       "type": "sub",
