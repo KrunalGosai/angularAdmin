@@ -18,7 +18,7 @@ export class ItemUnitViewComponent implements OnInit {
   data:any
   searchUserId:string = '';
   itemTypes:any= {SELLABLE:'Sellable',PACKAGING_MATERIAL:'Packaging Material',RAW_MATERIAL:'Raw Material'};
-  displayedColumns: string[] = ['price', 'qty', 'unit' ,'is_customer_show'];
+  displayedColumns: string[] = ['price','discount_value', 'discounted_price', 'qty', 'unit' ,'is_customer_show'];
   dataSource:any[] = [];
   public defaultUnitId = '';
 

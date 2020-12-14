@@ -36,20 +36,20 @@ export class OffersComponentsOfferAddComponent implements OnInit {
   ) {
     this.offerForm = this.fb.group(
       {
-        "offer_type":["",[Validators.required]],
-        "offer_on_ids":[],
-        "min_value":[0,[Validators.required]],
-        "discount_type":["",[Validators.required]],
-        "discount_value":[0,[Validators.required]],
-        "position":[1],
-        "coupon_code":[""],
-        "expiry":['',[Validators.required]],
-        "user_id":[],
-        "user_role":[""],
-        "is_active":[true],
-        "age":[0],
-        "gender":[""],  
-        "usage_count":[1]    
+        offer_type :["",[Validators.required]],
+        offer_on_ids :[],
+        min_value :[0,[Validators.required]],
+        discount_type :["",[Validators.required]],
+        discount_value :[0,[Validators.required]],
+        position :[1],
+        coupon_code :[""],
+        expiry :['',[Validators.required]],
+        user_id :[],
+        user_role :[""],
+        is_active :[true],
+        age :[0],
+        gender :[""],  
+        usage_count :[1]    
       });
     this.activeRoute.params.subscribe((params) => {
       if (params.id != undefined && params.id != null && params.id != "") {
@@ -62,23 +62,7 @@ export class OffersComponentsOfferAddComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.categoryFacade.loadParentCategories();
-    // this.unitFacde.loadUnites(1, 500);
-    // this.categoryFacade.getParentCategories().subscribe((parent) => {
-    //   this.categoryList = parent;
-    // });
-    // this.categoryFacade.getCategoriesByParentId().subscribe((categories) => {
-    //   this.subCategoryList = categories.data;
-    // });
-    // this.unitFacde.getUnites().subscribe((units) => {
-    //   this.unitList = units.data;
-    // });
-    // this.facade.getItemTypes().subscribe((types) => {
-    //   this.itemTypeList = types;
-    // });
-    // this.facade.getSallableItemList().subscribe((types) => {
-    //   this.recommendedList = types.data;
-    // });
+    
     if (this.isEditMode) {
       this.facade.getOfferDetails(this.activeEditId).subscribe(
         (res) => {
@@ -96,7 +80,7 @@ export class OffersComponentsOfferAddComponent implements OnInit {
   }
 
   get isTypeItemCategory(){
-    return this.offerForm.get('offer_type').value == "ITEM" || this.offerForm.get('offer_type').value == "CATEGORY";
+    return this.offerForm.get('offer_type').value == "ITEM" || this.offerForm.get('offer_type').value == "CATEGORY" || this.offerForm.get('offer_type').value == '';
   }
   get isOrderType(){
     return this.offerForm.get('offer_type').value == "ORDER"
@@ -112,7 +96,7 @@ export class OffersComponentsOfferAddComponent implements OnInit {
   public userRoleChanged(){
     this.usersList = [];
     let value = this.offerForm.get('user_role').value
-    this.userFacade.getUsers(0,0,'',value).subscribe(users => {
+    this.userFacade.getUsersByType(0,0,'',value).subscribe(users => {
       this.usersList = users.userList;
     },err => console.error(err))
   }
@@ -155,65 +139,7 @@ export class OffersComponentsOfferAddComponent implements OnInit {
     }
   }
 
-  ///chips stuff
-  // readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  // addtag(event: MatChipInputEvent): void {
-  //   const input = event.input;
-  //   const value = event.value;
-
-  //   let cate = [...this.offerForm.get("category_tags").value];
-
-  //   // Add
-  //   if ((value || "").trim()) {
-  //     cate.push(value.trim());
-  //     this.offerForm.get("category_tags").setValue(cate);
-  //   }
-
-  //   // Reset the input value
-  //   if (input) {
-  //     input.value = "";
-  //   }
-  // }
-
-  // removetag(tag: string): void {
-  //   let cate = [...this.offerForm.get("category_tags").value];
-  //   const index = cate.indexOf(tag);
-
-  //   if (index >= 0) {
-  //     // this.categoryTags.splice(index, 1);
-  //     cate.splice(index, 1);
-  //     this.offerForm.get("category_tags").setValue(cate);
-  //   }
-  // }
-
-  // addpic(event: MatChipInputEvent): void {
-  //   const input = event.input;
-  //   const value = event.value;
-
-  //   let pictures = [...this.offerForm.get("picture").value];
-
-  //   // Add
-  //   if ((value || "").trim()) {
-  //     pictures.push(value.trim());
-  //     this.offerForm.get("picture").setValue(pictures);
-  //   }
-
-  //   // Reset the input value
-  //   if (input) {
-  //     input.value = "";
-  //   }
-  // }
-
-  // removepic(pic: string): void {
-  //   let pictures = [...this.offerForm.get("picture").value];
-  //   const index = pictures.indexOf(pic);
-
-  //   if (index >= 0) {
-  //     // this.categoryTags.splice(index, 1);
-  //     pictures.splice(index, 1);
-  //     this.offerForm.get("picture").setValue(pictures);
-  //   }
-  // }
+  
 
   cateTagValues: string[] = [];
   subCateTagValues: string[] = [];
