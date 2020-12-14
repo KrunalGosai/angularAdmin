@@ -1,3 +1,4 @@
+import { SettingsService } from '@core';
 import { ToastrService } from "ngx-toastr";
 import { UsersFacade } from "./../../users-facade";
 import { Component, OnInit, OnDestroy } from "@angular/core";
@@ -34,6 +35,7 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
   constructor(
     private usersFacade: UsersFacade,
     private fb: FormBuilder,
+    private settingSvc:SettingsService,
     private dateAdapter: DateAdapter<any>,
     private translate: TranslateService,
     private activeRoute: ActivatedRoute,
@@ -43,14 +45,8 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
     this.userForm = this.fb.group({
       first_name: ["", [Validators.required, Validators.maxLength(50)]],
       last_name: [""],
-      contact: [
-        "",
-        [Validators.required, Validators.pattern("[6-9]{1}[0-9]{9}")],
-      ],
-      contact_2: [
-        "",
-        [ Validators.pattern("[6-9]{1}[0-9]{9}")],
-      ],
+      contact: ["",[Validators.required, Validators.pattern("[6-9]{1}[0-9]{9}")],],
+      contact_2: ["",[ Validators.pattern("[6-9]{1}[0-9]{9}")],],
       role_id: ["", [Validators.required]],
       gender: [""],
       email: [""],
@@ -131,10 +127,30 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
       (res) => {
         let data: any = res;
         this.roleList = data.data;
+        this.roleDepoFilter();
+        this.roleMPlantFilter();
+        this.rolePManagerFilter();
       },
       (err) => console.error(err)
     );
   }
+
+  private roleDepoFilter(){
+    if(this.settingSvc.isDepo)
+      this.roleList = this.roleList.filter(role => role.type == "DELIVERY_BOY" || role.type == "HAWKER");
+  }
+
+  private rolePManagerFilter(){
+    if(this.settingSvc.isPurchaseManager)
+      this.roleList = this.roleList.filter(role => role.type == "SUPPLIER");
+  }
+
+  private roleMPlantFilter(){
+    if(this.settingSvc.isManufaturingPlant){
+      this.roleList = this.roleList.filter(role => role.type == "SUPPLIER" || role.type == "MANUFACTURING_PLANT");
+    }
+  }
+ 
 
   public loadFormDropdowns() {
     this.usersFacade.getCountryList().subscribe(

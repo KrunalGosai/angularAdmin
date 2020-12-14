@@ -53,7 +53,7 @@ export class AddRequestComponents implements OnInit {
 		private facade: ItemsFacadeService,
 		private unitFacde: UnitesFacadeService,
 		private usersFacade: UsersFacade,
-		private settingService: SettingsService,
+		public settingService: SettingsService,
 		private requestServive:RequestFacadeService
 	) {
 		this.requestForm = this.fb.group({

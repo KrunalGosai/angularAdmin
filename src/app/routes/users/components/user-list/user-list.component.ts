@@ -1,3 +1,4 @@
+import { SettingsService } from '@core';
 import { Router } from "@angular/router";
 import { ConfirmService } from "./../../../../shared/services/confirm.service";
 import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
@@ -50,6 +51,7 @@ export class UsersUserListComponent implements OnInit {
   constructor(
     private usersFacade: UsersFacade,
     private router: Router,
+    private settingSvc:SettingsService,
     private confirmService: ConfirmService
   ) {}
 
@@ -64,6 +66,9 @@ export class UsersUserListComponent implements OnInit {
     this.usersFacade.getRoleList().subscribe(res => {
       let roles:any = res;
       this.filterRoleList = roles.data
+      this.roleDepoFilter();
+      this.rolePManagerFilter();
+      this.roleMPlantFilter();
     })
   }
 
@@ -108,6 +113,22 @@ export class UsersUserListComponent implements OnInit {
       this.pageDetails.itemsPerPage,
       this.searchByName,this.searchRoleName
     );
+  }
+
+  private roleDepoFilter(){
+    if(this.settingSvc.isDepo)
+      this.filterRoleList = this.filterRoleList.filter(role => role.type == "DELIVERY_BOY" || role.type == "HAWKER");
+  }
+
+  private rolePManagerFilter(){
+    if(this.settingSvc.isPurchaseManager)
+      this.filterRoleList = this.filterRoleList.filter(role => role.type == "SUPPLIER");
+  }
+
+  private roleMPlantFilter(){
+    if(this.settingSvc.isManufaturingPlant){
+      this.filterRoleList = this.filterRoleList.filter(role => role.type == "SUPPLIER" || role.type == "MANUFACTURING_PLANT");
+    }
   }
 
   public navigateToEdit(id) {

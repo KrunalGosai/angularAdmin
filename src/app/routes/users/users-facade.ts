@@ -14,18 +14,18 @@ export class UsersFacade {
     private usersstate:UsersStateService,
     private toster: ToastrService) { }
 
-  public loadUsers(currentPage = 1,currentPageSize = 5,searchByName = '',searchByType = ''){
+  public loadUsers(currentPage = 0,currentPageSize = 0,searchByName = '',searchByType = ''){
     this.api.getUsers(currentPage,currentPageSize,searchByName,searchByType).subscribe(res => {
         this.usersstate.setUsers(res)
     })
   }
 
-  public getUsers(currentPage = 1,currentPageSize = 5,searchByName = '',searchByType = ''){
+  public getUsers(currentPage = 0,currentPageSize = 0,searchByName = '',searchByType = ''){
     if(!this.usersstate.isUserSet) this.loadUsers(currentPage,currentPageSize,searchByName,searchByType);
     return this.usersstate.getUsers().pipe(tap(res => res))
   }
 
-  public getUsersByType(currentPage = 1,currentPageSize = 5,searchByName = '',searchByType = ''){
+  public getUsersByType(currentPage = 0,currentPageSize = 0,searchByName = '',searchByType = ''){
     if(!this.usersstate.isUserSet && searchByType != '') this.loadUsers(currentPage,currentPageSize,searchByName,searchByType);
     return this.usersstate.getUsers().pipe(tap(res => res))
   }
