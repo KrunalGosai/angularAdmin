@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '@shared/shared.module';
 import { OrdersRoutingModule } from './orders-routing.module';
 import { OrdersOrderListComponent } from './components/order-list/order-list.component';
+import { OrdersComponentsOrderViewComponent } from './components/order-view/order-view.component';
 
-const COMPONENTS = [OrdersOrderListComponent];
+const COMPONENTS = [OrdersOrderListComponent, OrdersComponentsOrderViewComponent];
 const COMPONENTS_DYNAMIC = [];
 
 @NgModule({

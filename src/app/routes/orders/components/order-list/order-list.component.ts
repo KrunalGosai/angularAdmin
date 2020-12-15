@@ -1,3 +1,4 @@
+import { map } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -5,6 +6,8 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { OrdersFacadeService } from './../../orders-facade.service';
 import { ConfirmService } from './../../../../shared/services/confirm.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { OrdersComponentsOrderViewComponent } from '../order-view/order-view.component';
+import { SidebarNoticeService } from '@theme/sidebar-notice/sidebar-notice.service';
 
 @Component({
   selector: 'app-orders-order-list',
@@ -13,7 +16,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 })
 export class OrdersOrderListComponent implements OnInit {
 
-  displayedColumns: string[] = ["order_no","type",'status', "source_id","destination_id","items","controls"];
+  displayedColumns: string[] = [];
   dataSource: MatTableDataSource<any>;
   searchByOrderType:string =''
   searchByOrderStatus:string = '';
@@ -33,6 +36,7 @@ export class OrdersOrderListComponent implements OnInit {
     private router:Router,
     private activeRouter:ActivatedRoute,
     private facade:OrdersFacadeService,
+    private sidebarNoticeService:SidebarNoticeService,
     private confirmService:ConfirmService) {
       this.activeRouter.params.subscribe((params) => {
         if (params.order_type != undefined && params.order_type != null && params.order_type != "") {
@@ -102,6 +106,7 @@ export class OrdersOrderListComponent implements OnInit {
 
   public filterOrder(){
     this.facade.loadOrderList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByOrderType,this.searchByOrderStatus)
+    this.setColumns();
   }
 
   public resetFilter(){
@@ -111,10 +116,16 @@ export class OrdersOrderListComponent implements OnInit {
 
   private setColumns(){
     if(this.isCustomerOrder){
-      this.displayedColumns = ["order_no","type",'status',"source_id","destination_id","items","controls"]
+      this.displayedColumns = ["order_no","type",'status',"source_id","destination_id","items","created_on",'slot_date', "controls"]
     }else{
-      this.displayedColumns = ["order_no","type",'status',"source_id","destination_id","items","controls"];
+      this.displayedColumns = ["order_no","type",'status',"source_id","destination_id","items","created_on","controls"];
     }
+  }
+
+  public openView(row){
+    this.sidebarNoticeService.setComponent(OrdersComponentsOrderViewComponent);
+    this.sidebarNoticeService.setIsOpened(true);
+    this.facade.setViewData(row);      
   }
 
 }

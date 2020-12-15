@@ -36,7 +36,9 @@ export class ProcessingApiService {
     return this.http.post(url,processingUnit);
   }
 
-
-  // "processing_id":"5fd5e014853d300155e73e65"    
+  public getProcessingDetail(id){
+    let url = this.baseURl+`/api/item/get_processing_detail/${id}`;
+    return this.http.get(url);
+  }
 
 }

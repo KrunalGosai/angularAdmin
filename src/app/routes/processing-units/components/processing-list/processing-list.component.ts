@@ -18,7 +18,7 @@ import { UsersFacade } from 'app/routes/users/users-facade';
 })
 export class ProcessingUnitsProcessingListComponent implements OnInit {
 
-  displayedColumns: string[] = ["batchNumber","status","raw_item_id","sellable_item_id", "controls"];
+  displayedColumns: string[] = ["batchNumber","status", "controls"]; //"raw_item_id","sellable_item_id",
   dataSource: MatTableDataSource<any>;
   filterUserList = [];
   searchUserId = '';
@@ -82,8 +82,9 @@ export class ProcessingUnitsProcessingListComponent implements OnInit {
   }
 
   public navigateToEdit(row){
-    this.facade.loadProcessigUnitDetail(row)
-    this.router.navigate(['processing-units','edit',row._id])
+    this.facade.loadProcessigUnitDetail(row._id).then(item => {
+      this.router.navigate(['processing-units','edit',row._id])
+    })
   }
 
   public filterProcessingUnis(){
