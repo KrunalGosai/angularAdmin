@@ -90,11 +90,11 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   ngOnInit() {
     
     if (this.isEditMode) {
-      
-      this.facade.getProcessingUnitDetail().subscribe(
+      this.facade.getProcessingUnitDetail(this.activeEditId).subscribe(
         (res) => {
           let data: any = { ...res };
           let item = data.items[0];
+          console.log(data);
           this.production = this.productionEditList(item.production_unit_ids);
           this.packagingMaterial = this.packingEditList(item.packaging_material);
           this.processingForm.patchValue({

@@ -29,4 +29,12 @@ export class OrdersFacadeService {
       return res;
     }).catch(err => {console.error('api call error from Cancel Order',err); throw err })
   }
+
+  public setViewData(viewData){
+    this.state.setViewData(viewData);
+  }
+
+  public getViewData(){
+    return this.state.getViewData().pipe(tap(data => data))
+  }
 }

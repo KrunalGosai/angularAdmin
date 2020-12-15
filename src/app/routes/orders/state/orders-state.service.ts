@@ -9,6 +9,7 @@ export class OrdersStateService {
   constructor() { }
 
   private orders:BehaviorSubject<any> = new BehaviorSubject({});
+  private viewData:BehaviorSubject<any> = new BehaviorSubject({});
 
   isOrdersSet:boolean = false;
 
@@ -19,5 +20,13 @@ export class OrdersStateService {
   public setOrderList(itemList:any){
     this.isOrdersSet = true;
     this.orders.next(itemList);
+  }
+
+  public getViewData():Observable<any>{
+    return this.viewData.asObservable();
+  }
+
+  public setViewData(viewData:any){
+    this.viewData.next(viewData);
   }
 }
