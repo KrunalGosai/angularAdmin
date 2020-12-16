@@ -14,49 +14,49 @@
             <mat-label><strong> Status </strong></mat-label>
         </div>
         <div fxFlex="35" fxFlex.lt-sm="100">
-          <mat-label>: {{viewData.canceledStatus && viewData.canceledStatus == "CANCELED" ? 'Canceled' : ''}}</mat-label>
+          <mat-label>: {{viewData.canceledStatus && viewData.canceledStatus == "CANCELED" ? 'Canceled' : 'N/A'}}</mat-label>
         </div>
 
         <div fxFlex="15" fxFlex.lt-sm="100">
             <mat-label><strong> Raw Item </strong></mat-label>
         </div>
         <div fxFlex="85" fxFlex.lt-sm="100">
-          <mat-label>: {{ viewData.items[0].raw_item_id ? viewData.items[0].raw_item_id.name : '' }}</mat-label>
+          <mat-label>: {{ viewData.raw_item_id ? viewData.raw_item_id.name : 'N/A' }}</mat-label>
         </div>
 
         <div fxFlex="15" fxFlex.lt-sm="100">
             <mat-label><strong> Consumed Unit </strong></mat-label>
         </div>
         <div fxFlex="35" fxFlex.lt-sm="100">
-          <mat-label>: {{ viewData.items[0].consumed_unit_id ? viewData.items[0].consumed_unit_id.name : '' }}</mat-label>
+          <mat-label>: {{ viewData.consumed_unit_id ? viewData.consumed_unit_id.name : 'N/A' }}</mat-label>
         </div>
 
         <div fxFlex="15" fxFlex.lt-sm="100">
             <mat-label><strong> Consumed Qty </strong></mat-label>
         </div>
         <div fxFlex="35" fxFlex.lt-sm="100">
-          <mat-label>: {{ viewData.items[0].consumed_quantity }}</mat-label>
+          <mat-label>: {{ viewData.consumed_quantity }}</mat-label>
         </div>
 
         <div fxFlex="15" fxFlex.lt-sm="100">
             <mat-label><strong> Wastage Unit </strong></mat-label>
         </div>
         <div fxFlex="35" fxFlex.lt-sm="100">
-          <mat-label>: {{ viewData.items[0].wastage_unit_id ? viewData.items[0].wastage_unit_id.name : '' }}</mat-label>
+          <mat-label>: {{ viewData.wastage_unit_id ? viewData.wastage_unit_id.name : 'N/A' }}</mat-label>
         </div>
 
         <div fxFlex="15" fxFlex.lt-sm="100">
             <mat-label><strong> Wastage Qty </strong></mat-label>
         </div>
         <div fxFlex="35" fxFlex.lt-sm="100">
-          <mat-label>: {{ viewData.items[0].wastage_quantity }}</mat-label>
+          <mat-label>: {{ viewData.wastage_quantity }}</mat-label>
         </div>
 
         <div fxFlex="15" fxFlex.lt-sm="100">
             <mat-label><strong> Sellable Item </strong></mat-label>
         </div>
         <div fxFlex="85" fxFlex.lt-sm="100">
-          <mat-label>: {{ viewData.items[0].sellable_item_id ? viewData.items[0].sellable_item_id.name : '' }}</mat-label>
+          <mat-label>: {{ viewData.sellable_item_id ? viewData.sellable_item_id.name : 'N/A' }}</mat-label>
         </div>
 
         <!-- production table -->                 
