@@ -18,10 +18,10 @@ export class ProcessingViewComponent implements OnInit {
   ngOnInit(): void {
     this.facade.getProcessingUnitViewData().subscribe(data => {
       this.viewData = data;
-      if(this.viewData.items[0].production_unit_ids && this.viewData.items[0].production_unit_ids.length > 0 )
-        this.production = this.viewData.items[0].production_unit_ids;
-      if(this.viewData.items[0].packaging_material && this.viewData.items[0].packaging_material.length > 0 )
-        this.packagingMaterial = this.viewData.items[0].packaging_material;
+      if(this.viewData.production_unit_ids && this.viewData.production_unit_ids.length > 0 )
+        this.production = this.viewData.production_unit_ids;
+      if(this.viewData.packaging_material && this.viewData.packaging_material.length > 0 )
+        this.packagingMaterial = this.viewData.packaging_material;
     })
   }
 
