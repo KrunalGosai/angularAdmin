@@ -37,4 +37,13 @@ export class OrdersFacadeService {
   public getViewData(){
     return this.state.getViewData().pipe(tap(data => data))
   }
+
+  public setReadyForDispatch(dispatchOrder){
+    return this.api.setReadyForDispatch(dispatchOrder).toPromise().then(res => {
+      this.loadOrderList();
+      this.toster.success('Order Successfully Updated','Success',{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from setReadyForDispatch',err); throw err })
+
+  }
 }

@@ -1,8 +1,9 @@
 <page-header title="Items" [nav]="navPath"></page-header>
 
 <section>
+  <!-- *ngIf="!isManufaturingPlant" -->
   <a mat-raised-button aria-label="View basic sidenav example" color="primary" 
-    *ngIf="!isManufaturingPlant" routerLink="new">
+    *ngIf="isAdmin" routerLink="new">
     Add New
   </a>
 </section>

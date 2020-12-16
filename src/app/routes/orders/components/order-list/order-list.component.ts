@@ -1,4 +1,4 @@
-import { map } from 'rxjs/operators';
+import { OrdersDispatchComponent } from './../dispatch/dispatch.component';
 import { MatSort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -45,7 +45,8 @@ export class OrdersOrderListComponent implements OnInit {
       });
       router.events.subscribe((val) => {
         if(val instanceof NavigationEnd) {
-          this.filterOrder();
+          if(val.url.startsWith('/orders/'))
+            this.filterOrder();
         }
       })
      }
@@ -126,6 +127,12 @@ export class OrdersOrderListComponent implements OnInit {
     this.sidebarNoticeService.setComponent(OrdersComponentsOrderViewComponent);
     this.sidebarNoticeService.setIsOpened(true);
     this.facade.setViewData(row);      
+  }
+
+  public openDispatch(row){
+    this.sidebarNoticeService.setComponent(OrdersDispatchComponent);
+    this.sidebarNoticeService.setIsOpened(true);
+    this.facade.setViewData(row);    
   }
 
 }
