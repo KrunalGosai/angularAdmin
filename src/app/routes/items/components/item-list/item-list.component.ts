@@ -135,7 +135,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
   public filterItem(){
     this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchRoleName, this.searchUserId,this.filterCategoryId,this.searchByName)
     if(this.searchRoleName == userrole.DEPO && this.searchUserId && this.searchUserId != '' ){
-      this.displayedColumns = ['thumbnail', 'position', 'name','type', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id'];
+      this.displayedColumns = ['thumbnail', 'position', 'name','type', 'category', 'item_volume', 'availability_status_edit','is_active_edit', 'price_edit', 'unit_id'];
       this.isDepoUserSearched = true;
     }else{
       this.setRoleBasedColumn(); this.isDepoUserSearched = false;
@@ -214,16 +214,16 @@ export class ItemsComponentsItemListComponent implements OnInit {
     //['thumbnail', 'position', 'name', 'type','is_active','category', 'item_volume','price', 'controls'];
     switch (this.currentRole) {
       case UserRole.ADMIN:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'price', 'type','is_active','category', 'controls'];
+        this.displayedColumns = ['thumbnail', 'position_edit', 'name', 'price', 'type','is_active_edit','category', 'controls'];
         break;
       case UserRole.MANUFACTURING_PLANT:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'price', 'type','is_active','category', 'controls'];
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'price', 'type','is_active','category'];
         break;
       case UserRole.DEPO:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id'];
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'availability_status','is_active', 'price_depo', 'unit_id'];
         break;
       case UserRole.HAWKER:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'price', 'controls'];
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'price'];
         break;
       default:
         this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category'];

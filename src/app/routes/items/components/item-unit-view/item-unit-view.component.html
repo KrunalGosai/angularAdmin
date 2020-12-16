@@ -4,14 +4,20 @@
     <p>Note: Discounted will get affected autometiclly.</p>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         
-        <ng-container matColumnDef="price">
+        <ng-container matColumnDef="price_edit">
           <th mat-header-cell *matHeaderCellDef> Price </th>
           <td mat-cell *matCellDef="let element"> 
-            <!-- {{element.price}}  -->
             <input type="number" 
             [ngModelOptions]="{standalone: true}" 
             (change)="changePrice(element)" 
             style="max-width: 65px;" [(ngModel)]="element.price" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef> Price </th>
+          <td mat-cell *matCellDef="let element"> 
+            {{element.price}} 
           </td>
         </ng-container>
 
@@ -37,7 +43,7 @@
           <td mat-cell *matCellDef="let element"> {{element.unit_id ? element.unit_id.name : ''}} </td>
         </ng-container>
         
-        <ng-container matColumnDef="is_customer_show">
+        <ng-container matColumnDef="is_customer_show_edit">
           <th mat-header-cell *matHeaderCellDef> Is Default </th>
           <td mat-cell *matCellDef="let element"> 
             <!-- {{element.is_customer_show}} -->
@@ -46,6 +52,13 @@
                 {{''}}
               </mat-radio-button>
             </mat-radio-group>
+           </td>
+        </ng-container>
+
+        <ng-container matColumnDef="is_customer_show">
+          <th mat-header-cell *matHeaderCellDef> Is Default </th>
+          <td mat-cell *matCellDef="let element"> 
+            {{element.is_customer_show ? 'Default' : ''}}
            </td>
         </ng-container>
 

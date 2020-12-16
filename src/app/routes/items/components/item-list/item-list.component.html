@@ -136,6 +136,14 @@
       <form>
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Position</th>
         <td mat-cell *matCellDef="let row">
+          {{row.position}}
+        </td>
+      </form>
+    </ng-container>
+    <ng-container matColumnDef="position_edit">
+      <form>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Position</th>
+        <td mat-cell *matCellDef="let row">
           <!-- {{row.position}} -->
           <input
             type="number"
@@ -200,10 +208,16 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="price_depo">
+      <th mat-header-cell *matHeaderCellDef>Price</th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.user_price }}
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="price_edit">
       <th mat-header-cell *matHeaderCellDef>Price</th>
       <td mat-cell *matCellDef="let row">
-        <!-- {{row.price}} -->
         <input
           type="number"
           [ngModelOptions]="{ standalone: true }"
@@ -223,42 +237,34 @@
     <ng-container matColumnDef="unit_id">
       <th mat-header-cell *matHeaderCellDef>Unit</th>
       <td mat-cell *matCellDef="let row">
-        {{ row.unit_id ? row.unit_id.name : ""
-        }}<a [routerLink]="[]" (click)="viewItemUnit(row)"
-          >(
-          {{
-            row.all_item_units && row.all_item_units.length > 0
-              ? row.all_item_units.length
-              : ""
-          }}
-          )</a
-        >
+        {{ row.unit_id ? row.unit_id.name : "" }}
+        <a [routerLink]="[]" (click)="viewItemUnit(row)">
+          ({{ row.all_item_units && row.all_item_units.length > 0 ? row.all_item_units.length : ""}})
+        </a>
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="availability_status">
+    <ng-container matColumnDef="availability_status_edit">
       <th mat-header-cell *matHeaderCellDef>Availability Status</th>
       <form>
         <td mat-cell *matCellDef="let row">
-          <mat-select style="max-width: 80px;"
-            placeholder="Type"
-            (selectionChange)="updateItemDepoPrice(row)"
-            [ngModelOptions]="{ standalone: true }"
-            [(ngModel)]="row.availability_status"
-            name="availability_status"
-          >
-            <mat-option
-              *ngFor="let aStatus of availabilityList"
-              [value]="aStatus.value"
-              >{{ aStatus.name }}</mat-option
-            >
+          <mat-select style="max-width: 80px;" placeholder="Type" (selectionChange)="updateItemDepoPrice(row)"
+            [ngModelOptions]="{ standalone: true }" [(ngModel)]="row.availability_status" name="availability_status">
+            <mat-option *ngFor="let aStatus of availabilityList" [value]="aStatus.value" >
+              {{ aStatus.name }}
+            </mat-option>
           </mat-select>
         </td>
       </form>
     </ng-container>
 
+    <ng-container matColumnDef="availability_status">
+      <th mat-header-cell *matHeaderCellDef>Availability Status</th>
+      <td mat-cell *matCellDef="let row">{{ row.availability_status == 'TRUE' ? 'Available' : 'Notify' }}</td>
+    </ng-container>
+
     <!-- active Column -->
-    <ng-container matColumnDef="is_active">
+    <ng-container matColumnDef="is_active_edit">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
       <td mat-cell *matCellDef="let row">
         <!-- {{row.is_active ? 'Yes' : 'No'}} -->
@@ -267,6 +273,13 @@
           (change)="changeActivationStatus(row)"
           color="primary"
         ></mat-slide-toggle>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="is_active">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
+      <td mat-cell *matCellDef="let row">
+        {{row.is_active ? 'Yes' : 'No'}}
       </td>
     </ng-container>
 
@@ -298,12 +311,8 @@
               <mat-icon color="primary">create</mat-icon>
             </button>
           </mat-grid-tile>
-          <mat-grid-tile>
-            <button
-              mat-icon-button
-              aria-label="Delete"
-              (click)="deleteIcon(row._id)"
-            >
+          <mat-grid-tile *ngIf="isAdmin">
+            <button mat-icon-button aria-label="Delete" (click)="deleteIcon(row._id)" >
               <mat-icon color="accent">delete</mat-icon>
             </button>
           </mat-grid-tile>
