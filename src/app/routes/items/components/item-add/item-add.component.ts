@@ -81,6 +81,7 @@ export class ItemsComponentsItemAddComponent implements OnInit {
           let item: any = { ...res };
           this.itemForm.patchValue(res);
           this.itemForm.patchValue({ item_type: item.type });
+          this.onCategorySelectionChange();
         },
         (err) => console.error(err)
       );

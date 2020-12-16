@@ -1,0 +1,103 @@
+<div fxLayout="row wrap" class="matero-row">
+    <mat-card>
+      <mat-card-title>Order Dispatch</mat-card-title>
+
+      <div fxLayout="row wrap" fxLayoutGap="8px grid">
+              
+        <div fxFlex="15" fxFlex.lt-sm="100">
+          <mat-label><strong> Order # </strong>:</mat-label>
+        </div>
+        <div fxFlex="85" fxFlex.lt-sm="100">
+          <mat-label>{{viewData.order_no}}</mat-label>
+        </div>
+
+      </div>
+      <form [formGroup]="dispatchFrom" (submit)="onFormSubmit($event)" class="form-field-full" >
+        <div fxLayout="row wrap" fxLayoutGap="8px grid">
+
+            <div fxFlex="50" fxFlex.lt-sm="100">
+                <mat-form-field>
+                    <mat-label>Item</mat-label>
+                    <mat-select formControlName="item_id" placeholder="Item" required>
+                        <mat-option *ngFor="let item of itemList" [value]="item._id" >
+                            {{ item.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="dispatchFrom.get('item_id').invalid">
+                        {{ "validations.required" | translate }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div fxFlex="50" fxFlex.lt-sm="100">
+                <mat-form-field>
+                    <mat-label>Unit</mat-label>
+                    <mat-select formControlName="item_unit_id" placeholder="Item" required>
+                        <mat-option *ngFor="let unit of allUnitList" [value]="unit._id" >
+                            {{ unit.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="dispatchFrom.get('item_unit_id').invalid">
+                        {{ "validations.required" | translate }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div fxFlex="50" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Item Qty</mat-label>
+                  <input matInput placeholder="Item Qty" formControlName="item_quantity"
+                         required type="number">
+                  <mat-error *ngIf="dispatchFrom.get('item_quantity').invalid">
+                    {{'validations.required' | translate}}
+                  </mat-error>
+                </mat-form-field>
+            </div>
+
+        </div>
+        <button mat-raised-button color="primary" type="submit" style="margin-right: 5px" class="m-t-8">Add</button>
+        <button mat-raised-button type="button" class="m-t-8" (click)="dispatchFrom.reset()">Back</button>
+      </form>
+      <div fxLayout="row wrap" fxLayoutGap="8px grid">
+           
+        <div fxFlex="100" fxFlex.lt-sm="100">
+            <table mat-table [dataSource]="tableSource" class="mat-elevation-z8">
+            
+              <ng-container matColumnDef="item_id">
+                <th mat-header-cell *matHeaderCellDef> Item Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.item_id}} </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="item_quantity">
+                <th mat-header-cell *matHeaderCellDef> Item Quantity </th>
+                <td mat-cell *matCellDef="let element"> {{element.item_quantity}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="item_unit_id">
+                <th mat-header-cell *matHeaderCellDef> Item Unit </th>
+                <td mat-cell *matCellDef="let element"> {{element.item_unit_id}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="controls">
+                <th mat-header-cell *matHeaderCellDef>Controls</th>
+                <td mat-cell *matCellDef="let row; let i = index;">
+                  <mat-grid-list cols="3" rowHeight="50px">
+                    <mat-grid-tile>
+                      <button mat-icon-button aria-label="Delete" (click)="deleteIcon(i);" >
+                        <mat-icon color="accent">delete</mat-icon>
+                      </button>
+                    </mat-grid-tile>
+                  </mat-grid-list>
+                </td>
+              </ng-container>
+              
+              
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>        
+        </div>
+      </div>
+      <button mat-raised-button color="primary" type="button" (click)="readyFroDispatch();" class="m-t-8">Dispatch</button>
+      <p>{{viewData | json}}</p>
+    </mat-card>
+</div>
