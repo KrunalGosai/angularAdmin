@@ -1,6 +1,7 @@
 <page-header></page-header>
 
 <!-- Filter -->
+<!-- searchBySource, searchByDestination, searchByOrdertype, searchByOrderstatus -->
 
 <div fxLayout="row wrap" class="matero-row">
   <div fxFlex="100" class="matero-col">
@@ -15,6 +16,32 @@
             <mat-select placeholder="Status" [(ngModel)]="searchByOrderStatus" name="searchByOrderStatus" >
               <mat-option *ngFor="let status of filterOrderStatus" [value]="status" style="text-transform: capitalize;">
                 {{ status | titlecase}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="25" *ngIf="!isAdmin" fxFlex.lt-sm="100" class="matero-col">
+            <mat-label>IN-OUT</mat-label>
+            <mat-select placeholder="Status" [(ngModel)]="searchByInOut" name="inout" >
+              <mat-option value="in" style="text-transform: capitalize;">IN</mat-option>
+              <mat-option value="in" style="text-transform: capitalize;">OUT</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="25" *ngIf="isAdmin" fxFlex.lt-sm="100" class="matero-col">
+            <mat-label>Source</mat-label>
+            <mat-select placeholder="Source" [(ngModel)]="searchBySource" name="searchBySource" >
+              <mat-option *ngFor="let user of userList" [value]="user._id" style="text-transform: capitalize;">
+                {{ user.first_name | titlecase}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="25" *ngIf="isAdmin" fxFlex.lt-sm="100" class="matero-col">
+            <mat-label>Destination</mat-label>
+            <mat-select placeholder="Destination" [(ngModel)]="searchByDestination" name="searchByDestination" >
+              <mat-option *ngFor="let user of userList" [value]="user._id" style="text-transform: capitalize;">
+                {{ user.first_name | titlecase}}
               </mat-option>
             </mat-select>
           </mat-form-field>
