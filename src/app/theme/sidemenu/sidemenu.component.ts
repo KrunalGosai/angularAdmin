@@ -25,6 +25,7 @@ export class SidemenuComponent implements OnInit {
       this.adminMenuFilter();
       this.userMenuFitler();
       this.purchaseManagerMenuFilter();
+      this.processingMenufiter();
     })
   }
 
@@ -57,5 +58,11 @@ export class SidemenuComponent implements OnInit {
     if(this.settingsService.isPurchaseManager)
       this.menus = this.menus.filter(menuItem => 
          menuItem.name != "menu.items")
+  }
+
+  private processingMenufiter(){
+    if(this.settingsService.isAdmin || this.settingsService.isManufaturingPlant) return;
+    this.menus = this.menus.filter(menuItem => 
+      menuItem.name != "menu.processing")
   }
 }

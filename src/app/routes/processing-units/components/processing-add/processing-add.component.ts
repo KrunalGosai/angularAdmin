@@ -227,16 +227,17 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
 
   public onFormSubmit(event) {
     // if (!this.processingUnits && this.processingUnits.length <= 0) return;
+    let body:any = this.processingForm.value; //{items:[...this.processingUnits]}
+    if(body.raw_item_id == "") body.raw_item_id = null;
+    if(body.consumed_unit_id == "") body.consumed_unit_id = null;
+
     if (this.isEditMode) {
-      let body:any = this.processingForm.value; //{items:[...this.processingUnits]}
-      // let value = this.processingForm.value;
       body.processing_id = this.activeEditId;
       this.facade.newProcessingUnit(body).then((res) => {
         this.processingForm.reset();
         this.router.navigate(["processing-units"]);
       });
     } else {
-      let body:any = this.processingForm.value;
       this.facade.newProcessingUnit(body).then((res) => {
         this.facade.loadProcessingUnitsList();
         this.processingForm.reset();

@@ -11,6 +11,8 @@ import { UsersFacade } from "../../users-facade";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { userList } from "../../entities";
+import { UserRole } from '@shared/entities';
+import { userrole } from '../../enums';
 
 export interface UserData {
   name: string;
@@ -127,7 +129,7 @@ export class UsersUserListComponent implements OnInit {
 
   private roleMPlantFilter(){
     if(this.settingSvc.isManufaturingPlant){
-      this.filterRoleList = this.filterRoleList.filter(role => role.type == "SUPPLIER" || role.type == "MANUFACTURING_PLANT");
+      this.filterRoleList = this.filterRoleList.filter(role => role.type == userrole.SUPPLIER || role.type == UserRole.PURCHASE_MANAGER );
     }
   }
 

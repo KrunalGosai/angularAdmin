@@ -7,6 +7,7 @@ import { DateAdapter } from "@angular/material/core";
 import { Subscription } from "rxjs";
 import { TranslateService } from "@ngx-translate/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { UserRole } from '@shared/entities';
 
 @Component({
   selector: "app-users-user-add",
@@ -147,7 +148,7 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
 
   private roleMPlantFilter(){
     if(this.settingSvc.isManufaturingPlant){
-      this.roleList = this.roleList.filter(role => role.type == "SUPPLIER" || role.type == "MANUFACTURING_PLANT");
+      this.roleList = this.roleList.filter(role => role.type == UserRole.SUPPLIER || role.type == UserRole.PURCHASE_MANAGER);
     }
   }
  
