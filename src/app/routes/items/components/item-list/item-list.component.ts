@@ -35,7 +35,6 @@ export class ItemsComponentsItemListComponent implements OnInit {
   searchItemType:string = ''
   searchUserId:string ='';
   filterCategoryId:string = '';
-  isDepoUserSearched:boolean = false;
   availabilityStatus:availabilityStatus = null;
   availabilityList = [{name:'Available',value:"TRUE"},{name:'Notify',value:"NOTIFY"}]
   currentRole = this.settingService.user.role_id.type || 'CUSTOMER';
@@ -94,12 +93,8 @@ export class ItemsComponentsItemListComponent implements OnInit {
     return this.settingService.isManufaturingPlant
   }
 
-  get isDepoView(){
-    return this.isDepoUserSearched || this.currentRole == UserRole.DEPO ? true : false;
-  }
-
-  get isDepoRole(){
-    return this.currentRole == UserRole.DEPO ? true : false;
+  get isUserView(){
+    return this.searchUserId.trim() != '' || this.currentRole != UserRole.ADMIN ? true : false;
   }
 
   applyFilter(event: Event) {
@@ -134,11 +129,10 @@ export class ItemsComponentsItemListComponent implements OnInit {
 
   public filterItem(){
     this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchRoleName, this.searchUserId,this.filterCategoryId,this.searchByName)
-    if(this.searchRoleName == userrole.DEPO && this.searchUserId && this.searchUserId != '' ){
-      this.displayedColumns = ['thumbnail', 'position', 'name','type', 'category', 'item_volume', 'availability_status_edit','is_active_edit', 'price_edit', 'unit_id'];
-      this.isDepoUserSearched = true;
+    if(this.searchRoleName != '' && this.searchUserId && this.searchUserId != '' ){
+      this.displayedColumns = ['thumbnail', 'name','type', 'category', 'item_volume', 'availability_status_edit','is_active_edit', 'price_edit', 'unit_id'];
     }else{
-      this.setRoleBasedColumn(); this.isDepoUserSearched = false;
+      this.setRoleBasedColumn(); 
     }
     this.setHeaderPath();
   }
@@ -176,7 +170,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
 
   public changeActivationStatus(row){
     let rowcopy = {...row};
-    if(!this.isDepoView){
+    if(!this.isUserView){
       this.facade.changeActivationStatus(rowcopy).then(res => {
         this.filterItem()
       });
@@ -194,7 +188,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
     rowcopy.item_type = rowcopy.type;
     rowcopy.category_id = rowcopy.category_id._id
     rowcopy.subCategory_ids = subcats;
-    if(this.isDepoView){
+    if(this.isUserView){
       this.updateItemDepoPrice(rowcopy)
     }else{
       this.facade.updateItem(rowcopy);
@@ -214,19 +208,19 @@ export class ItemsComponentsItemListComponent implements OnInit {
     //['thumbnail', 'position', 'name', 'type','is_active','category', 'item_volume','price', 'controls'];
     switch (this.currentRole) {
       case UserRole.ADMIN:
-        this.displayedColumns = ['thumbnail', 'position_edit', 'name', 'price', 'type','is_active_edit','category', 'controls'];
+        this.displayedColumns = ['thumbnail', 'position_edit', 'name', 'price', 'type','is_active_edit','category','controls'];
         break;
       case UserRole.MANUFACTURING_PLANT:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'price', 'type','is_active','category'];
+        this.displayedColumns = ['thumbnail', 'name', 'price_user', 'type','is_active','category','unit_id'];
         break;
       case UserRole.DEPO:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'availability_status','is_active', 'price_depo', 'unit_id'];
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'availability_status','is_active', 'price_user', 'unit_id'];
         break;
       case UserRole.HAWKER:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'price'];
+        this.displayedColumns = ['thumbnail', 'name', 'type', 'category', 'item_volume', 'price_user','unit_id'];
         break;
       default:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category'];
+        this.displayedColumns = ['thumbnail', 'name', 'type', 'category'];
         break;
     }
   }
