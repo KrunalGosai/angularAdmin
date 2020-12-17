@@ -1,3 +1,4 @@
+import { SettingsService } from './../../../../core/bootstrap/settings.service';
 import { OrdersDispatchComponent } from './../dispatch/dispatch.component';
 import { MatSort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
@@ -8,6 +9,7 @@ import { ConfirmService } from './../../../../shared/services/confirm.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdersComponentsOrderViewComponent } from '../order-view/order-view.component';
 import { SidebarNoticeService } from '@theme/sidebar-notice/sidebar-notice.service';
+import { UsersFacade } from 'app/routes/users/users-facade';
 
 @Component({
   selector: 'app-orders-order-list',
@@ -20,6 +22,10 @@ export class OrdersOrderListComponent implements OnInit {
   dataSource: MatTableDataSource<any>;
   searchByOrderType:string =''
   searchByOrderStatus:string = '';
+  searchByInOut = '';
+  searchBySource = ''; 
+  searchByDestination ='';
+  userList = [];
   filterOrderType = ['PURCHASE_ORDER', 'TRANSFER_ORDER', 'CUSTOMER_ORDER', 'HAWKER_CUSTOMER_ORDER'];
   filterOrderStatus = ['CONFIRMED', "READY_FOR_DISPATCH", 'DIPATCHED', 'DELIVERED', 'CANCELLED', 'NOT_DELIVERED', 'REJECTED']
 
@@ -34,6 +40,8 @@ export class OrdersOrderListComponent implements OnInit {
   
   constructor(
     private router:Router,
+    private settingSvc:SettingsService,
+    private userFacade:UsersFacade,
     private activeRouter:ActivatedRoute,
     private facade:OrdersFacadeService,
     private sidebarNoticeService:SidebarNoticeService,
@@ -43,6 +51,9 @@ export class OrdersOrderListComponent implements OnInit {
           this.searchByOrderType = params.order_type;
         }
       });
+      this.userFacade.getUsers().subscribe(users => {
+        this.userList = users.userList;
+      })
       router.events.subscribe((val) => {
         if(val instanceof NavigationEnd) {
           if(val.url.startsWith('/orders/'))
@@ -50,6 +61,10 @@ export class OrdersOrderListComponent implements OnInit {
         }
       })
      }
+
+  get isAdmin(){
+    return this.settingSvc.isAdmin;
+  }
 
   get isPurchaseOrder(){
     return this.searchByOrderType == 'PURCHASE_ORDER';
@@ -106,13 +121,15 @@ export class OrdersOrderListComponent implements OnInit {
   }
 
   public filterOrder(){
-    this.facade.loadOrderList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByOrderType,this.searchByOrderStatus)
+    this.facade.loadOrderList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByOrderType,this.searchByOrderStatus,this.searchBySource,this.searchByDestination)
     this.setColumns();
   }
 
   public resetFilter(){
     this.searchByOrderStatus = '';
-    this.searchByOrderType = '';
+    this.searchBySource = '';
+    this.searchByDestination = '';
+    this.searchByInOut = '';
   }
 
   private setColumns(){

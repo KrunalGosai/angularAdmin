@@ -47,6 +47,7 @@ export class ProcessingUnitsProcessingListComponent implements OnInit {
       this.dataSource.sort = this.sort;
       this.pageDetails.totalRecords = processingUnits.totalCount;
     })
+    if(this.isAdmin)
     this.usersFacade.getUsersByType(0,0,'',UserRole.MANUFACTURING_PLANT).subscribe(users => {
       this.filterUserList = users.userList;
     })

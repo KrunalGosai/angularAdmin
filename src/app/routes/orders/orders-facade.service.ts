@@ -11,15 +11,15 @@ export class OrdersFacadeService {
 
   constructor(private api:OrdersApiService,private state:OrdersStateService,private toster: ToastrService) { }
 
-  public loadOrderList(currentPage = 0,currentPageSize = 0,searchByOrderType = '',searchByOrderStatus = ''){
-    this.api.loadOrderList(currentPage ,currentPageSize,searchByOrderType,searchByOrderStatus).subscribe(offers => {
+  public loadOrderList(currentPage = 0,currentPageSize = 0,searchByOrderType = '',searchByOrderStatus = '',searchBySource = '', searchByDestination = ''){
+    this.api.loadOrderList(currentPage ,currentPageSize,searchByOrderType,searchByOrderStatus,searchBySource, searchByDestination).subscribe(offers => {
       this.state.setOrderList(offers);
     },err => console.error('api call error from load orders ',err))
   }
 
 
-  public getOrderList(currentPage = 0,currentPageSize = 0,searchByOrderType = '',searchByOrderStatus = ''){
-    if(!this.state.isOrdersSet) this.loadOrderList(currentPage ,currentPageSize, searchByOrderType,searchByOrderStatus)
+  public getOrderList(currentPage = 0,currentPageSize = 0,searchByOrderType = '',searchByOrderStatus = '',searchBySource = '', searchByDestination = ''){
+    if(!this.state.isOrdersSet) this.loadOrderList(currentPage ,currentPageSize, searchByOrderType,searchByOrderStatus,searchBySource, searchByDestination)
     return this.state.getOrderList().pipe(tap(cate => cate))
   }
 

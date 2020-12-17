@@ -11,16 +11,20 @@ export class OrdersApiService {
   constructor(private http:HttpClient) { }
   private baseUrl = environment.SERVER_ORIGIN;
 
-  public loadOrderList(currentPage = 0,currentPageSize = 0,searchByOrderType = '',searchByOrderStatus = ''):Observable<any>{
+  public loadOrderList(currentPage = 0,currentPageSize = 0,searchByOrderType = '',searchByOrderStatus = '',searchBySource = '', searchByDestination = ''):Observable<any>{
     let url = this.baseUrl+`/api/request-order/order/list?`
     // if(currentPage && currentPage != 0)
     //   url += `&currentPage=${currentPage}`;
     // if(currentPageSize && currentPageSize != 0)
     //   url += `&currentPageSize=${currentPageSize}`;
-    // if(searchByOrderType && searchByOrderType.trim() != '')
-    //   url += `&searchByOrdertype=${searchByOrderType}`;
-    // if(searchByOrderStatus && searchByOrderStatus.trim() != '')
-    //   url += `&searchByOrderstatus=${searchByOrderStatus}`;
+    if(searchByOrderType && searchByOrderType.trim() != '')
+      url += `&searchByOrdertype=${searchByOrderType}`;
+    if(searchByOrderStatus && searchByOrderStatus.trim() != '')
+      url += `&searchByOrderstatus=${searchByOrderStatus}`;
+    if(searchBySource && searchBySource.trim() != '')
+      url += `&searchBySource=${searchBySource}`;
+    if(searchByDestination && searchByDestination.trim() != '')
+      url += `&searchByDestination=${searchByDestination}`;
     
     url = url.replace('?&','?');
 
