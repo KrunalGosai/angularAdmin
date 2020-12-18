@@ -1,3 +1,4 @@
+import { unit } from './../../../unites/entities/index';
 import { SettingsService } from './../../../../core/bootstrap/settings.service';
 import { ProcessingFacadeService } from './../../processing-facade.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -22,7 +23,8 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   unitList:any[] = [];
   sellableItemList:any[] = [];
   rawItemList:any[] = [];
-  userList = []
+  roleList = [];
+  userList = [];
  
   //forms
   processingForm: FormGroup;
@@ -40,7 +42,6 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   production:any = [];
   productionSource:MatTableDataSource<any>;
   productionColumn:string[] = ["consumed_unit_id","consumed_quantity","controls"]
-  processingUnits:any[] = [];
   
 
   constructor(
@@ -54,6 +55,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     private facade: ProcessingFacadeService,
   ) {
     this.processingForm = this.fb.group({
+        role_id:[''],
         user_id:[''],
         item_type:["",[Validators.required]],
         raw_item_id:[""],
@@ -75,7 +77,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
         item_id:["",[Validators.required]],
         consumed_unit_id:["",[Validators.required]],
         consumed_quantity:[0],
-        wastage_unit_id:["",[Validators.required]],
+        wastage_unit_id:[""],
         wastage_quantity:[0]
     })
 
@@ -90,21 +92,20 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   ngOnInit() {
     
     if (this.isEditMode) {
-      
-      this.facade.getProcessingUnitDetail().subscribe(
+      this.facade.getProcessingUnitDetail(this.activeEditId).subscribe(
         (res) => {
           let data: any = { ...res };
-          let item = data.items[0];
+          let item = data;
           this.production = this.productionEditList(item.production_unit_ids);
           this.packagingMaterial = this.packingEditList(item.packaging_material);
           this.processingForm.patchValue({
             user_id:data.user_id,
             item_type:item.raw_item_id ? 'RAW_MATERIAL' : 'SELLABLE',
-            raw_item_id:item.raw_item_id ? item.raw_item_id._id : '',
-            sellable_item_id:item.sellable_item_id ? item.sellable_item_id._id : '',
-            consumed_unit_id:item.consumed_unit_id ? item.consumed_unit_id._id : '',
+            raw_item_id:item.raw_item_id ? item.raw_item_id : '',
+            sellable_item_id:item.sellable_item_id ? item.sellable_item_id : '',
+            consumed_unit_id:item.consumed_unit_id ? item.consumed_unit_id : '',
             consumed_quantity:item.consumed_quantity,
-            wastage_unit_id:item.wastage_unit_id ? item.wastage_unit_id._id : '',
+            wastage_unit_id:item.wastage_unit_id ? item.wastage_unit_id : '',
             wastage_quantity:item.wastage_quantity,
             production_unit_ids:this.production,
             packaging_material:this.packagingMaterial
@@ -122,7 +123,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     let list = [];
     sourceList.map(item => {
       list.push({
-        unit_id:item.unit_id ? item.unit_id._id : '',
+        unit_id:item.unit_id ? item.unit_id : '',
         production_quantity: item.production_quantity
       })
     })
@@ -134,10 +135,10 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     let list = [];
     sourceList.map(item => {
       list.push({
-        item_id:item.item_id ? item.item_id._id : '',
-        consumed_unit_id:item.consumed_unit_id ? item.consumed_unit_id._id : '',
+        item_id:item.item_id ? item.item_id : '',
+        consumed_unit_id:item.consumed_unit_id ? item.consumed_unit_id : '',
         consumed_quantity:item.consumed_quantity,
-        wastage_unit_id:item.consumed_unit_id ? item.consumed_unit_id._id : '',
+        wastage_unit_id:item.consumed_unit_id ? item.consumed_unit_id : '',
         wastage_quantity:item.wastage_quantity
       })
     })
@@ -159,9 +160,12 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
       this.rawItemList = list.data;
       this.itemList = this.rawItemList;
     })
-    this.usersFacade.getUsersByType(0,0,'',UserRole.MANUFACTURING_PLANT).subscribe(users => {
-      this.userList = users.userList;
-    })
+    if(this.isAdmin){
+      this.usersFacade.getRoleList().subscribe(res => {
+        let roles:any = res;
+        this.roleList = roles.data.filter(role => role.type == UserRole.DEPO || role.type == UserRole.HAWKER || role.type == UserRole.FRANCHISE || role.type == UserRole.RETAILERS );
+      })
+    }
   }
 
   get isSallable(){
@@ -170,6 +174,20 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
 
   get isAdmin(){
     return this.settingSvc.isAdmin;
+  }
+
+  get isRetailer(){
+    return this.settingSvc.isRetailer || this.processingForm.get('role_id').value == UserRole.RETAILERS;
+  }
+
+  public roleChanged(){
+    this.userList = [];
+    if(this.isAdmin){
+      let value = this.processingForm.get('role_id').value;
+      this.usersFacade.getUsersByType(0,0,'',value).subscribe(users => {
+        this.userList = users.userList;
+      })
+    }
   }
 
   public getUnit(id){
@@ -200,7 +218,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     }
     this.processingForm.get('production_unit_ids').setValue(this.production);
     this.processingForm.get('packaging_material').setValue(this.packagingMaterial);
-    this.processingUnits = [this.processingForm.value];
+    this.processingForm.value;
     // this.processingForm.reset();
     this.onFormSubmit(null);
   }
@@ -209,10 +227,22 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     if(!this.productionForm.valid) return;
     let oldValue:any = this.production;
     let value = this.productionForm.value;
+    let unit = {...value.unit_id};
+    if(unit.packaging_material_consumed && unit.packaging_material_consumed.length > 0){
+      unit.packaging_material_consumed.map(item => {
+        this.packagingMaterial.push({
+          item_id:item.item_id,
+          consumed_unit_id:item.item_unit_id,
+          consumed_quantity:(item.item_quantity * value.production_quantity),
+        })
+      })
+    }
+    value.unit_id = unit._id;
     let newValue = [...oldValue];
     newValue.push(value);
     this.production = newValue;
     this.reloadProductionTable();
+    this.reloadPackingTable();
     this.productionForm.reset();
   }
 
@@ -220,6 +250,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     if(!this.packingForm.valid) return;
     let oldValue:any = this.packagingMaterial;
     let value = this.packingForm.value;
+    value.wastage_unit_id = value.wastage_unit_id == '' ? null : value.wastage_unit_id;
     let newValue = [...oldValue];
     newValue.push(value);
     this.packagingMaterial = newValue;
@@ -228,17 +259,19 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   }
 
   public onFormSubmit(event) {
-    if (!this.processingUnits && this.processingUnits.length <= 0) return;
+    // if (!this.processingUnits && this.processingUnits.length <= 0) return;
+    let body:any = this.processingForm.value; //{items:[...this.processingUnits]}
+    if(body.raw_item_id == "") body.raw_item_id = null;
+    if(body.consumed_unit_id == "") body.consumed_unit_id = null;
+    if(body.wastage_unit_id == "") body.wastage_unit_id = null;
+
     if (this.isEditMode) {
-      let body:any = {items:[...this.processingUnits]}
-      // let value = this.processingForm.value;
       body.processing_id = this.activeEditId;
       this.facade.newProcessingUnit(body).then((res) => {
         this.processingForm.reset();
         this.router.navigate(["processing-units"]);
       });
     } else {
-      let body = {items:[...this.processingUnits]}
       this.facade.newProcessingUnit(body).then((res) => {
         this.facade.loadProcessingUnitsList();
         this.processingForm.reset();

@@ -7,6 +7,7 @@ import { AppSettings, defaults } from '../settings';
 export const USER_KEY = 'usr';
 
 export interface User {
+  _id?:string;
   name?: string;
   avatar?: string;
   email?: string;
@@ -94,7 +95,7 @@ export class SettingsService {
   }
 
   get isRetailer(){
-    return this.user.role_id.type == UserRole.RETAILER;
+    return this.user.role_id.type == UserRole.RETAILERS;
   }
 
   get isPurchaseManager(){

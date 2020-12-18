@@ -48,11 +48,16 @@ export class ProcessingFacadeService {
     return this.state.getProcessingUnitViewData().pipe(tap(cate => cate))
   }
 
-  public loadProcessigUnitDetail(row){
-      this.state.setProcessingUnitDetail(row)
+  public loadProcessigUnitDetail(id){
+    return this.api.getProcessingDetail(id).toPromise().then(res => {
+      let data:any = res;
+      this.state.setProcessingUnitDetail(data.processingInfo)
+      return res
+    }).catch(err => {console.error('api call error from load processing Details',err); throw err });
   }
 
-  public getProcessingUnitDetail(){
+  public getProcessingUnitDetail(id){
+    if(!this.state.isProcessingEditSet)this.loadProcessigUnitDetail(id)
     return this.state.getProcessingUnitDetail().pipe(tap(cate => cate))
   }
 }

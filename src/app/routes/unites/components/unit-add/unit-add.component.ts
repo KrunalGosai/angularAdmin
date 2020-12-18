@@ -9,6 +9,7 @@ import {
   packagingMaterialwithObject,
 } from "../../entities";
 import { MatTableDataSource } from "@angular/material/table";
+import { ItemsFacadeService } from "app/routes/items/items-facade.service";
 
 @Component({
   selector: "app-unites-components-unit-add",
@@ -36,6 +37,7 @@ export class UnitesComponentsUnitAddComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private activeRoute: ActivatedRoute,
+    private itemFacade:ItemsFacadeService,
     private unitFacade: UnitesFacadeService
   ) {
     this.unitForm = this.fb.group({
@@ -169,14 +171,14 @@ export class UnitesComponentsUnitAddComponent implements OnInit {
 
   public loadBaseUnitNItem() {
     this.unitFacade.loadUnites();
-    this.unitFacade.loadItemList();
+    // this.unitFacade.loadItemList();
     this.unitFacade.getUnites().subscribe(
       (unitres) => {
         this.baseUnites = unitres.data;
       },
       (err) => console.error("error while load base unites", err)
     );
-    this.unitFacade.getItemList().subscribe(
+    this.itemFacade.getPackagingItemList().subscribe(
       (items) => {
         this.itemList = items.data;
       },

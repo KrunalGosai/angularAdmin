@@ -17,6 +17,15 @@
       <form class="form-field-full">
         <div fxLayout="row wrap" fxLayoutGap="8px grid">
 
+          <mat-form-field fxFlex="25" fxFlex.lt-sm="100">
+            <mat-label>Role</mat-label>
+            <mat-select placeholder="Role" (selectionChange)="roleChanged();" [(ngModel)]="searchRole" name="role" >
+              <mat-option *ngFor="let role of roleList"  [value]="role.type" >
+                {{ role.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
           <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
             <mat-label>User</mat-label>
             <mat-select placeholder="User" [(ngModel)]="searchUserId" name="searchUserId" >
@@ -93,7 +102,7 @@
           </mat-grid-tile>
           <mat-grid-tile>
             <button mat-icon-button aria-label="Delete" *ngIf="row.canceledStatus != 'CANCELED'" (click)="deleteIcon(row._id)" >
-              <mat-icon color="accent">delete</mat-icon>
+              <mat-icon color="accent">cancel</mat-icon>
             </button>
           </mat-grid-tile>
         </mat-grid-list>

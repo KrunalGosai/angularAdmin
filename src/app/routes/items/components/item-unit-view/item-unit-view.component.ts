@@ -1,3 +1,4 @@
+import { SettingsService } from '@core';
 import { hmrBootstrap } from './../../../../../hmr';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Inject } from '@angular/core';
@@ -12,13 +13,14 @@ import { ItemsFacadeService } from '../../items-facade.service';
 export class ItemUnitViewComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public viewdata:any,
-    private facade:ItemsFacadeService) {}
+    private facade:ItemsFacadeService,
+    private settingSvc:SettingsService) {}
 
   isAnyChange:boolean = false;
   data:any
   searchUserId:string = '';
   itemTypes:any= {SELLABLE:'Sellable',PACKAGING_MATERIAL:'Packaging Material',RAW_MATERIAL:'Raw Material'};
-  displayedColumns: string[] = ['price', 'qty', 'unit' ,'is_customer_show'];
+  displayedColumns: string[] = ['price','discount_value', 'discounted_price', 'qty', 'unit' ,'is_customer_show'];
   dataSource:any[] = [];
   public defaultUnitId = '';
 
@@ -30,6 +32,7 @@ export class ItemUnitViewComponent implements OnInit {
     this.dataSource =  this.data.all_item_units || [];
     let defaultunits:any = units.filter(item =>  item.is_customer_show == true)
     if(defaultunits && defaultunits.length > 0) this.defaultUnitId = defaultunits[0]._id;
+    this.displayColumns();
   }
 
   public changePrice(){
@@ -78,6 +81,14 @@ export class ItemUnitViewComponent implements OnInit {
     }
     this.facade.updateItemDepoPrice(body);
     this.isAnyChange = true;
+  }
+
+  displayColumns(){
+    if(this.settingSvc.isAdmin)
+      this.displayedColumns = ['price_edit','discount_value', 'discounted_price', 'qty', 'unit' ,'is_customer_show_edit'];
+    else 
+      this.displayedColumns = ['price','discount_value', 'discounted_price', 'qty', 'unit' ,'is_customer_show'];
+
   }
 
 }

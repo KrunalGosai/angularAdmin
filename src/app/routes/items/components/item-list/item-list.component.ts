@@ -35,7 +35,6 @@ export class ItemsComponentsItemListComponent implements OnInit {
   searchItemType:string = ''
   searchUserId:string ='';
   filterCategoryId:string = '';
-  isDepoUserSearched:boolean = false;
   availabilityStatus:availabilityStatus = null;
   availabilityList = [{name:'Available',value:"TRUE"},{name:'Notify',value:"NOTIFY"}]
   currentRole = this.settingService.user.role_id.type || 'CUSTOMER';
@@ -72,9 +71,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
     this.facade.getItemTypes().subscribe(types => {
       this.itemTypeList = types;
     })
-    this.usersFacade.getUsersByType(1,2000).subscribe(res => {
-      this.filterUserList = res.userList;
-    });
+    this.filterRoleChanged();
 
     this.categoryFacade.loadParentCategories();
     this.categoryFacade.getParentCategories().subscribe(res => {
@@ -96,12 +93,8 @@ export class ItemsComponentsItemListComponent implements OnInit {
     return this.settingService.isManufaturingPlant
   }
 
-  get isDepoView(){
-    return this.isDepoUserSearched || this.currentRole == UserRole.DEPO ? true : false;
-  }
-
-  get isDepoRole(){
-    return this.currentRole == UserRole.DEPO ? true : false;
+  get isUserView(){
+    return this.searchUserId.trim() != '' || this.currentRole != UserRole.ADMIN ? true : false;
   }
 
   applyFilter(event: Event) {
@@ -136,11 +129,11 @@ export class ItemsComponentsItemListComponent implements OnInit {
 
   public filterItem(){
     this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchRoleName, this.searchUserId,this.filterCategoryId,this.searchByName)
-    if(this.searchRoleName == userrole.DEPO && this.searchUserId && this.searchUserId != '' ){
-      this.displayedColumns = ['thumbnail', 'position', 'name','type', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id'];
-      this.isDepoUserSearched = true;
+    if(this.searchRoleName != '' && this.searchUserId && this.searchUserId != '' ){
+      // this.displayedColumns = ['thumbnail', 'name','type', 'category', 'item_volume', 'availability_status_edit','is_active_edit', 'price_edit', 'unit_id'];
+      this.displayedColumns = ['thumbnail', 'position_edit', 'name', 'type', 'category', 'item_volume', 'availability_status_edit','is_active_edit', 'price_user', 'unit_id'];
     }else{
-      this.setRoleBasedColumn(); this.isDepoUserSearched = false;
+      this.setRoleBasedColumn(); 
     }
     this.setHeaderPath();
   }
@@ -178,7 +171,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
 
   public changeActivationStatus(row){
     let rowcopy = {...row};
-    if(!this.isDepoView){
+    if(!this.isUserView){
       this.facade.changeActivationStatus(rowcopy).then(res => {
         this.filterItem()
       });
@@ -196,7 +189,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
     rowcopy.item_type = rowcopy.type;
     rowcopy.category_id = rowcopy.category_id._id
     rowcopy.subCategory_ids = subcats;
-    if(this.isDepoView){
+    if(this.isUserView){
       this.updateItemDepoPrice(rowcopy)
     }else{
       this.facade.updateItem(rowcopy);
@@ -204,11 +197,11 @@ export class ItemsComponentsItemListComponent implements OnInit {
   }
 
   public filterRoleChanged(){
-    if(this.searchRoleName.trim() == '') {
-      this.filterUserList = []; 
-      return;
-    }
-    this.usersFacade.loadUsers(1,200,'',this.searchRoleName)
+    if(!this.searchRoleName || this.searchRoleName.trim() == '') return;
+    this.filterUserList = []; 
+    this.usersFacade.getUsersByType(0,0,'',this.searchRoleName).subscribe(res => {
+      this.filterUserList = res.userList;
+    });
   }
 
   private setRoleBasedColumn(){
@@ -216,19 +209,19 @@ export class ItemsComponentsItemListComponent implements OnInit {
     //['thumbnail', 'position', 'name', 'type','is_active','category', 'item_volume','price', 'controls'];
     switch (this.currentRole) {
       case UserRole.ADMIN:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'price', 'type','is_active','category', 'controls'];
+        this.displayedColumns = ['thumbnail', 'position_edit', 'name', 'price', 'type','is_active_edit','category','controls'];
         break;
-      case UserRole.MANUFACTURING_PLANT:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'price', 'type','is_active','category', 'controls'];
-        break;
-      case UserRole.DEPO:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'availability_status','is_active', 'price_edit', 'unit_id'];
-        break;
-      case UserRole.HAWKER:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'price', 'controls'];
-        break;
+      // case UserRole.MANUFACTURING_PLANT:
+      //   this.displayedColumns = ['thumbnail', 'name', 'price_user', 'type','is_active','category','unit_id'];
+      //   break;
+      // case UserRole.DEPO:
+      //   this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'availability_status','is_active', 'price_user', 'unit_id'];
+      //   break;
+      // case UserRole.HAWKER:
+      //   this.displayedColumns = ['thumbnail', 'name', 'type', 'category', 'item_volume', 'price_user','unit_id'];
+      //   break;
       default:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category'];
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'availability_status','is_active', 'price_user', 'unit_id'];
         break;
     }
   }
