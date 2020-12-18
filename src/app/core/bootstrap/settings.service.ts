@@ -94,7 +94,7 @@ export class SettingsService {
   }
 
   get isRetailer(){
-    return this.user.role_id.type == UserRole.RETAILER;
+    return this.user.role_id.type == UserRole.RETAILERS;
   }
 
   get isPurchaseManager(){

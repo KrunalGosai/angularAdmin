@@ -1,3 +1,4 @@
+import { unit } from './../../../unites/entities/index';
 import { SettingsService } from './../../../../core/bootstrap/settings.service';
 import { ProcessingFacadeService } from './../../processing-facade.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -22,7 +23,8 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   unitList:any[] = [];
   sellableItemList:any[] = [];
   rawItemList:any[] = [];
-  userList = []
+  roleList = [];
+  userList = [];
  
   //forms
   processingForm: FormGroup;
@@ -53,6 +55,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     private facade: ProcessingFacadeService,
   ) {
     this.processingForm = this.fb.group({
+        role_id:[''],
         user_id:[''],
         item_type:["",[Validators.required]],
         raw_item_id:[""],
@@ -74,7 +77,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
         item_id:["",[Validators.required]],
         consumed_unit_id:["",[Validators.required]],
         consumed_quantity:[0],
-        wastage_unit_id:["",[Validators.required]],
+        wastage_unit_id:[""],
         wastage_quantity:[0]
     })
 
@@ -157,10 +160,12 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
       this.rawItemList = list.data;
       this.itemList = this.rawItemList;
     })
-    if(this.isAdmin)
-    this.usersFacade.getUsersByType(0,0,'',UserRole.MANUFACTURING_PLANT).subscribe(users => {
-      this.userList = users.userList;
-    })
+    if(this.isAdmin){
+      this.usersFacade.getRoleList().subscribe(res => {
+        let roles:any = res;
+        this.roleList = roles.data.filter(role => role.type == UserRole.DEPO || role.type == UserRole.HAWKER || role.type == UserRole.FRANCHISE || role.type == UserRole.RETAILERS );
+      })
+    }
   }
 
   get isSallable(){
@@ -169,6 +174,20 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
 
   get isAdmin(){
     return this.settingSvc.isAdmin;
+  }
+
+  get isRetailer(){
+    return this.settingSvc.isRetailer || this.processingForm.get('role_id').value == UserRole.RETAILERS;
+  }
+
+  public roleChanged(){
+    this.userList = [];
+    if(this.isAdmin){
+      let value = this.processingForm.get('role_id').value;
+      this.usersFacade.getUsersByType(0,0,'',value).subscribe(users => {
+        this.userList = users.userList;
+      })
+    }
   }
 
   public getUnit(id){
@@ -208,10 +227,22 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     if(!this.productionForm.valid) return;
     let oldValue:any = this.production;
     let value = this.productionForm.value;
+    let unit = {...value.unit_id};
+    if(unit.packaging_material_consumed && unit.packaging_material_consumed.length > 0){
+      unit.packaging_material_consumed.map(item => {
+        this.packagingMaterial.push({
+          item_id:item.item_id,
+          consumed_unit_id:item.item_unit_id,
+          consumed_quantity:(item.item_quantity * value.production_quantity),
+        })
+      })
+    }
+    value.unit_id = unit._id;
     let newValue = [...oldValue];
     newValue.push(value);
     this.production = newValue;
     this.reloadProductionTable();
+    this.reloadPackingTable();
     this.productionForm.reset();
   }
 
@@ -219,6 +250,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     if(!this.packingForm.valid) return;
     let oldValue:any = this.packagingMaterial;
     let value = this.packingForm.value;
+    value.wastage_unit_id = value.wastage_unit_id == '' ? null : value.wastage_unit_id;
     let newValue = [...oldValue];
     newValue.push(value);
     this.packagingMaterial = newValue;
@@ -231,6 +263,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     let body:any = this.processingForm.value; //{items:[...this.processingUnits]}
     if(body.raw_item_id == "") body.raw_item_id = null;
     if(body.consumed_unit_id == "") body.consumed_unit_id = null;
+    if(body.wastage_unit_id == "") body.wastage_unit_id = null;
 
     if (this.isEditMode) {
       body.processing_id = this.activeEditId;
