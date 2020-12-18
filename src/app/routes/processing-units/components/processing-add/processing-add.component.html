@@ -11,19 +11,34 @@
         <div fxLayout="row wrap" fxLayoutGap="8px grid">
 
           <mat-form-field fxFlex="33" *ngIf="isAdmin" fxFlex.lt-sm="100">
+            <mat-label>Role</mat-label>
+            <mat-select placeholder="Role" required (selectionChange)="roleChanged();" formControlName="role_id" name="role" >
+              <mat-option *ngFor="let role of roleList"  [value]="role.type" >
+                {{ role.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="processingForm.get('role_id').invalid">
+              {{ "validations.required" | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="33" *ngIf="isAdmin" fxFlex.lt-sm="100">
             <mat-label>User</mat-label>
-            <mat-select placeholder="User" formControlName="user_id" name="searchUserId" >
+            <mat-select placeholder="User" required formControlName="user_id" name="searchUserId" >
               <mat-option *ngFor="let user of userList"  [value]="user._id" >
                 {{ user.first_name }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="processingForm.get('user_id').invalid">
+              {{ "validations.required" | translate }}
+            </mat-error>
           </mat-form-field>
 
           <div fxFlex="33" fxFlex.lt-sm="100">
             <mat-form-field>
                 <mat-label>Item Type</mat-label>
                 <mat-select formControlName="item_type" placeholder="Item" required>
-                    <mat-option value="RAW_MATERIAL" >Raw Material</mat-option>
+                    <mat-option value="RAW_MATERIAL" *ngIf="!isRetailer">Raw Material</mat-option>
                     <mat-option value="SELLABLE" >Sellable</mat-option>
                 </mat-select>
                 <mat-error *ngIf="processingForm.get('item_type').invalid">
@@ -91,14 +106,14 @@
           <div fxFlex="33" fxFlex.lt-sm="100">
             <mat-form-field>
                 <mat-label>Wastage Unit</mat-label>
-                <mat-select formControlName="wastage_unit_id" placeholder="Wastage Unit" required>
+                <mat-select formControlName="wastage_unit_id" placeholder="Wastage Unit">
                     <mat-option *ngFor="let unit of unitList" [value]="unit._id" >
                         {{ unit.name }}
                     </mat-option>
                 </mat-select>
-                <mat-error *ngIf="processingForm.get('wastage_unit_id').invalid">
+                <!-- <mat-error *ngIf="processingForm.get('wastage_unit_id').invalid">
                     {{ "validations.required" | translate }}
-                </mat-error>
+                </mat-error> -->
             </mat-form-field>
           </div>
 
@@ -106,10 +121,10 @@
           <div fxFlex="34" fxFlex.lt-sm="100">
             <mat-form-field>
               <mat-label>Wastage Quantity</mat-label>
-              <input matInput placeholder="Wastage Quantity" formControlName="wastage_quantity" required type="number">
-              <mat-error *ngIf="processingForm.get('wastage_quantity').invalid">
+              <input matInput placeholder="Wastage Quantity" formControlName="wastage_quantity" type="number">
+              <!-- <mat-error *ngIf="processingForm.get('wastage_quantity').invalid">
                 {{'validations.required' | translate}}
-              </mat-error>
+              </mat-error> -->
             </mat-form-field>
           </div>
 
@@ -135,41 +150,41 @@
                   </div>
 
                   <form class="form-field-full" [formGroup]="productionForm" (submit)="onProductionFormSubmit($event)">
-                  <div fxLayout="row wrap" fxLayoutGap="8px grid">
-                    <!-- production unit  -->
-                    <div fxFlex="30" fxFlex.lt-sm="100">
-                      <mat-form-field>
-                          <mat-label>Production Unit</mat-label>
-                          <mat-select formControlName="unit_id" placeholder="Production Unit" required>
-                              <mat-option *ngFor="let unit of unitList" [value]="unit._id" >
-                                  {{ unit.name }}
-                              </mat-option>
-                          </mat-select>
-                          <mat-error *ngIf="productionForm.get('unit_id').invalid">
-                              {{ "validations.required" | translate }}
+                    <div fxLayout="row wrap" fxLayoutGap="8px grid">
+                      <!-- production unit  -->
+                      <div fxFlex="30" fxFlex.lt-sm="100">
+                        <mat-form-field>
+                            <mat-label>Production Unit</mat-label>
+                            <mat-select formControlName="unit_id" placeholder="Production Unit" required>
+                                <mat-option *ngFor="let unit of unitList" [value]="unit" >
+                                    {{ unit.name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="productionForm.get('unit_id').invalid">
+                                {{ "validations.required" | translate }}
+                            </mat-error>
+                        </mat-form-field>
+                      </div>
+            
+                      <!-- producion qty -->
+                      <div fxFlex="30" fxFlex.lt-sm="100">
+                        <mat-form-field>
+                          <mat-label>Production Quantity</mat-label>
+                          <input matInput placeholder="Production Quantity" formControlName="production_quantity" required type="number">
+                          <mat-error *ngIf="productionForm.get('production_quantity').invalid">
+                            {{'validations.required' | translate}}
                           </mat-error>
-                      </mat-form-field>
+                        </mat-form-field>
+                      </div>
                     </div>
-          
-                    <!-- producion qty -->
-                    <div fxFlex="30" fxFlex.lt-sm="100">
-                      <mat-form-field>
-                        <mat-label>Production Quantity</mat-label>
-                        <input matInput placeholder="Production Quantity" formControlName="production_quantity" required type="number">
-                        <mat-error *ngIf="productionForm.get('production_quantity').invalid">
-                          {{'validations.required' | translate}}
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <button mat-raised-button color="primary" 
-                    type="submit" style="margin-right: 5px" class="m-t-8">
-                    Add
-                  </button>
-                  <button mat-raised-button type="button" (click)="productionForm.reset()" class="m-t-8">
-                    Reset
-                  </button>
-                </form>     
+                    <button mat-raised-button color="primary" 
+                      type="submit" style="margin-right: 5px" class="m-t-8">
+                      Add
+                    </button>
+                    <button mat-raised-button type="button" (click)="productionForm.reset()" class="m-t-8">
+                      Reset
+                    </button>
+                  </form>     
                 <!-- production table -->                 
                 <div class="mat-elevation-z8">
                   <table mat-table [dataSource]="productionSource" matSort>
@@ -268,14 +283,14 @@
                     <div fxFlex="30" fxFlex.lt-sm="100">
                       <mat-form-field>
                           <mat-label>Wastage Unit</mat-label>
-                          <mat-select formControlName="wastage_unit_id" placeholder="Wastage Unit" required>
+                          <mat-select formControlName="wastage_unit_id" placeholder="Wastage Unit" >
                               <mat-option *ngFor="let unit of unitList" [value]="unit._id" >
                                   {{ unit.name }}
                               </mat-option>
                           </mat-select>
-                          <mat-error *ngIf="packingForm.get('wastage_unit_id').invalid">
+                          <!-- <mat-error *ngIf="packingForm.get('wastage_unit_id').invalid">
                               {{ "validations.required" | translate }}
-                          </mat-error>
+                          </mat-error> -->
                       </mat-form-field>
                     </div>
           
@@ -283,10 +298,10 @@
                     <div fxFlex="30" fxFlex.lt-sm="100">
                       <mat-form-field>
                         <mat-label>Wastage Quantity</mat-label>
-                        <input matInput placeholder="Wastage Quantity" formControlName="wastage_quantity" required type="number">
-                        <mat-error *ngIf="packingForm.get('wastage_quantity').invalid">
+                        <input matInput placeholder="Wastage Quantity" formControlName="wastage_quantity" type="number">
+                        <!-- <mat-error *ngIf="packingForm.get('wastage_quantity').invalid">
                           {{'validations.required' | translate}}
-                        </mat-error>
+                        </mat-error> -->
                       </mat-form-field>
                     </div>
                   </div>

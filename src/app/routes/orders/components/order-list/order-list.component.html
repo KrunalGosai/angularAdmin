@@ -1,7 +1,6 @@
 <page-header></page-header>
 
 <!-- Filter -->
-<!-- searchBySource, searchByDestination, searchByOrdertype, searchByOrderstatus -->
 
 <div fxLayout="row wrap" class="matero-row">
   <div fxFlex="100" class="matero-col">
@@ -23,8 +22,8 @@
           <mat-form-field fxFlex="25" *ngIf="!isAdmin" fxFlex.lt-sm="100" class="matero-col">
             <mat-label>IN-OUT</mat-label>
             <mat-select placeholder="Status" [(ngModel)]="searchByInOut" name="inout" >
-              <mat-option value="in" style="text-transform: capitalize;">IN</mat-option>
-              <mat-option value="in" style="text-transform: capitalize;">OUT</mat-option>
+              <mat-option value="IN" style="text-transform: capitalize;">IN</mat-option>
+              <mat-option value="OUT" style="text-transform: capitalize;">OUT</mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -141,7 +140,7 @@
               <mat-icon color="accent">cancel</mat-icon>
             </button>
           </mat-grid-tile>
-          <mat-grid-tile>
+          <mat-grid-tile *ngIf="row.status == 'CONFIRMED'">
             <button mat-icon-button color="primary" matTooltip="Dispatch" aria-label="Dispatch" (click)="openDispatch(row)" >
               <mat-icon color="primary">exit_to_app</mat-icon>
             </button>
@@ -158,10 +157,10 @@
       </tr> -->
   </table>
 
-  <mat-paginator
+  <!-- <mat-paginator
     (page)="pageEvent($event)"
     [length]="pageDetails.totalRecords"
     [pageSize]="pageDetails.itemsPerPage"
     [pageSizeOptions]="[5, 10, 25]"
-  ></mat-paginator>
+  ></mat-paginator> -->
 </div>

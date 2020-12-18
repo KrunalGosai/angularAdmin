@@ -82,6 +82,13 @@ export class OffersComponentsOfferAddComponent implements OnInit {
   get isTypeItemCategory(){
     return this.offerForm.get('offer_type').value == "ITEM" || this.offerForm.get('offer_type').value == "CATEGORY" || this.offerForm.get('offer_type').value == '';
   }
+
+  get isTypeItemCategoryWithDepo(){
+    return (this.offerForm.get('offer_type').value == "ITEM" 
+            || this.offerForm.get('offer_type').value == "CATEGORY" 
+            || this.offerForm.get('offer_type').value == '') 
+            && this.offerForm.get('user_role').value == 'DEPO';
+  }
   get isOrderType(){
     return this.offerForm.get('offer_type').value == "ORDER"
   }

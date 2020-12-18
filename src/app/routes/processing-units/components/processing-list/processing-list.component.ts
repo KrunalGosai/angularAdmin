@@ -21,7 +21,9 @@ export class ProcessingUnitsProcessingListComponent implements OnInit {
   displayedColumns: string[] = ["batchNumber","status", "controls"]; //"raw_item_id","sellable_item_id",
   dataSource: MatTableDataSource<any>;
   filterUserList = [];
+  roleList = [];
   searchUserId = '';
+  searchRole = '';
 
   @ViewChild(MatSort) sort: MatSort;
   pageDetails = {
@@ -47,10 +49,13 @@ export class ProcessingUnitsProcessingListComponent implements OnInit {
       this.dataSource.sort = this.sort;
       this.pageDetails.totalRecords = processingUnits.totalCount;
     })
-    if(this.isAdmin)
-    this.usersFacade.getUsersByType(0,0,'',UserRole.MANUFACTURING_PLANT).subscribe(users => {
-      this.filterUserList = users.userList;
-    })
+    if(this.isAdmin){
+      this.usersFacade.getRoleList().subscribe(res => {
+        let roles:any = res;
+        this.roleList = roles.data.filter(role => role.type == UserRole.DEPO || role.type == UserRole.HAWKER || role.type == UserRole.FRANCHISE || role.type == UserRole.RETAILERS );
+      })
+    }
+    
     
   }
 
@@ -94,12 +99,23 @@ export class ProcessingUnitsProcessingListComponent implements OnInit {
 
   public resetFilter(){
     this.searchUserId = '';
+    this.searchRole = ''
   }
 
   public openItemViewDialog(row){
     this.sidebarNoticeService.setComponent(ProcessingViewComponent);
     this.sidebarNoticeService.setIsOpened(true);
     this.facade.setProcessingUnitViewData(row);  
+  }
+
+  public roleChanged(){
+    this.filterUserList = [];
+    if(this.isAdmin){
+      if(this.searchRole == '') return;
+      this.usersFacade.getUsersByType(0,0,'',this.searchRole).subscribe(users => {
+        this.filterUserList = users.userList;
+      })
+    }
   }
 
 

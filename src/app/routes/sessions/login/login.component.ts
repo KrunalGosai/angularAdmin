@@ -45,7 +45,6 @@ export class LoginComponent implements OnInit {
     this.token.validateLogin(this.loginForm.value).toPromise().then(user => {
       let userdata:any = user;
       let userInfo:any = userdata.userInfo
-      console.log(userInfo);
 
       // Set user info
       this.settings.setUser(userInfo)
