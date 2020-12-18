@@ -121,6 +121,13 @@ export class OrdersOrderListComponent implements OnInit {
   }
 
   public filterOrder(){
+    if(this.searchByInOut == 'IN'){
+      this.searchByDestination = this.settingSvc.user._id;
+      this.searchBySource = ''
+    }else if(this.searchByInOut == 'OUT'){
+      this.searchBySource = this.settingSvc.user._id;
+      this.searchByDestination = '';
+    }
     this.facade.loadOrderList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByOrderType,this.searchByOrderStatus,this.searchBySource,this.searchByDestination)
     this.setColumns();
   }
