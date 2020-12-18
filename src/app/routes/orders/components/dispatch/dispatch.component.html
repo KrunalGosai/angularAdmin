@@ -115,7 +115,7 @@
                           <mat-form-field>
                             <mat-label>Unit</mat-label>
                             <mat-select #unit placeholder="Unit" required>
-                                <mat-option *ngFor="let unit of allUnitList" [value]="unit._id" >
+                                <mat-option *ngFor="let unit of allUnitList" [value]="unit" >
                                     {{ unit.name }}
                                 </mat-option>
                             </mat-select>
@@ -141,7 +141,7 @@
                       <table #innerTables mat-table [dataSource]="getItemItemUnits(element.item_id)">
                         <ng-container matColumnDef="item_unit_id" >
                           <th mat-header-cell *matHeaderCellDef> Unit </th>
-                          <td mat-cell *matCellDef="let element"> {{element.item_unit_id}} </td>
+                          <td mat-cell *matCellDef="let element"> {{element.item_unit_id.name}} </td>
                         </ng-container>
                         <ng-container matColumnDef="item_quantity" >
                           <th mat-header-cell *matHeaderCellDef> Quantity </th>

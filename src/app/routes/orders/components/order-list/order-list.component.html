@@ -140,7 +140,7 @@
               <mat-icon color="accent">cancel</mat-icon>
             </button>
           </mat-grid-tile>
-          <mat-grid-tile>
+          <mat-grid-tile *ngIf="row.status == 'CONFIRMED'">
             <button mat-icon-button color="primary" matTooltip="Dispatch" aria-label="Dispatch" (click)="openDispatch(row)" >
               <mat-icon color="primary">exit_to_app</mat-icon>
             </button>
@@ -157,10 +157,10 @@
       </tr> -->
   </table>
 
-  <mat-paginator
+  <!-- <mat-paginator
     (page)="pageEvent($event)"
     [length]="pageDetails.totalRecords"
     [pageSize]="pageDetails.itemsPerPage"
     [pageSizeOptions]="[5, 10, 25]"
-  ></mat-paginator>
+  ></mat-paginator> -->
 </div>

@@ -1,3 +1,4 @@
+import { unit } from 'app/routes/unites/entities';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmService } from './../../../../shared/services/confirm.service';
 import { MatTableDataSource } from '@angular/material/table';
@@ -101,7 +102,6 @@ export class OrdersDispatchComponent implements OnInit {
   // }
 
   public deleteIcon(row){
-    console.log(row);
     let ind = this.dispatchData.indexOf(row);
     if(ind != -1){
       let data = [...this.dispatchData];
@@ -112,14 +112,14 @@ export class OrdersDispatchComponent implements OnInit {
 
   public readyFroDispatch(){
     if(!this.validateBeforeDispatch()) return;
+    if(!this.dispatchItems || this.dispatchItems.length <= 0) return;
+    console.log(this.dispatchItems);
     let body = {
-      items: this.dispatchData,
+      items: this.dispatchItems,
       order_id: this.viewData._id,
       status: "READY_FOR_DISPATCH",
     }
     this.facade.setReadyForDispatch(body).then(res => {
-      // this.dispatchFrom.reset();
-      // this.dataSource = [];
       this.sidebarNoticeService.setIsOpened(false);
     })
   }
@@ -135,53 +135,75 @@ export class OrdersDispatchComponent implements OnInit {
     unit.value = '';
     
     this.dispatchData.push(item)
-    console.log(this.dispatchData);
   }
 
 
+  dispatchItems = [];
   validateBeforeDispatch(){
     if(!this.dispatchData || this.dispatchData.length <= 0){
       this.toster.error('Order not fulfilled!','Error',{timeOut:3000})
       return false;
     }
     let result = true;
+    this.dispatchItems = [];
     let orderItems = this.viewData.items;
-    let units = [...this.allUnitList];
     for (let index = 0; index < orderItems.length; index++) {
       const orderItem = orderItems[index];
-      console.log(orderItem);
+      
       let id = orderItem.item_id._id;
       let unitId = orderItem.item_unit_id._id;
       let orderqty = orderItem.booked_item_quantity;
+      // check if base unit exists then take base unit id 
+      if(orderItem.item_unit_id.base_unit && orderItem.item_unit_id.base_unit._id)
+        unitId = orderItem.item_unit_id.base_unit._id;
+      
+      //take qty in base unit if exists
+      if(orderItem.item_unit_id.base_unit && orderItem.item_unit_id.base_quantity)
+        orderqty = orderItem.item_unit_id.base_quantity * orderqty;
 
       let dispatchcount = 0;
-      let dispatchcart = [];
       for (let indexj = 0; indexj < this.dispatchData.length; indexj++) {
         const row = this.dispatchData[indexj];
+        let rowUnitId = row.item_unit_id._id;
+        let rowQty = row.item_quantity;
+
+        //check if base unit exists
+        if(row.item_unit_id.base_unit && row.item_unit_id.base_unit._id)
+          rowUnitId = row.item_unit_id.base_unit._id
+
+        //check if base unit exists 
+        if(row.item_unit_id.base_unit && row.item_unit_id.base_unit)
+          rowQty = row.item_unit_id.base_quantity * rowQty
+
         if(row.item_id == id){
           
           //check Unit
-          if(unitId != row.item_unit_id){
+          if(unitId != rowUnitId){
             this.toster.error('Order Units not matched!','Error',{timeOut:3000})
             result = false;
             break;
           }
           
           //count items;
-          dispatchcount += row.item_quantity;
-          return row;
+          dispatchcount += rowQty;
+
+          if(result){
+            let itemObj = {...row};
+            itemObj.item_unit_id = row.item_unit_id._id;;
+            this.dispatchItems.push(itemObj);
+          }
         }
         
       }
       
 
-      if(dispatchcart.length <= 0){
+      if(result && this.dispatchItems.length <= 0){
         this.toster.error('Order not fulfilled!','Error',{timeOut:3000})
         result = false;
         break;
       }
 
-      if(orderqty != dispatchcount){
+      if(result && orderqty != dispatchcount){
         this.toster.error('Order Quantites not matched!','Error',{timeOut:3000})
         result = false;
         break
