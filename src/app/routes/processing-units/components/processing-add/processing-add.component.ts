@@ -157,6 +157,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
       this.rawItemList = list.data;
       this.itemList = this.rawItemList;
     })
+    if(this.isAdmin)
     this.usersFacade.getUsersByType(0,0,'',UserRole.MANUFACTURING_PLANT).subscribe(users => {
       this.userList = users.userList;
     })
