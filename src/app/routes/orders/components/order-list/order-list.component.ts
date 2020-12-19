@@ -159,4 +159,8 @@ export class OrdersOrderListComponent implements OnInit {
     this.facade.setViewData(row);    
   }
 
+  public deliveryClick(row){
+    this.facade.setDeliveryData(row);
+  }
+
 }

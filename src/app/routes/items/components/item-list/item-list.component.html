@@ -152,6 +152,7 @@
             (change)="changePosition(row)"
             style="max-width: 50px"
             [(ngModel)]="row.position"
+            min="1"
           />
         </td>
       </form>
@@ -225,6 +226,7 @@
           (change)="changePosition(row)"
           style="max-width: 70px"
           [(ngModel)]="row.user_price"
+          min="1"
         />
       </td>
     </ng-container>
