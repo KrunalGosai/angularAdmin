@@ -38,6 +38,14 @@ export class OrdersFacadeService {
     return this.state.getViewData().pipe(tap(data => data))
   }
 
+  public setDeliveryData(setDeliveryData){
+    this.state.setDeliveryData(setDeliveryData);
+  }
+
+  public getDeliveryData(){
+    return this.state.getDeliveryData().pipe(tap(data => data))
+  }
+
   public setReadyForDispatch(dispatchOrder){
     return this.api.setReadyForDispatch(dispatchOrder).toPromise().then(res => {
       this.loadOrderList();
