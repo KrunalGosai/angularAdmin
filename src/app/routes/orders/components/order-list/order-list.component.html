@@ -144,6 +144,11 @@
             <button mat-icon-button color="primary" matTooltip="Dispatch" aria-label="Dispatch" (click)="openDispatch(row)" >
               <mat-icon color="primary">exit_to_app</mat-icon>
             </button>
+          </mat-grid-tile> 
+          <mat-grid-tile >
+            <button mat-icon-button color="primary" matTooltip="Delivery" (click)="deliveryClick(row)" [routerLink]="['delivery',row._id]"   >
+              <mat-icon color="primary">assignment_turned_in</mat-icon>
+            </button>
           </mat-grid-tile>
         </mat-grid-list>
       </td>

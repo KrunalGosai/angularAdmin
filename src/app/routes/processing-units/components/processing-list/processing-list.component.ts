@@ -52,7 +52,7 @@ export class ProcessingUnitsProcessingListComponent implements OnInit {
     if(this.isAdmin){
       this.usersFacade.getRoleList().subscribe(res => {
         let roles:any = res;
-        this.roleList = roles.data.filter(role => role.type == UserRole.DEPO || role.type == UserRole.HAWKER || role.type == UserRole.FRANCHISE || role.type == UserRole.RETAILERS );
+        this.roleList = roles.data.filter(role => role.type == UserRole.DEPO || role.type == UserRole.HAWKER || role.type == UserRole.FRANCHISE || role.type == UserRole.RETAILERS || role.type == UserRole.MANUFACTURING_PLANT );
       })
     }
     
