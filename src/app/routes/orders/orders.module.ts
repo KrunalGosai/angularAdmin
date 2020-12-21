@@ -6,7 +6,7 @@ import { OrdersComponentsOrderViewComponent } from './components/order-view/orde
 import { OrdersDispatchComponent } from './components/dispatch/dispatch.component';
 import { OrdersComponentsDeliveryComponent } from './components/delivery/delivery.component';
 
-const COMPONENTS = [OrdersOrderListComponent, OrdersComponentsOrderViewComponent, OrdersComponentsDeliveryComponent];
+const COMPONENTS = [OrdersOrderListComponent, OrdersComponentsDeliveryComponent,OrdersComponentsOrderViewComponent];
 const COMPONENTS_DYNAMIC = [];
 
 @NgModule({

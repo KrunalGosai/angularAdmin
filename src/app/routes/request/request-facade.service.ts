@@ -11,15 +11,16 @@ export class RequestFacadeService {
 
   constructor(private api:RequestApiService,private state:RequestStateService,private toster: ToastrService) { }
 
-  public loadReuestList(currentPage = 0,currentPageSize = 0,searchByRequesttype:String = ''){
-    this.api.loadRequestList(currentPage ,currentPageSize,searchByRequesttype).subscribe(requestList => {
+  public loadReuestList(currentPage = 0,currentPageSize = 0,searchRequestNumber:string = '',searchBySource:string='',searchByDestination:string='',searchByOrdertype:string='',searchByOrderstatus:string=''){
+    console.log("request service",currentPage,currentPageSize);
+    this.api.loadRequestList(currentPage ,currentPageSize,searchRequestNumber,searchBySource,searchByDestination,searchByOrdertype,searchByOrderstatus).subscribe(requestList => {
       this.state.setRequestList(requestList);
     },err => console.error('api call error from load request ',err))
   }
 
 
-  public getRequestList(currentPage = 0,currentPageSize = 0,searchOfferType:String = ''){
-    if(!this.state.isRequestsSet) this.loadReuestList(currentPage ,currentPageSize,searchOfferType)
+  public getRequestList(currentPage = 0,currentPageSize = 0,searchRequestNumber:string = '',searchBySource:string ='',searchByDestination:string='',searchByOrdertype:string='',searchByOrderstatus:string=''){
+    if(!this.state.isRequestsSet) this.loadReuestList(currentPage,currentPageSize,searchRequestNumber,searchBySource,searchByDestination,searchByOrdertype,searchByOrderstatus)
     return this.state.getRequestList().pipe(tap(cate => cate))
   }
 
@@ -36,5 +37,18 @@ export class RequestFacadeService {
       return res;
     }).catch(err => {console.error('api call error from raise request',err); throw err });
   }
-  
+  public changeStatus(reqData:any) {
+    return this.api.changeStatus(reqData).toPromise().then((res:any) => {
+      this.toster.success(res.message,'Success',{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from change request',err); throw err }); 
+  }
+
+  public setViewData(viewData){
+    this.state.setViewData(viewData);
+  }
+
+  public getViewData(){
+    return this.state.getViewData().pipe(tap(data => data))
+  }
 }
