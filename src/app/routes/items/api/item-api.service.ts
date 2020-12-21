@@ -38,6 +38,17 @@ export class ItemApiService {
     return this.http.get<itemListResponse>(url);
   }
 
+  getItemListForDropDown(searchItemType = ''){
+    let url = this.baseURl+`/api/item/get_admin_item_list?adminlist=true`;
+    
+    if(searchItemType != undefined && searchItemType !=  null && searchItemType.trim() != '')
+      url += `&item_type=${searchItemType}`;
+    
+    url = url.replace('?&','?')
+      
+    return this.http.get<itemListResponse>(url);
+  }
+
   public deleteItem(itemId){
     let url = this.baseURl+`/api/item/delete_Item/${itemId}`;
     return this.http.delete(url);

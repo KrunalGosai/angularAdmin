@@ -1,5 +1,6 @@
+import { MatDialog } from '@angular/material/dialog';
 import { SettingsService } from './../../../../core/bootstrap/settings.service';
-import { OrdersDispatchComponent } from './../dispatch/dispatch.component';
+import { OrdersDispatchReadyComponent } from '../dispatch-ready/dispatch-ready.component';
 import { MatSort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,6 +11,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdersComponentsOrderViewComponent } from '../order-view/order-view.component';
 import { SidebarNoticeService } from '@theme/sidebar-notice/sidebar-notice.service';
 import { UsersFacade } from 'app/routes/users/users-facade';
+import { DispatchComponent } from '../dispatch/dispatch.component';
 
 @Component({
   selector: 'app-orders-order-list',
@@ -40,6 +42,7 @@ export class OrdersOrderListComponent implements OnInit {
   
   constructor(
     private router:Router,
+    private dispatchDialog: MatDialog,
     private settingSvc:SettingsService,
     private userFacade:UsersFacade,
     private activeRouter:ActivatedRoute,
@@ -115,12 +118,6 @@ export class OrdersOrderListComponent implements OnInit {
     })
   }
 
-  public navigateToEdit(id){
-    // this.facade.loadOfferDetails(id).then(item => {
-    //   this.router.navigate(['offers','edit',id])
-    // })
-  }
-
   public filterOrder(){
     if(this.searchByInOut == 'IN'){
       this.searchByDestination = this.settingSvc.user._id;
@@ -154,14 +151,24 @@ export class OrdersOrderListComponent implements OnInit {
     this.facade.setViewData(row);      
   }
 
-  public openDispatch(row){
-    this.sidebarNoticeService.setComponent(OrdersDispatchComponent);
+  public openDispatchReady(row){
+    this.sidebarNoticeService.setComponent(OrdersDispatchReadyComponent);
     this.sidebarNoticeService.setIsOpened(true);
     this.facade.setViewData(row);    
   }
 
   public deliveryClick(row){
     this.facade.setDeliveryData(row);
+  }
+
+  public dispatchClick(row:any){
+    let viewData = row
+    const dialogRef = this.dispatchDialog.open(DispatchComponent, {data:viewData});
+      dialogRef.afterClosed().subscribe(result => {
+        // console.log(`Dialog result: ${result}`);
+        if(result)
+          this.filterOrder();
+      });
   }
 
 }

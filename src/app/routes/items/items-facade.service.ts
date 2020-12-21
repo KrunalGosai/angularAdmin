@@ -22,19 +22,23 @@ export class ItemsFacadeService {
 
   public getItemList(currentPage = 0,currentPageSize = 0, searchItemType= '',availabilityStatus = null,searchRoleName = null,userId = '',filterCategoryId:string = '',searchByName =''){
     if(!this.state.isItemsSet) this.loadItemList(currentPage,currentPageSize,searchItemType,availabilityStatus, searchRoleName,userId,filterCategoryId,searchByName)
-    return this.state.getItemList().pipe(tap(cate => cate))
+    return this.state.getItemList().pipe(tap(res => res))
   }
 
   public getSallableItemList(){
-    return this.api.getItemList(0,0,'SELLABLE').pipe(tap(cate => cate))
+    return this.api.getItemListForDropDown('SELLABLE').pipe(tap(res => res))
   }
 
   public getPackagingItemList(){
-    return this.api.getItemList(0,0,'PACKAGING_MATERIAL').pipe(tap(cate => cate))
+    return this.api.getItemListForDropDown('PACKAGING_MATERIAL').pipe(tap(res => res))
   }
 
   public getRawItemList(){
-    return this.api.getItemList(0,0,'RAW_MATERIAL').pipe(tap(cate => cate))
+    return this.api.getItemListForDropDown('RAW_MATERIAL').pipe(tap(res => res))
+  }
+
+  public getItemListForDropDown(){
+    return this.api.getItemListForDropDown().pipe(tap(res => res))
   }
 
 

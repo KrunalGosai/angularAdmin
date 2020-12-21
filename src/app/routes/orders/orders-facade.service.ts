@@ -62,4 +62,13 @@ export class OrdersFacadeService {
       return res;
     }).catch(err => {console.error('api call error from setReadyForDispatch',err); throw err })
   }
+
+  public setOrderDispatch(order_id:string,vehicle_id:string){
+    let body = {order_ids:[order_id],vehicle_id}
+    return this.api.setOrderDispatch(body).toPromise().then(res => {
+      this.toster.success('Order Successfully Updated','Success',{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from setOrderDispatch',err); throw err })
+
+  }
 }

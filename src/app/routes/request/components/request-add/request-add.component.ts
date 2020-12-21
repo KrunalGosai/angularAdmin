@@ -241,7 +241,7 @@ export class AddRequestComponents implements OnInit {
 		
 		this.facade.loadItemList(this.pageDetails.currentPage, this.pageDetails.itemsPerPage,itemType, null, this.searchRoleName, this.searchUserId, null, this.searchByName)
 		
-		this.facade.getItemList(this.pageDetails.currentPage, this.pageDetails.itemsPerPage,itemType, null, this.searchRoleName, this.searchUserId, null, this.searchByName).subscribe((items:any) => {
+		this.facade.getItemListForDropDown().subscribe((items:any) => {
 			if(this.requestForm.controls['requestOrderType'].value == 'TRANSFER_ORDER'){
 				let filterItem = {"data" : [],"totalCount":0};
 				if(items){
