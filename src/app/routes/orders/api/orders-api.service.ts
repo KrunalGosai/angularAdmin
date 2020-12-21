@@ -42,4 +42,9 @@ export class OrdersApiService {
     return this.http.post(url,dispatchOrder);
   }
 
+  public setOrderDelivery(orderDelivery){
+    let url = this.baseUrl+`/api/request-order/confirm-order-delivery`;
+    return this.http.patch(url,orderDelivery);
+  }
+
 }
