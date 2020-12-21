@@ -27,7 +27,7 @@ export class OrdersOrderListComponent implements OnInit {
   searchByDestination ='';
   userList = [];
   filterOrderType = ['PURCHASE_ORDER', 'TRANSFER_ORDER', 'CUSTOMER_ORDER', 'HAWKER_CUSTOMER_ORDER'];
-  filterOrderStatus = ['CONFIRMED', "READY_FOR_DISPATCH", 'DIPATCHED', 'DELIVERED', 'CANCELLED', 'NOT_DELIVERED', 'REJECTED']
+  filterOrderStatus = ['CONFIRMED', "READY_FOR_DISPATCH", 'DISPATCHED', 'DELIVERED', 'CANCELLED', 'NOT_DELIVERED', 'REJECTED']
 
   @ViewChild(MatSort) sort: MatSort;
   pageDetails = {
@@ -57,6 +57,7 @@ export class OrdersOrderListComponent implements OnInit {
       router.events.subscribe((val) => {
         if(val instanceof NavigationEnd) {
           if(val.url.startsWith('/orders/'))
+            this.resetFilter();
             this.filterOrder();
         }
       })
@@ -141,9 +142,9 @@ export class OrdersOrderListComponent implements OnInit {
 
   private setColumns(){
     if(this.isCustomerOrder){
-      this.displayedColumns = ["order_no","type",'status',"source_id","destination_id","items","created_on",'slot_date', "controls"]
+      this.displayedColumns = ["order_no",'status',"source_id","destination_id","items","created_on",'slot_date',"controls"]
     }else{
-      this.displayedColumns = ["order_no","type",'status',"source_id","destination_id","items","created_on","controls"];
+      this.displayedColumns = ["order_no",'status',"source_id","destination_id","items","created_on","controls"];
     }
   }
 

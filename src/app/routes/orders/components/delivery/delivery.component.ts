@@ -1,35 +1,27 @@
-import { element } from 'protractor';
-import { unit } from 'app/routes/unites/entities';
+import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrdersFacadeService } from './../../orders-facade.service';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-orders-components-delivery',
   templateUrl: './delivery.component.html',
-  styleUrls: ['./delivery.component.scss'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+  styleUrls: ['./delivery.component.scss']
 })
 export class OrdersComponentsDeliveryComponent implements OnInit {
 
   constructor(
     private facade:OrdersFacadeService,
     private rotuer:Router,
+    private toster: ToastrService,
     private cd: ChangeDetectorRef) { }
 
   public deliveryData:any = {};
 
   dataSource: MatTableDataSource<any>;
   tableData:any[] = [];
-  columnsToDisplay = ['item_name','booked_item_quantity','item_quantity','weight_item_quantity','item_unit_id','loss_in_transit','scaling_loss','wastage_item_quantity','wastage_reason'];
+  columnsToDisplay = ['check', 'item_name','item_quantity','weight_item_quantity','loss_in_transit','scaling_loss','wastage_item_quantity','wastage_reason'];
   innerDisplayedColumns = ['item_unit_id','item_quantity','control'];
   expandedElement: any | null;
 
@@ -41,7 +33,8 @@ export class OrdersComponentsDeliveryComponent implements OnInit {
       // this.tableData = [...this.deliveryData.items];
       this.deliveryData.items.map(item => {
         this.tableData.push({
-          row:item,
+          fullReceived:false,
+          check:false,
           _id:item._id,
           item_id :item.item_id, 
           item_name : item.item_name,
@@ -67,11 +60,6 @@ export class OrdersComponentsDeliveryComponent implements OnInit {
     return this.tableData.filter(item => item.item_id == itemId);
   }
 
-  toggleRow(element: any) {
-    element.addresses && (element.addresses as MatTableDataSource<any>).data.length ? (this.expandedElement = this.expandedElement === element ? null : element) : null;
-    this.cd.detectChanges();
-  }
-
   getBaseUnit(unitObj){
     let result = ''
     //get unit name;
@@ -85,7 +73,16 @@ export class OrdersComponentsDeliveryComponent implements OnInit {
   }
 
   public quantityChange(element){
-    element.loss_in_transit = element.booked_item_quantity - element.item_quantity;
+    let loss = 0;
+    loss = element.booked_item_quantity - element.item_quantity;
+
+    //convert loss in base unit if exists
+    if(element.item_unit_id.base_unit && element.item_unit_id.base_unit.name)
+      loss = element.item_unit_id.base_quantity * loss;
+
+    element.loss_in_transit = loss
+    element.fullReceived = false;
+    element.check = true;
     this.reloadTableData();
   }
 
@@ -98,15 +95,57 @@ export class OrdersComponentsDeliveryComponent implements OnInit {
       weight = element.item_unit_id.base_quantity * element.booked_item_quantity;
     
     element.scaling_loss = weight - element.weight_item_quantity;
-
+    element.fullReceived = false;
+    element.check = true;
     this.reloadTableData();
   }
 
   onReceived(){
-    console.log({
+    let data = this.updateFullReceived();
+    if(data && data.length <= 0){
+      this.toster.error('Fill Order Deails','Error',{timeOut:3000})
+      return;
+    }
+    let body = {
       order_id:this.deliveryData._id,
-      items:this.tableData
+      items:data
+    }
+    this.facade.confirmDelivery(body).then(res => {
+      this.rotuer.navigate(['/orders/PURCHASE_ORDER'])
     })
   }
 
+  fullReceivedChanged(row){
+    if(row.fullReceived){
+      row.item_quantity = row.booked_item_quantity
+      row.scaling_loss = 0;
+      row.loss_in_transit = 0;
+      let weight = 0
+
+      weight = row.item_quantity;
+
+      if(row.item_unit_id.base_unit && row.item_unit_id.base_unit.name)
+        weight = row.item_unit_id.base_quantity * row.booked_item_quantity;
+      
+      row.weight_item_quantity = weight;
+    }
+    row.check = true;
+  }
+
+  updateFullReceived(){
+    let result = [];
+    let validate = true;
+    this.tableData.map(item => {
+      let obj = {...item};
+      obj.item_id = item.item_id._id;
+      obj.item_unit_id = item.item_unit_id._id
+      //check validation is each row changed
+      if(!obj.check){
+        validate = false;
+        console.error(obj);
+      }
+      result.push(obj);
+    })
+    return validate ? result : [];
+  }
 }

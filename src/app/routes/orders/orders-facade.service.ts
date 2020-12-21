@@ -54,4 +54,12 @@ export class OrdersFacadeService {
     }).catch(err => {console.error('api call error from setReadyForDispatch',err); throw err })
 
   }
+
+  public confirmDelivery(orderDelivery){
+    return this.api.setOrderDelivery(orderDelivery).toPromise().then(res => {
+      this.loadOrderList();
+      this.toster.success('Order Successfully Updated','Success',{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from setReadyForDispatch',err); throw err })
+  }
 }
