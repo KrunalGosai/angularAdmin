@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { SettingsService } from './../../../../core/bootstrap/settings.service';
 import { OrdersDispatchReadyComponent } from '../dispatch-ready/dispatch-ready.component';
@@ -12,6 +13,7 @@ import { OrdersComponentsOrderViewComponent } from '../order-view/order-view.com
 import { SidebarNoticeService } from '@theme/sidebar-notice/sidebar-notice.service';
 import { UsersFacade } from 'app/routes/users/users-facade';
 import { DispatchComponent } from '../dispatch/dispatch.component';
+import { UserRole } from '@shared/entities';
 
 @Component({
   selector: 'app-orders-order-list',
@@ -27,7 +29,11 @@ export class OrdersOrderListComponent implements OnInit {
   searchByInOut = '';
   searchBySource = ''; 
   searchByDestination ='';
-  userList = [];
+  searchBySourceRole = '';
+  searchByDestinationRole = '';
+  sourceUserList = [];
+  destinationUserList = [];
+  roleList = [];
   filterOrderType = ['PURCHASE_ORDER', 'TRANSFER_ORDER', 'CUSTOMER_ORDER', 'HAWKER_CUSTOMER_ORDER'];
   filterOrderStatus = ['CONFIRMED', "READY_FOR_DISPATCH", 'DISPATCHED', 'DELIVERED', 'CANCELLED', 'NOT_DELIVERED', 'REJECTED']
 
@@ -54,8 +60,9 @@ export class OrdersOrderListComponent implements OnInit {
           this.searchByOrderType = params.order_type;
         }
       });
-      this.userFacade.getUsers().subscribe(users => {
-        this.userList = users.userList;
+      this.userFacade.getRoleList().subscribe(res=> {
+        let roles:any = res;
+        this.roleList = roles.data.filter(role => role.type != UserRole.ADMIN && role.type != UserRole.CUSTOMER && role.type != UserRole.DELIVERY_BOY);
       })
       router.events.subscribe((val) => {
         if(val instanceof NavigationEnd) {
@@ -121,10 +128,8 @@ export class OrdersOrderListComponent implements OnInit {
   public filterOrder(){
     if(this.searchByInOut == 'IN'){
       this.searchByDestination = this.settingSvc.user._id;
-      this.searchBySource = ''
     }else if(this.searchByInOut == 'OUT'){
       this.searchBySource = this.settingSvc.user._id;
-      this.searchByDestination = '';
     }
     this.facade.loadOrderList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByOrderType,this.searchByOrderStatus,this.searchBySource,this.searchByDestination)
     this.setColumns();
@@ -169,6 +174,20 @@ export class OrdersOrderListComponent implements OnInit {
         if(result)
           this.filterOrder();
       });
+  }
+
+  sourceRoleChanged(){
+    this.sourceUserList = [];
+    this.userFacade.getUsersByType(0,0,'',this.searchBySourceRole).subscribe(users => {
+      this.sourceUserList = users.userList;
+    })
+  }
+
+  destinationRoleChanged(){
+    this.destinationUserList = [];
+    this.userFacade.getUsersByType(0,0,'',this.searchByDestinationRole).subscribe(users => {
+      this.destinationUserList = users.userList;
+    })
   }
 
 }
