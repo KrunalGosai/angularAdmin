@@ -9,7 +9,7 @@ export class RequestStateService {
   constructor() { }
 
   private requests:BehaviorSubject<any> = new BehaviorSubject({});
-
+  private viewData:BehaviorSubject<any> = new BehaviorSubject({});
   // flags
   isRequestsSet:boolean = false;
 
@@ -20,5 +20,12 @@ export class RequestStateService {
   public setRequestList(isRequestList:any){
     this.isRequestsSet = true;
     this.requests.next(isRequestList);
+  }
+  public getViewData():Observable<any>{
+    return this.viewData.asObservable();
+  }
+
+  public setViewData(viewData:any){
+    this.viewData.next(viewData);
   }
 }

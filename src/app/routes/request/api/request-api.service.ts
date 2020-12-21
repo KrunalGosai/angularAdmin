@@ -11,15 +11,23 @@ export class RequestApiService {
   constructor(private http:HttpClient) { }
   private baseUrl = environment.SERVER_ORIGIN;
 
-  public loadRequestList(currentPage = 0,currentPageSize = 0,searchOfferType:String = ''):Observable<any>{
+  public loadRequestList(currentPage = 0,currentPageSize = 0,searchRequestNumber:string = '',searchBySource:string,searchByDestination:string,searchByOrdertype:string,searchByOrderstatus:string):Observable<any>{
     let url = this.baseUrl+`/api/request-order/list?`
     if(currentPage && currentPage != 0)
       url += `&currentPage=${currentPage}`;
     if(currentPageSize && currentPageSize != 0)
-      url += `&pageSize=${currentPageSize}`;
-    // if(searchOfferType && searchOfferType.trim() != '')
-    //   url += `&offer_type=${searchOfferType}`;
-    
+      url += `&currentPageSize=${currentPageSize}`;
+    if(searchRequestNumber && searchRequestNumber.trim() != '')
+      url += `&searchRequestNumber=${searchRequestNumber}`;
+    if(searchBySource && searchBySource.trim() != '')
+      url += `&searchBySource=${searchBySource}`;  
+    if(searchByDestination && searchByDestination.trim() != '')
+      url += `&searchByDestination=${searchByDestination}`;
+    if(searchByOrdertype && searchByOrdertype.trim() != '')
+      url += `&searchByOrdertype=${searchByOrdertype}`;
+    if(searchByOrderstatus && searchByOrderstatus.trim() != '')
+      url += `&searchByOrdertype=${searchByOrderstatus}`;    
+      
     url = url.replace('?&','?');
 
     return this.http.get(url);
@@ -43,5 +51,10 @@ export class RequestApiService {
     return this.http.post(url,body);
     
   }
-  
+  public changeStatus(reqData){
+    let url = this.baseUrl+`/api/request-order/accept-cancel-request`;
+    let body = reqData
+    return this.http.patch(url,body);
+
+  }
 }

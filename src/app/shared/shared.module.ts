@@ -19,7 +19,7 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { ErrorCodeComponent } from './components/error-code/error-code.component';
 import { ConfirmComponent } from './components/confirm/confirm.component';
-
+import { OrdersComponentsOrderViewComponent } from '../../app/routes/orders/components/order-view/order-view.component';
 const THIRD_MODULES = [
   MaterialModule,
   MaterialExtensionsModule,
@@ -51,6 +51,6 @@ const PIPES = [];
     ...DIRECTIVES,
     ...PIPES,
   ],
-  entryComponents: COMPONENTS_DYNAMIC,
+  entryComponents: [...COMPONENTS_DYNAMIC,OrdersComponentsOrderViewComponent],
 })
 export class SharedModule {}
