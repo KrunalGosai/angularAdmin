@@ -10,7 +10,7 @@ export class requestViewComponent implements OnInit {
 
   constructor(private facade:RequestFacadeService) { }
   public viewData:any = {};
-  displayedColumns: string[] = ['item_name', 'booked_item_quantity','wastage_item_quantity','suggested_price', 'final_purchase_price','scaling_loss','loss_in_transit'];
+  displayedColumns: string[] = ['item_name', 'booked_item_quantity']; //,'wastage_item_quantity','suggested_price', 'final_purchase_price','scaling_loss','loss_in_transit'
   dataSource = [];
 
   ngOnInit() {

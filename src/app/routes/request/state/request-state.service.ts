@@ -10,6 +10,7 @@ export class RequestStateService {
 
   private requests:BehaviorSubject<any> = new BehaviorSubject({});
   private viewData:BehaviorSubject<any> = new BehaviorSubject({});
+  private requestEditData:BehaviorSubject<any> = new BehaviorSubject({});
   // flags
   isRequestsSet:boolean = false;
 
@@ -27,5 +28,13 @@ export class RequestStateService {
 
   public setViewData(viewData:any){
     this.viewData.next(viewData);
+  }
+
+  public getRequestEdit():Observable<any>{
+    return this.requestEditData.asObservable();
+  }
+
+  public setRequestEdit(requestEdit:any){
+    this.requestEditData.next(requestEdit);
   }
 }

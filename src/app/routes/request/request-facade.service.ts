@@ -51,4 +51,12 @@ export class RequestFacadeService {
   public getViewData(){
     return this.state.getViewData().pipe(tap(data => data))
   }
+
+  public setRequestEdit(requestEdit){
+    return this.state.setRequestEdit(requestEdit);
+  }
+
+  public getRequestEdit(){
+    return this.state.getRequestEdit().pipe(tap(data => data))
+  }
 }

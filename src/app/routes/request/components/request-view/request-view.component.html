@@ -1,14 +1,14 @@
 <div fxLayout="row wrap" class="matero-row">
     <mat-card>
-      <mat-card-title>Order View</mat-card-title>
+      <mat-card-title>Request View</mat-card-title>
       <div fxLayout="row wrap" fxLayoutGap="8px grid">
               
-        <div fxFlex="15" fxFlex.lt-sm="100">
+        <!-- <div fxFlex="15" fxFlex.lt-sm="100">
           <mat-label><strong> Order # </strong>:</mat-label>
         </div>
         <div fxFlex="85" fxFlex.lt-sm="100">
           <mat-label>{{viewData.order_no}}</mat-label>
-        </div>
+        </div> -->
 
         <div fxFlex="15" fxFlex.lt-sm="100">
             <mat-label><strong> Source </strong>:</mat-label>
@@ -53,7 +53,7 @@
             <mat-label>{{viewData.raised_by_id ? viewData.raised_by_id.first_name : 'N/A'}}</mat-label>
         </div>
 
-        <div fxFlex="15" fxFlex.lt-sm="100">
+        <!-- <div fxFlex="15" fxFlex.lt-sm="100">
             <mat-label><strong> Vehicle </strong>:</mat-label>
         </div>
         <div fxFlex="35" fxFlex.lt-sm="100">
@@ -65,9 +65,9 @@
         </div>
         <div fxFlex="30" fxFlex.lt-sm="100">
             <mat-label>{{viewData.dispatch_time | date}}</mat-label>
-        </div>
+        </div> -->
         <!-- "suggested_price": 100, "final_purchase_price": 120, "scaling_loss": 4, "loss_in_transit": 1 -->
-
+        <br>
 
         <div fxFlex="100" fxFlex.lt-sm="100">
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
