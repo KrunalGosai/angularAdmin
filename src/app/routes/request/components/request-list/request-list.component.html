@@ -16,19 +16,20 @@
 
       <form class="form-field-full">
         <div fxLayout="row wrap" fxLayoutGap="8px grid">
-          <mat-form-field fxFlex="33" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field fxFlex="50" fxFlex.lt-sm="100" class="matero-col">
             <mat-label>Request Number</mat-label>
-            <input matInput placeholder="Name" [(ngModel)]="searchRequestNumber" name="searchRequestNumber">
+            <input matInput placeholder="Name" [(ngModel)]="searchRequestNumber" [ngModelOptions]="{ standalone: true }">
           </mat-form-field>
+          <div fxFlex="50">
 
-          <mat-form-field fxFlex="33" fxFlex.lt-sm="100" class="matero-col"
+          </div>
+          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col"
           >
-            <mat-label>User Role</mat-label>
+            <mat-label>Source User Role</mat-label>
             <mat-select
               placeholder="User Role"
               (selectionChange)="filterRoleChanged()"
-              [(ngModel)]="searchRoleName"
-              name="searchRoleName"
+              [(ngModel)]="searchRoleName" [ngModelOptions]="{ standalone: true }"
             >
               <mat-option
                 *ngFor="let role of filterRoleList"
@@ -39,16 +40,15 @@
           </mat-form-field>
 
           <mat-form-field
-            fxFlex="33"
+            fxFlex="25"
             fxFlex.lt-sm="100"
             *ngIf="isAdmin"
             class="matero-col"
           >
-            <mat-label>User</mat-label>
+            <mat-label>Source User</mat-label>
             <mat-select
               placeholder="User"
-              [(ngModel)]="searchUserId"
-              name="searchUserId"
+              [(ngModel)]="searchUserId" [ngModelOptions]="{ standalone: true }"
             >
               <mat-option
                 *ngFor="let user of filterUserList"
@@ -57,13 +57,45 @@
               >
             </mat-select>
           </mat-form-field>
+          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col"
+          >
+            <mat-label>Destination User Role</mat-label>
+            <mat-select
+              placeholder="User Role"
+              (selectionChange)="destRoleChanged()"
+              [(ngModel)]="destinationRole" [ngModelOptions]="{ standalone: true }"
+            >
+              <mat-option
+                *ngFor="let role of filterRoleList"
+                [value]="role.type"
+                >{{ role.name }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
 
+          <mat-form-field
+            fxFlex="25"
+            fxFlex.lt-sm="100"
+            *ngIf="isAdmin"
+            class="matero-col"
+          >
+            <mat-label>Destination User</mat-label>
+            <mat-select
+              placeholder="User"
+              [(ngModel)]="destinationIdUserId" [ngModelOptions]="{ standalone: true }"
+            >
+              <mat-option
+                *ngFor="let user of destinationUserList"
+                [value]="user._id"
+                >{{ user.first_name }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
           <mat-form-field fxFlex="33" fxFlex.lt-sm="100" class="matero-col">
             <mat-label>Order Type</mat-label>
             <mat-select
               placeholder="Order Type"
-              name="filterType"
-            >
+			  [(ngModel)]="order_type" [ngModelOptions]="{ standalone: true }">
               <mat-option
                 *ngFor="let type of orderType"
                 [value]="type.value"
@@ -75,12 +107,11 @@
           <mat-form-field fxFlex="33" fxFlex.lt-sm="100" class="matero-col">
             <mat-label>Status</mat-label>
             <mat-select
-              placeholder="Status"
-              name="filterType"
+              placeholder="Status" [ngModelOptions]="{ standalone: true }" [(ngModel)]="order_status"
             >
               <mat-option
-                *ngFor="let cate of status"
-                [value]="status"
+				*ngFor="let cate of status"
+                [value]="cate"
                 >{{ cate }}</mat-option
               >
             </mat-select>
@@ -96,7 +127,7 @@
           </mat-form-field> -->
 
           <div fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
-            <button mat-raised-button color="primary" style="margin-right: 5px" (click)="filterOffer()">
+            <button mat-raised-button color="primary" style="margin-right: 5px" (click)="applyFilter()">
               Search
             </button>
             <button mat-raised-button (click)="resetFilter()">Reset</button>
@@ -159,9 +190,23 @@
     <!-- active Column -->
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <form>
       <td mat-cell *matCellDef="let row" style="text-transform: capitalize;">
-        {{row.status}}
+	  	<mat-form-field class="matero-col">
+            <!-- <mat-label>Status</mat-label> -->
+            <mat-select
+              [ngModelOptions]="{ standalone: true }" [(ngModel)]="row.status" (selectionChange)="changeStatus(row)"
+            >
+              <mat-option
+				*ngFor="let cate of orderStatus"
+                [value]="cate"
+                >{{ cate }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+		<!-- {{row.status}} -->
       </td>
+    </form>
     </ng-container>
 
     <!-- coupon_code -->
@@ -183,8 +228,8 @@
             </button>
           </mat-grid-tile>
           <mat-grid-tile>
-            <button mat-icon-button aria-label="Delete" (click)="deleteIcon(row._id)" >
-              <mat-icon color="accent">delete</mat-icon>
+            <button mat-icon-button aria-label="View" matTooltip="View" (click)="openView(row)" >
+              <mat-icon color="primary">visibility</mat-icon>
             </button>
           </mat-grid-tile>
         </mat-grid-list>
