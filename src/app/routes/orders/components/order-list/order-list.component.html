@@ -10,37 +10,55 @@
       <form class="form-field-full">
         <div fxLayout="row wrap" fxLayoutGap="8px grid">
 
-          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
-            <mat-label>Order Status</mat-label>
-            <mat-select placeholder="Status" [(ngModel)]="searchByOrderStatus" name="searchByOrderStatus" >
-              <mat-option *ngFor="let status of filterOrderStatus" [value]="status" style="text-transform: capitalize;">
-                {{ status | titlecase}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
           <mat-form-field fxFlex="25" *ngIf="!isAdmin" fxFlex.lt-sm="100" class="matero-col">
             <mat-label>IN-OUT</mat-label>
-            <mat-select placeholder="Status" [(ngModel)]="searchByInOut" name="inout" >
+            <mat-select placeholder="Status" (selectionChange)="searchBySource = '';searchByDestination = '';" [(ngModel)]="searchByInOut" name="inout" >
               <mat-option value="IN" style="text-transform: capitalize;">IN</mat-option>
               <mat-option value="OUT" style="text-transform: capitalize;">OUT</mat-option>
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field fxFlex="25" *ngIf="isAdmin" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field fxFlex="25" *ngIf="isAdmin || searchByInOut == 'IN'" fxFlex.lt-sm="100">
+            <mat-label>Source Role</mat-label>
+            <mat-select placeholder="Role" (selectionChange)="sourceRoleChanged()" [(ngModel)]="searchBySourceRole" name="role" >
+              <mat-option *ngFor="let role of roleList"  [value]="role.type" >
+                {{ role.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="25" *ngIf="isAdmin || searchByInOut == 'IN'" fxFlex.lt-sm="100" class="matero-col">
             <mat-label>Source</mat-label>
             <mat-select placeholder="Source" [(ngModel)]="searchBySource" name="searchBySource" >
-              <mat-option *ngFor="let user of userList" [value]="user._id" style="text-transform: capitalize;">
+              <mat-option *ngFor="let user of sourceUserList" [value]="user._id">
                 {{ user.first_name | titlecase}}
               </mat-option>
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field fxFlex="25" *ngIf="isAdmin" fxFlex.lt-sm="100" class="matero-col">
+          <mat-form-field fxFlex="25" *ngIf="isAdmin || searchByInOut == 'OUT'" fxFlex.lt-sm="100">
+            <mat-label>Destination Role</mat-label>
+            <mat-select placeholder="Role" (selectionChange)="destinationRoleChanged()" [(ngModel)]="searchByDestinationRole" name="role" >
+              <mat-option *ngFor="let role of roleList"  [value]="role.type" >
+                {{ role.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="25" *ngIf="isAdmin || searchByInOut == 'OUT'" fxFlex.lt-sm="100" class="matero-col">
             <mat-label>Destination</mat-label>
             <mat-select placeholder="Destination" [(ngModel)]="searchByDestination" name="searchByDestination" >
-              <mat-option *ngFor="let user of userList" [value]="user._id" style="text-transform: capitalize;">
+              <mat-option *ngFor="let user of userList" [value]="user._id">
                 {{ user.first_name | titlecase}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
+            <mat-label>Order Status</mat-label>
+            <mat-select placeholder="Status" [(ngModel)]="searchByOrderStatus" name="searchByOrderStatus" >
+              <mat-option *ngFor="let status of filterOrderStatus" [value]="status" style="text-transform: capitalize;">
+                {{ status | titlecase}}
               </mat-option>
             </mat-select>
           </mat-form-field>
