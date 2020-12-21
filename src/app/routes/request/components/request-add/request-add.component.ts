@@ -38,6 +38,7 @@ export class AddRequestComponents implements OnInit {
 	searchRoleName: string;
 	searchUserId: any;
 	searchByName: string;
+	activeEditId:string = '';
 	pageDetails = {
 		currentPage: 1,
 		itemsPerPage: 10,
@@ -50,12 +51,22 @@ export class AddRequestComponents implements OnInit {
 	constructor(
 		private fb: FormBuilder,
 		private router: Router,
-		private facade: ItemsFacadeService,
+		private activeRoute:ActivatedRoute,
+		private itemFacade: ItemsFacadeService,
 		private unitFacde: UnitesFacadeService,
 		private usersFacade: UsersFacade,
 		public settingService: SettingsService,
-		private requestServive:RequestFacadeService
+		private facade:RequestFacadeService
 	) {
+		this.activeRoute.params.subscribe((params) => {
+			if (params.id != undefined && params.id != null && params.id != "") {
+			  this.isEditMode = true;
+			  this.activeEditId = params.id;
+			  this.requestForm.patchValue({
+				  
+			  })
+			}
+		  });
 		this.requestForm = this.fb.group({
 			requestOrderType: ["", [Validators.required, Validators.maxLength(50)]],
 			searchBySorceRoleName: ["", [Validators.required]],
@@ -70,6 +81,16 @@ export class AddRequestComponents implements OnInit {
 
 
 	ngOnInit() {
+
+		if(this.isEditMode){
+			this.facade.getRequestEdit().subscribe(data => {
+				console.log(data);
+				this.requestForm.patchValue({
+					requestOrderType:data.type
+
+				  })
+			})
+		}
 		this.unitFacde.loadUnites(1, 500);
 		this.unitFacde.getUnites().subscribe((units) => {
 			this.unitList = units.data;
@@ -127,7 +148,7 @@ export class AddRequestComponents implements OnInit {
 	public pageEvent(event: PageEvent) {
 		this.pageDetails.itemsPerPage = event.pageSize;
 		this.pageDetails.currentPage = event.pageIndex + 1;
-		this.facade.loadItemList(this.pageDetails.currentPage, this.pageDetails.itemsPerPage, null, null, this.searchRoleName, this.searchUserId, null, this.searchByName)
+		this.itemFacade.loadItemList(this.pageDetails.currentPage, this.pageDetails.itemsPerPage, null, null, this.searchRoleName, this.searchUserId, null, this.searchByName)
 	}
 	onFormSubmit(event) {
 		const reqData = {
@@ -151,7 +172,7 @@ export class AddRequestComponents implements OnInit {
 				});
 			});
 		}
-		this.requestServive.raiseRequest(reqData).then((res:any) => {
+		this.facade.raiseRequest(reqData).then((res:any) => {
 			this.requestForm.reset();
         	this.router.navigate(["request"]);
 		}).catch((err:any) => {
@@ -239,9 +260,9 @@ export class AddRequestComponents implements OnInit {
 	}
 	getItem(itemType:string){
 		
-		this.facade.loadItemList(this.pageDetails.currentPage, this.pageDetails.itemsPerPage,itemType, null, this.searchRoleName, this.searchUserId, null, this.searchByName)
+		this.itemFacade.loadItemList(this.pageDetails.currentPage, this.pageDetails.itemsPerPage,itemType, null, this.searchRoleName, this.searchUserId, null, this.searchByName)
 		
-		this.facade.getItemListForDropDown().subscribe((items:any) => {
+		this.itemFacade.getItemListForDropDown().subscribe((items:any) => {
 			if(this.requestForm.controls['requestOrderType'].value == 'TRANSFER_ORDER'){
 				let filterItem = {"data" : [],"totalCount":0};
 				if(items){

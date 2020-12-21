@@ -29,6 +29,7 @@ export class RequestListComponent implements OnInit {
 	status: string[] = ['PENDING', 'REJECTED', 'CANCELLED', 'CONFIRMED'];
 	orderStatus = ['APPROVED','CANCELLED','REJECTED'];
 	searchRoleName: string = this.settingService.user.role_id.type;
+	searchByInOut = '';
 	searchUserId: string = '';
 	destinationIdUserId: string;
 	destinationUserList: Array<object>;
@@ -80,7 +81,7 @@ export class RequestListComponent implements OnInit {
 	}
 
 	get isAdmin() {
-		return true
+		return this.settingService.isAdmin;
 		// return this.currentRole == UserRole.ADMIN ? true : false;
 	}
 
@@ -120,13 +121,17 @@ export class RequestListComponent implements OnInit {
 		})
 	}
 
-	public navigateToEdit(id) {
-		// this.facade.loadItemDetails(id).then(item => {
-		//   this.router.navigate(['items','edit',id])
-		// })
+	public navigateToEdit(row) {
+		this.facade.setRequestEdit(row)
+		this.router.navigate(['request','edit',row._id])
 	}
 
 	public filterRequest() {
+		if(this.searchByInOut == 'IN'){
+			this.destinationIdUserId = this.settingService.user._id;
+		}else if(this.searchByInOut == 'OUT'){
+			this.searchUserId = this.settingService.user._id;
+		}
 		this.facade.loadReuestList(this.pageDetails.currentPage, this.pageDetails.itemsPerPage, this.searchRequestNumber,this.searchUserId,this.destinationIdUserId,this.order_type,this.order_status);
 	}
 
@@ -136,6 +141,7 @@ export class RequestListComponent implements OnInit {
 		this.destinationIdUserId = ''; 
 		this.order_type = '';
 		this.order_status = '';
+		this.searchByInOut = '';
 		this.filterRequest();
 	}
 	public filterRoleChanged() {

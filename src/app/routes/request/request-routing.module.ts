@@ -4,8 +4,8 @@ import { RequestListComponent } from './components/request-list/request-list.com
 import { AddRequestComponents } from './components/request-add/request-add.component';
 
 const routes: Routes = [{ path: '', component: RequestListComponent },
-{ path: 'new', component: AddRequestComponents }
-,{ path: 'edit/:id', component: AddRequestComponents }
+{ path: 'new', component: AddRequestComponents },
+{ path: 'edit/:id', component: AddRequestComponents }
 ];
 
 @NgModule({
