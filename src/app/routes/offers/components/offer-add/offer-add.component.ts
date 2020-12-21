@@ -113,7 +113,7 @@ export class OffersComponentsOfferAddComponent implements OnInit {
     this.offerOnItem = [];
     switch (value.toUpperCase()) {
       case "ITEM":
-        this.itemFacade.getItemList().subscribe(items => {
+        this.itemFacade.getItemListForDropDown().subscribe(items => {
           this.offerOnItem = items.data;
         },err => console.error(err))
         break;
