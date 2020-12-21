@@ -140,14 +140,19 @@
               <mat-icon color="accent">cancel</mat-icon>
             </button>
           </mat-grid-tile>
-          <mat-grid-tile *ngIf="isCustomerOrder && row.status == 'CONFIRMED'">
-            <button mat-icon-button color="primary" matTooltip="Dispatch" aria-label="Dispatch" (click)="openDispatch(row)" >
+          <mat-grid-tile *ngIf="row.status == 'CONFIRMED'">
+            <button mat-icon-button color="primary" matTooltip="Ready for Dispatch" (click)="openDispatchReady(row)" >
               <mat-icon color="primary">exit_to_app</mat-icon>
             </button>
           </mat-grid-tile> 
           <mat-grid-tile *ngIf="!isCustomerOrder && row.status == 'DISPATCHED'">
             <button mat-icon-button color="primary" matTooltip="Delivery" (click)="deliveryClick(row)" [routerLink]="['delivery',row._id]"   >
               <mat-icon color="primary">assignment_turned_in</mat-icon>
+            </button>
+          </mat-grid-tile> 
+          <mat-grid-tile *ngIf="row.status == 'READY_FOR_DISPATCH'">
+            <button mat-icon-button color="primary" matTooltip="Dispatch" (click)="dispatchClick(row)">
+              <mat-icon color="primary">local_shipping</mat-icon>
             </button>
           </mat-grid-tile>
         </mat-grid-list>

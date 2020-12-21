@@ -47,4 +47,9 @@ export class OrdersApiService {
     return this.http.patch(url,orderDelivery);
   }
 
+  public setOrderDispatch(dispatchOrder){
+    let url = this.baseUrl+`/api/request-order/dispatch-order`;
+    return this.http.patch(url,dispatchOrder);
+  }
+
 }
