@@ -93,6 +93,12 @@
         ]
     },
     {
+      "route": "trips",
+      "name": "trips",
+      "type": "link",
+      "icon":"local_shipping"
+    },
+    {
       "route": "address",
       "name": "address",
       "type": "sub",

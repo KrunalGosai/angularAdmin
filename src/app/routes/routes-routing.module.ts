@@ -40,6 +40,7 @@ const routes: Routes = [
     { path: 'request', loadChildren: () => import('./request/request.module').then(m => m.RequestModule) },
     { path: 'processing-units', loadChildren: () => import('./processing-units/processing-units.module').then(m => m.ProcessingUnitsModule) },
     { path: 'orders', loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule) },
+    { path: 'trips', loadChildren: () => import('./trips/trips.module').then(m => m.TripsModule) },
     ],
   },
   {

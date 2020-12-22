@@ -1,0 +1,97 @@
+<page-header title="{{ isEditMode ? 'Edit Trip' : 'New Trip' }}" [nav]="['home', 'trips', 'new']"></page-header>
+
+<div fxLayout="row wrap" class="matero-row">
+    <div fxFlex="100" class="matero-col">
+
+        <mat-accordion>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <strong>Filter</strong>
+                </mat-panel-title>
+                <mat-panel-description>
+                    Fitler Order List
+                </mat-panel-description>
+                </mat-expansion-panel-header>
+                <form class="form-field-full">
+                <div fxLayout="row wrap" fxLayoutGap="8px grid">
+        
+                    <mat-form-field fxFlex="25"  fxFlex.lt-sm="100" class="matero-col">
+                    <mat-label>Order Type</mat-label>
+                    <mat-select placeholder="Status" [(ngModel)]="searchByOrderType" name="searchByOrderType" >
+                        <mat-option value="CUSTOMER_ORDER">Customer Order</mat-option>
+                    </mat-select>
+                    </mat-form-field>
+        
+                    <!-- <mat-form-field fxFlex="25"  fxFlex.lt-sm="100">
+                    <mat-label>Source Role</mat-label>
+                    <mat-select placeholder="Role" (selectionChange)="sourceRoleChanged()" [(ngModel)]="searchBySourceRole" name="role" >
+                        <mat-option *ngFor="let role of roleList"  [value]="role.type" >
+                        {{ role.name }}
+                        </mat-option>
+                    </mat-select>
+                    </mat-form-field>
+        
+                    <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
+                    <mat-label>Source</mat-label>
+                    <mat-select placeholder="Source" [(ngModel)]="searchBySource" name="searchBySource" >
+                        <mat-option *ngFor="let user of sourceUserList" [value]="user._id">
+                        {{ user.first_name | titlecase}}
+                        </mat-option>
+                    </mat-select>
+                    </mat-form-field>
+        
+                    <mat-form-field fxFlex="25"  fxFlex.lt-sm="100">
+                    <mat-label>Destination Role</mat-label>
+                    <mat-select placeholder="Role" (selectionChange)="destinationRoleChanged()" [(ngModel)]="searchByDestinationRole" name="role" >
+                        <mat-option *ngFor="let role of roleList"  [value]="role.type" >
+                        {{ role.name }}
+                        </mat-option>
+                    </mat-select>
+                    </mat-form-field>
+        
+                    <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
+                    <mat-label>Destination</mat-label>
+                    <mat-select placeholder="Destination" [(ngModel)]="searchByDestination" name="searchByDestination" >
+                        <mat-option *ngFor="let user of destinationUserList" [value]="user._id">
+                        {{ user.first_name | titlecase}}
+                        </mat-option>
+                    </mat-select>
+                    </mat-form-field>
+        
+                    <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
+                    <mat-label>Order Status</mat-label>
+                    <mat-select placeholder="Status" [(ngModel)]="searchByOrderStatus" name="searchByOrderStatus" >
+                        <mat-option *ngFor="let status of filterOrderStatus" [value]="status" style="text-transform: capitalize;">
+                        {{ status | titlecase}}
+                        </mat-option>
+                    </mat-select>
+                    </mat-form-field> -->
+        
+                    <div fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
+                    <button mat-raised-button color="primary" style="margin-right: 5px" (click)="filterOrder()">
+                        Search
+                    </button>
+                    <button mat-raised-button (click)="resetFilter()">Reset</button>
+                    </div>
+                </div>
+                </form>
+            </mat-expansion-panel>
+            <!-- <mat-expansion-panel (opened)="panelOpenState = true"
+                                    (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Self aware panel
+                </mat-panel-title>
+                <mat-panel-description>
+                    Currently I am {{panelOpenState ? 'open' : 'closed'}}
+                </mat-panel-description>
+                </mat-expansion-panel-header>
+                <p>I'm visible because I am open</p>
+            </mat-expansion-panel> -->
+        </mat-accordion>
+        <mat-card>
+            <p>{{orders | json}}</p>
+        </mat-card>
+    </div>
+  </div>
