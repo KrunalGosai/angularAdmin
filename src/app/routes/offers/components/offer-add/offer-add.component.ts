@@ -133,13 +133,16 @@ export class OffersComponentsOfferAddComponent implements OnInit {
     if (!this.offerForm.valid) return;
     if (this.isEditMode) {
       let value = this.offerForm.value;
+      value.user_id = [value.user_id];
       value._id = this.activeEditId;
       this.facade.updateOffer(value).then((res) => {
         this.offerForm.reset();
         this.router.navigate(["offers"]);
       });
     } else {
-      this.facade.newOffer(this.offerForm.value).then((res) => {
+      let value = this.offerForm.value;
+      value.user_id = [value.user_id];
+      this.facade.newOffer(value).then((res) => {
         this.offerForm.reset();
         this.router.navigate(["offers"]);
       });

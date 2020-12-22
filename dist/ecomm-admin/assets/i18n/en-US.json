@@ -9,6 +9,7 @@
     "unit": "Units",
     "items": "Items",
     "request":"Request",
+    "trips":"Trips",
     "orders":"Orders",
     "orders.purchaseorder":"Purchase",
     "orders.transferorder":"Transfer",
