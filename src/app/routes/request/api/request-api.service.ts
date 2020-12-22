@@ -55,6 +55,15 @@ export class RequestApiService {
     let url = this.baseUrl+`/api/request-order/accept-cancel-request`;
     let body = reqData
     return this.http.patch(url,body);
-
+  }
+  
+  public getRequestDetailsById(id){
+    let url = this.baseUrl+`/api/request-order/requestdetail/${id}`;
+    return this.http.get(url);
+  }
+  
+  public updateRequest(requestData){
+    let url = this.baseUrl+`/api/request-order/request`;
+    return this.http.patch(url,requestData);
   }
 }
