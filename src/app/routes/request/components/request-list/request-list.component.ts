@@ -122,8 +122,9 @@ export class RequestListComponent implements OnInit {
 	}
 
 	public navigateToEdit(row) {
-		this.facade.setRequestEdit(row)
-		this.router.navigate(['request','edit',row._id])
+		this.facade.setRequestEdit(row._id).then(res=> {
+			this.router.navigate(['request','edit',row._id])
+		})
 	}
 
 	public filterRequest() {

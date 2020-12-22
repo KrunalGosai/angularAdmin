@@ -1,3 +1,4 @@
+import { ThemeModule } from './../../theme/theme.module';
 import { ToastrService } from 'ngx-toastr';
 import { tap } from 'rxjs/operators';
 import { RequestStateService } from './state/request-state.service';
@@ -52,11 +53,23 @@ export class RequestFacadeService {
     return this.state.getViewData().pipe(tap(data => data))
   }
 
-  public setRequestEdit(requestEdit){
-    return this.state.setRequestEdit(requestEdit);
+  public setRequestEdit(requestEditId){
+    return this.api.getRequestDetailsById(requestEditId).toPromise().then(res => {
+      let result:any =res;
+      this.state.setRequestEdit(result.message);
+      return res;
+    }).catch(err => {console.error(err); throw err})
   }
 
-  public getRequestEdit(){
+  public getRequestEdit(id){
+    if(!this.state.isRequestEditset) this.setRequestEdit(id)
     return this.state.getRequestEdit().pipe(tap(data => data))
+  }
+
+  public updateRequest(request){
+    return this.api.updateRequest(request).toPromise().then( res => {
+      this.toster.success('Request Successfully Updated',"Success",{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from Update request',err); throw err })
   }
 }

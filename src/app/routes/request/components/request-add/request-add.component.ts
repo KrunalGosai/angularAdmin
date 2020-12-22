@@ -62,9 +62,6 @@ export class AddRequestComponents implements OnInit {
 			if (params.id != undefined && params.id != null && params.id != "") {
 			  this.isEditMode = true;
 			  this.activeEditId = params.id;
-			  this.requestForm.patchValue({
-				  
-			  })
 			}
 		  });
 		this.requestForm = this.fb.group({
@@ -83,31 +80,68 @@ export class AddRequestComponents implements OnInit {
 	ngOnInit() {
 
 		if(this.isEditMode){
-			this.facade.getRequestEdit().subscribe(data => {
+		
+			this.facade.getRequestEdit(this.activeEditId).subscribe(data => {
 				console.log(data);
+				if(!data._id) return;
+				let sendRecieve = ''
+				if(data.destination_id._id == this.settingService.user._id){
+					sendRecieve = 'recieve';
+				}else if(data.source_id._id == this.settingService.user._id){
+					sendRecieve = 'send';
+				}
 				this.requestForm.patchValue({
-					requestOrderType:data.type
-
+					requestOrderType:data.type,
+					selectRequestType:sendRecieve,
+					sourceUserId:data.source_id._id,
+					destinationUserId:data.destination_id._id,
+					searchBySorceRoleName:data.source_id.role_id._id,
+					destinationRoleName:data.destination_id.role_id._id,
+					supplierUserId: data.supplier_id
 				  })
+				let cartData = [];
+				data.items.map(item => {
+					let obj = {
+						_id:item.item_id._id,
+						name : item.item_name,
+						price:1,
+						quantity:item.booked_item_quantity,
+						unit:item.item_unit_id._id,
+						unit_id:item.item_unit_id
+					}
+					cartData.push(obj);
+				})
+				this.cartItemList= cartData;
+				this.reloadCartTable();
+				this.sourceUserChange();
+				this.filterRoleChanged('searchBySorceRoleName')
+				this.filterRoleChanged('destinationRoleName')
 			})
 		}
 		this.unitFacde.loadUnites(1, 500);
 		this.unitFacde.getUnites().subscribe((units) => {
 			this.unitList = units.data;
 		});
+		this.usersFacade.getUsersByType(1, 2000).subscribe(res => {
+			this.filterUserList = res.userList;
+			if(this.filterUserList && this.filterUserList.length){
+				this.getRole();
+			}			
+		});
 
-		this.requestForm.controls['sourceUserId'].valueChanges.subscribe((value) => {
+		// this.requestForm.controls['sourceUserId'].valueChanges.subscribe((value) => {
 			
-			if(this.requestForm.controls['requestOrderType'].value === 'PURCHASE_ORDER'){
-				this.searchUserId = null;
-				this.getItem('RAW_MATERIAL');
-			}
-			if(this.requestForm.controls['requestOrderType'].value === 'TRANSFER_ORDER'){
-				console.log(this.requestForm.controls['requestOrderType'].value,value);
-				this.searchUserId = value;
-				this.getItem('SELLABLE');
-			}
-		})
+		// 	if(this.requestForm.controls['requestOrderType'].value === 'PURCHASE_ORDER'){
+		// 		this.searchUserId = null;
+		// 		this.getItem('RAW_MATERIAL');
+		// 	}
+		// 	if(this.requestForm.controls['requestOrderType'].value === 'TRANSFER_ORDER'){
+		// 		// console.log(this.requestForm.controls['requestOrderType'].value,value);
+		// 		this.searchUserId = value;
+		// 		this.getItem('SELLABLE');
+		// 	}
+		// })
+		
 		this.requestForm.controls['requestOrderType'].valueChanges.subscribe((value) => {
 			if(value === 'PURCHASE_ORDER'){
 				//this.filterRoleList = this.filterRoleList.filter(role => role.type == 'PURCHASE_MANAGER' && role.type == 'MANUFACTURING_PLANT');
@@ -115,23 +149,29 @@ export class AddRequestComponents implements OnInit {
 
 			}
 		})
-		this.requestForm.controls['searchBySorceRoleName'].valueChanges.subscribe((value) => {
-			console.log("value",value)
-			this.destinationRoleList = this.filterRoleList.filter(role => role._id != value &&  role.type != 'ADMIN' && role.type != 'CUSTOMER' && role.type != 'DELIVERY_BOY' && role.type != 'SUPPLIER');
-		})
-		this.usersFacade.loadUsers(1, 2000, '', '');
-		this.usersFacade.getUsersByType(1, 2000).subscribe(res => {
-			this.filterUserList = res.userList;
-			if(this.filterUserList && this.filterUserList.length){
-				this.getRole();
-			}
-			
-		});
+		// this.requestForm.controls['searchBySorceRoleName'].valueChanges.subscribe((value) => {
+		// 	console.log("value",value)
+		// 	if(this.filterRoleList && this.filterRoleList.length > 0)
+		// 	this.destinationRoleList = this.filterRoleList.filter(role => role._id != value &&  role.type != 'ADMIN' && role.type != 'CUSTOMER' && role.type != 'DELIVERY_BOY' && role.type != 'SUPPLIER');
+		// })
 	}
+	private loadDestinationRoleList(){
+		let value = this.requestForm.controls['searchBySorceRoleName'].value;
+		if(this.filterRoleList && this.filterRoleList.length >= 0){
+			this.destinationRoleList = this.filterRoleList.filter(role => role._id != value &&  role.type != 'ADMIN' && role.type != 'CUSTOMER' && role.type != 'DELIVERY_BOY' && role.type != 'SUPPLIER');
+			this.filterRoleChanged('destinationRoleName');
+		}
+	}
+
+
 	get is_active_value() {
 		return this.requestForm.get("is_active").value
 			? this.requestForm.get("is_active").value
 			: false;
+	}
+
+	get isAdmin(){
+		return this.settingService.isAdmin;
 	}
 	public filterRoleChanged(filterType) {
 		if (this.searchSorceRoleName.trim() == '') {
@@ -140,6 +180,7 @@ export class AddRequestComponents implements OnInit {
 		}
 		if (filterType === 'searchBySorceRoleName') {
 			this.sourceUserList = this.filterUserList.filter((user: any) => user.role_id._id === this.requestForm.controls[filterType].value);
+			this.loadDestinationRoleList();
 		} else if (filterType === 'destinationRoleName') {
 			this.destinationUserList = this.filterUserList.filter((user: any) => user.role_id._id === this.requestForm.controls[filterType].value);
 		}
@@ -172,31 +213,48 @@ export class AddRequestComponents implements OnInit {
 				});
 			});
 		}
-		this.facade.raiseRequest(reqData).then((res:any) => {
-			this.requestForm.reset();
-        	this.router.navigate(["request"]);
-		}).catch((err:any) => {
-			console.error("send request",err);
-		});
+		if(this.isEditMode){
+			reqData['request_id'] = this.activeEditId;
+			console.log(reqData);
+			this.facade.updateRequest(reqData).then(res => {
+				this.requestForm.reset();
+				this.router.navigate(['request']);
+			})
+		}
+		else{
+			this.facade.raiseRequest(reqData).then((res:any) => {
+				this.requestForm.reset();
+				this.router.navigate(["request"]);
+			}).catch((err:any) => {
+				console.error("send request",err);
+			});
+		}
 		
+	}
+
+	private reloadCartTable(){
+		this.dataSourceCart = new MatTableDataSource(this.cartItemList);
+		console.log(this.cartItemList);
+	}
+
+	private reloadItemTable(){
+		this.pageDetails.totalRecords = this.itemList['totalCount'];
+		this.dataSource = new MatTableDataSource(this.itemList['data']);
 	}
 
 	addCartItem(raw:any,index:number){
 		this.itemList['data'].splice(index,1);
-		this.dataSource = new MatTableDataSource(this.itemList['data']);
-		this.pageDetails.totalRecords = this.itemList['totalCount'];
 		raw.quantity = 1;
 		this.cartItemList.push(raw);
-		this.dataSourceCart = new MatTableDataSource(this.cartItemList);
+		this.reloadCartTable();
+		this.reloadItemTable();
 	}
 	deleteICartItem(raw:object,index:number){
 		this.cartItemList.splice(index,1);
-		this.dataSourceCart = new MatTableDataSource(this.cartItemList);
 		//console.log(index,this.cartItemList);return;
 		this.itemList['data'].push(raw);
-		this.dataSource = new MatTableDataSource(this.itemList['data']);
-		this.pageDetails.totalRecords = this.itemList['totalCount'];
-		
+		this.reloadCartTable();
+		this.reloadItemTable();
 	}
 	addQuantity(index:number){
 		this.cartItemList[index]['quantity'] = Number(this.cartItemList[index]['quantity']) + 1;
@@ -256,11 +314,24 @@ export class AddRequestComponents implements OnInit {
 
 				this.supplierList = this.filterUserList.filter((user:any) => user.role_id._id == supplierObj._id);
 			}
+			this.filterRoleChanged('searchBySorceRoleName');
 		})
 	}
-	getItem(itemType:string){
+
+	public sourceUserChange(){
+		let value = this.requestForm.get('sourceUserId').value;
+		if(this.requestForm.controls['requestOrderType'].value === 'PURCHASE_ORDER'){
+			this.searchUserId = null;
+		}
+		if(this.requestForm.controls['requestOrderType'].value === 'TRANSFER_ORDER'){
+			this.searchUserId = value;
+		}
+		this.getItem();
+	}
+
+	getItem(){
 		
-		this.itemFacade.loadItemList(this.pageDetails.currentPage, this.pageDetails.itemsPerPage,itemType, null, this.searchRoleName, this.searchUserId, null, this.searchByName)
+		// this.itemFacade.loadItemList(this.pageDetails.currentPage, this.pageDetails.itemsPerPage,itemType, null, this.searchRoleName, this.searchUserId, null, this.searchByName)
 		
 		this.itemFacade.getItemListForDropDown().subscribe((items:any) => {
 			if(this.requestForm.controls['requestOrderType'].value == 'TRANSFER_ORDER'){
@@ -281,15 +352,17 @@ export class AddRequestComponents implements OnInit {
 						});
 						filterItem.totalCount = items.totalCount;
 						this.itemList = filterItem;
-						this.dataSource = new MatTableDataSource(this.itemList['data']);
-						this.pageDetails.totalRecords = this.itemList['totalCount'];
+						// this.dataSource = new MatTableDataSource(this.itemList['data']);
+						// this.pageDetails.totalRecords = this.itemList['totalCount'];
+						this.reloadItemTable();
 					}
 				}
 			}else{
 				//console.log("ocean",items);
 				this.itemList = items;
-				this.dataSource = new MatTableDataSource(this.itemList['data']);
-				this.pageDetails.totalRecords = this.itemList['totalCount'];
+				// this.dataSource = new MatTableDataSource(this.itemList['data']);
+				// this.pageDetails.totalRecords = this.itemList['totalCount'];
+				this.reloadItemTable();
 			}
 		})
 	}
