@@ -48,7 +48,7 @@
           <mat-form-field fxFlex="25" *ngIf="isAdmin || searchByInOut == 'OUT'" fxFlex.lt-sm="100" class="matero-col">
             <mat-label>Destination</mat-label>
             <mat-select placeholder="Destination" [(ngModel)]="searchByDestination" name="searchByDestination" >
-              <mat-option *ngFor="let user of userList" [value]="user._id">
+              <mat-option *ngFor="let user of destinationUserList" [value]="user._id">
                 {{ user.first_name | titlecase}}
               </mat-option>
             </mat-select>
