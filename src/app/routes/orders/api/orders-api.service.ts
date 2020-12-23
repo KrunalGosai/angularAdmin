@@ -11,7 +11,7 @@ export class OrdersApiService {
   constructor(private http:HttpClient) { }
   private baseUrl = environment.SERVER_ORIGIN;
 
-  public loadOrderList(currentPage = 0,currentPageSize = 0,searchByOrderType = '',searchByOrderStatus = '',searchBySource = '', searchByDestination = ''):Observable<any>{
+  public loadOrderList(currentPage = 0,currentPageSize = 0,searchByOrderType = '',searchByOrderStatus = '',searchBySource = '', searchByDestination = '',searchBySlotid = '',searchBySlotdate = ''):Observable<any>{
     let url = this.baseUrl+`/api/request-order/order/list?`
     // if(currentPage && currentPage != 0)
     //   url += `&currentPage=${currentPage}`;
@@ -25,6 +25,10 @@ export class OrdersApiService {
       url += `&searchBySource=${searchBySource}`;
     if(searchByDestination && searchByDestination.trim() != '')
       url += `&searchByDestination=${searchByDestination}`;
+    if(searchBySlotid && searchBySlotid.trim() != '')
+      url += `&searchBySlotid=${searchBySlotid}`;
+    if(searchBySlotdate && searchBySlotdate.trim() != '')
+      url += `&searchBySlotdate=${searchBySlotdate}`;
     
     url = url.replace('?&','?');
 

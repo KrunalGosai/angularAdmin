@@ -144,10 +144,24 @@ export class OrdersOrderListComponent implements OnInit {
 
   private setColumns(){
     if(this.isCustomerOrder){
-      this.displayedColumns = ["order_no",'status',"source_id","destination_id","items","created_on",'slot_date',"controls"]
+      this.displayedColumns = ["order_no",'status',"source_id","destination_id","created_on",'slot_date','slot_id','sub_total_amount',"address_id","controls"]
     }else{
-      this.displayedColumns = ["order_no",'status',"source_id","destination_id","items","created_on","controls"];
+      this.displayedColumns = ["order_no",'status',"source_id","destination_id","created_on","controls"];
     }
+  }
+
+  public getAddressString(address){
+    let result = '';
+    if(address){
+      if(address.houseno && address.houseno != '')
+        result += (address.houseno+',');
+      if(address.streetname && address.streetname != '')
+        result += (address.streetname+',');
+      if(address.area_locality && address.area_locality != '')
+        result += (address.area_locality+',');
+    }
+
+    return result;
   }
 
   public openView(row){
