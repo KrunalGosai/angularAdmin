@@ -83,7 +83,7 @@
 </mat-form-field>
    -->
 <div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource" matSort>
+  <table mat-table [dataSource]="dataSource" matSort style="word-break: break-all;">
     <!-- position Column -->
     <!-- <ng-container matColumnDef="position">
       <form>
@@ -115,7 +115,7 @@
     </ng-container>
     <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-        <td mat-cell style="max-width: 100px;" *matCellDef="let row">{{ row.status | titlecase}}</td>
+        <td mat-cell style="max-width: 100px;" *matCellDef="let row">{{ row.status.replace('_',' ') | titlecase}}</td>
     </ng-container>
     <ng-container matColumnDef="items">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Items</th>
@@ -128,6 +128,18 @@
     <ng-container matColumnDef="slot_date">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Delivery Date</th>
       <td mat-cell style="max-width: 100px" *matCellDef="let row">{{ row.slot_date | date }}</td>
+    </ng-container>
+    <ng-container matColumnDef="slot_id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Slot</th>
+      <td mat-cell style="max-width: 100px" *matCellDef="let row">{{ row.slot_id ? row.slot_id.start_time + ' - '+ row.slot_id.end_time : '' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="sub_total_amount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Amount</th>
+      <td mat-cell style="max-width: 100px" *matCellDef="let row">{{ row.sub_total_amount }}</td>
+    </ng-container>
+    <ng-container matColumnDef="address_id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Address</th>
+      <td mat-cell style="max-width: 100px" *matCellDef="let row">{{ getAddressString(row.address_id) }}</td>
     </ng-container>
 
     <!-- active Column -->
