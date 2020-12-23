@@ -31,6 +31,9 @@
                               <mat-option [value]="UserRole.DELIVERY_BOY" >
                                   {{ UserRole.DELIVERY_BOY | titlecase }}
                               </mat-option>
+                              <mat-option [value]="UserRole.HAWKER" >
+                                {{ UserRole.HAWKER | titlecase }}
+                            </mat-option>
                           </mat-select>
                           <mat-error *ngIf="tripFrom.get('user_type').invalid">
                               {{ "validations.required" | translate }}

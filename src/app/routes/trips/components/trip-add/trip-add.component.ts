@@ -10,7 +10,6 @@ import { OrdersFacadeService } from 'app/routes/orders/orders-facade.service';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { UserRole } from '@shared/entities';
 import { UsersFacade } from 'app/routes/users/users-facade';
-import { userrole } from 'app/routes/users/enums';
 
 @Component({
   selector: 'app-trips-components-trip-add',
@@ -21,6 +20,7 @@ export class TripsComponentsTripAddComponent implements OnInit {
 
   isEditMode:boolean = false;
   searchByOrderType = 'CUSTOMER_ORDER';
+  searchByOrderStatus = 'READY_FOR_DISPATCH';
   searchBySlotId = '';
   seachBySlotDate = '';
   orders = [];
@@ -54,7 +54,7 @@ export class TripsComponentsTripAddComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.orderFacade.getTripOrderList(this.searchByOrderType,this.searchBySlotId).subscribe(orders => {
+    this.orderFacade.getTripOrderList(this.searchByOrderType,this.searchBySlotId,'',this.searchByOrderStatus).subscribe(orders => {
       this.orders = orders.data;
       this.showDragDrop = true;
     })
@@ -121,7 +121,7 @@ export class TripsComponentsTripAddComponent implements OnInit {
   public filterOrder(){
     let sortDate = (new Date(this.seachBySlotDate)).toLocaleDateString();
     sortDate = sortDate.toLowerCase() != 'Invalid Date' ? sortDate : '';
-    this.orderFacade.loadTripOrderList(this.searchByOrderType,this.searchBySlotId,sortDate);
+    this.orderFacade.loadTripOrderList(this.searchByOrderType,this.searchBySlotId,sortDate,this.searchByOrderStatus);
   }
 
   public getAddressString(address){

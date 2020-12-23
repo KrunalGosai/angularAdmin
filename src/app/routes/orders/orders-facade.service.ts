@@ -23,14 +23,14 @@ export class OrdersFacadeService {
     return this.state.getOrderList().pipe(tap(cate => cate))
   }
 
-  public loadTripOrderList(searchByOrderType = '',searchBySlotid = '',searchBySlotdate = ''){
-    this.api.loadOrderList(0,0,searchByOrderType,'','','',searchBySlotid,searchBySlotdate).subscribe(offers => {
+  public loadTripOrderList(searchByOrderType = '',searchBySlotid = '',searchBySlotdate = '',searchByOrderStatus = ''){
+    this.api.loadOrderList(0,0,searchByOrderType,searchByOrderStatus,'','',searchBySlotid,searchBySlotdate).subscribe(offers => {
       this.state.setOrderList(offers);
     },err => console.error('api call error from load orders ',err))
   }
 
-  public getTripOrderList(searchByOrderType = '',searchBySlotid = '',searchBySlotdate = ''){
-    if(!this.state.isOrdersSet) this.loadTripOrderList(searchByOrderType,searchBySlotid,searchBySlotdate)
+  public getTripOrderList(searchByOrderType = '',searchBySlotid = '',searchBySlotdate = '',searchByOrderStatus = ''){
+    if(!this.state.isOrdersSet) this.loadTripOrderList(searchByOrderType,searchBySlotid,searchBySlotdate,searchByOrderStatus)
     return this.state.getOrderList().pipe(tap(res => res))
   }
 
