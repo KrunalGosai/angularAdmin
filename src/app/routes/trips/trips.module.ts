@@ -3,6 +3,7 @@ import { SharedModule } from '@shared/shared.module';
 import { TripsRoutingModule } from './trips-routing.module';
 import { TripsComponentsTripListComponent } from './components/trip-list/trip-list.component';
 import { TripsComponentsTripAddComponent } from './components/trip-add/trip-add.component';
+import { TripViewComponent } from './components/trip-view/trip-view.component';
 
 const COMPONENTS = [TripsComponentsTripListComponent, TripsComponentsTripAddComponent];
 const COMPONENTS_DYNAMIC = [];
@@ -14,7 +15,8 @@ const COMPONENTS_DYNAMIC = [];
   ],
   declarations: [
     ...COMPONENTS,
-    ...COMPONENTS_DYNAMIC
+    ...COMPONENTS_DYNAMIC,
+    TripViewComponent
   ],
   entryComponents: COMPONENTS_DYNAMIC
 })

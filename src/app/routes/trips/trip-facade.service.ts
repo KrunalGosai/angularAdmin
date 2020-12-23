@@ -34,4 +34,25 @@ export class TripFacadeService {
     }).catch(err => {console.error('api call error from new trip ',err); throw err })
   }
 
+  public getTripViewData(){
+    return this.state.getTripViewData().pipe(tap(res => res))
+  }
+
+  public setTripViewData(viewData){
+    this.state.setTripViewData(viewData);
+  }
+
+  public loadTripDetailsById(tripId){
+    return this.api.getTripDetailsById(tripId).toPromise().then(res => {
+      let result:any = res;
+      this.state.setTripDetail(result.trip_details)
+      return result.trip_details;
+    }).catch(err => {console.error('api call error from load trip Details',err); throw err });
+  }
+
+  public getTripDetailsById(tripId){
+    if(!this.state.isTripDetailsSet) this.loadTripDetailsById(tripId)
+    return this.state.getTripDetail().pipe(tap(cate => cate))
+  }
+
 }

@@ -112,12 +112,17 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Controls</th>
       <td mat-cell *matCellDef="let row">
         <mat-grid-list cols="3" rowHeight="50px">
-          <!-- <mat-grid-tile>
+          <mat-grid-tile>
+            <button mat-icon-button aria-label="View" matTooltip="View" (click)="openView(row)" >
+              <mat-icon color="primary">visibility</mat-icon>
+            </button>
+          </mat-grid-tile>
+          <mat-grid-tile *ngIf="isAdmin || isDepo">
             <button mat-icon-button aria-label="Edit"  (click)="navigateToEdit(row._id)" [routerLink]="[]" >
               <mat-icon color="primary">create</mat-icon>
             </button>
           </mat-grid-tile>
-          <mat-grid-tile>
+          <!-- <mat-grid-tile>
             <button mat-icon-button aria-label="Delete" (click)="deleteIcon(row._id)" >
               <mat-icon color="accent">delete</mat-icon>
             </button>

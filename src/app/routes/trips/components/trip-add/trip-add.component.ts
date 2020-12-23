@@ -2,7 +2,7 @@ import { SlotFacadeService } from './../../../slot/slot-facade.service';
 import { SettingsService } from './../../../../core/bootstrap/settings.service';
 import { Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { TripFacadeService } from './../../trip-facade.service';
 import { Component, OnInit } from '@angular/core';
@@ -19,6 +19,7 @@ import { UsersFacade } from 'app/routes/users/users-facade';
 export class TripsComponentsTripAddComponent implements OnInit {
 
   isEditMode:boolean = false;
+  activeEditId ='';
   searchByOrderType = 'CUSTOMER_ORDER';
   searchByOrderStatus = 'READY_FOR_DISPATCH';
   searchBySlotId = '';
@@ -35,6 +36,7 @@ export class TripsComponentsTripAddComponent implements OnInit {
   tripFrom: FormGroup;
   constructor(
     private fb: FormBuilder,
+    private activeRoute: ActivatedRoute,
     private router: Router,
     private slotFacade:SlotFacadeService,
     private settingSvc:SettingsService,
@@ -51,6 +53,12 @@ export class TripsComponentsTripAddComponent implements OnInit {
         vehicle_id :["",[Validators.required]],
         total_amount_to_collect :[0,[Validators.required]]    
       });
+      this.activeRoute.params.subscribe((params) => {
+        if (params.id != undefined && params.id != null && params.id != "") {
+          this.isEditMode = true;
+          this.activeEditId = params.id;
+        }
+      });
    }
 
   ngOnInit() {
@@ -58,6 +66,22 @@ export class TripsComponentsTripAddComponent implements OnInit {
       this.orders = orders.data;
       this.showDragDrop = true;
     })
+    if (this.isEditMode) {
+      this.facade.getTripDetailsById(this.activeEditId).subscribe(
+        (res) => {
+          let data: any = { ...res };
+          if(!data.user_id) return;
+          console.log(data)
+          this.tripFrom.patchValue({
+            user_type:data.role_type,
+            delivery_boy_id:data.user_id._id,
+            total_amount_to_collect: data.total_amount_to_collect
+          });
+          this.tripOrders = data.orders;
+          this.userTypeChanged();
+        },(err) => console.error(err)
+      );
+    }
     this.loadDropdown();
   }
 

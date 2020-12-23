@@ -1,3 +1,5 @@
+import { SettingsService } from './../../../../core/bootstrap/settings.service';
+import { SidebarNoticeService } from './../../../../theme/sidebar-notice/sidebar-notice.service';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { TripFacadeService } from './../../trip-facade.service';
@@ -5,6 +7,7 @@ import { ConfirmService } from './../../../../shared/services/confirm.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { TripViewComponent } from '../trip-view/trip-view.component';
 
 @Component({
   selector: 'app-trips-components-trip-list',
@@ -25,6 +28,8 @@ export class TripsComponentsTripListComponent implements OnInit {
 
   constructor(
     private router:Router,
+    private settingSvc:SettingsService,
+    private sidebarNoticeSvc:SidebarNoticeService,
     private facade:TripFacadeService,
     private confirmService:ConfirmService) { }
 
@@ -52,9 +57,17 @@ export class TripsComponentsTripListComponent implements OnInit {
   }
 
   public navigateToEdit(id){
-    // this.facade.loadOfferDetails(id).then(item => {
-    //   this.router.navigate(['offers','edit',id])
-    // })
+    this.facade.loadTripDetailsById(id).then(item => {
+      this.router.navigate(['trips','edit',id])
+    })
+  }
+
+  get isAdmin(){
+    return this.settingSvc.isAdmin;
+  }
+
+  get isDepo(){
+    return this.settingSvc.isDepo;
   }
 
   public filterTrip(){
@@ -63,6 +76,12 @@ export class TripsComponentsTripListComponent implements OnInit {
 
   public resetFilter(){
     // this.searchOfferType = '';
+  }
+
+  public openView(row){
+    this.sidebarNoticeSvc.setComponent(TripViewComponent);
+    this.sidebarNoticeSvc.setIsOpened(true);
+    this.facade.setTripViewData(row); 
   }
 
 }
