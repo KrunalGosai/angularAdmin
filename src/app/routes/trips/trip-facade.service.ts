@@ -23,4 +23,15 @@ export class TripFacadeService {
     return this.state.getTripList().pipe(tap(cate => cate))
   }
 
+  public newTrip(newTrip){
+    if(!newTrip.order_ids || newTrip.order_ids.length <= 0){
+      this.toster.error('No Orders in trip!','Error',{timeOut:3000})
+      throw new Error('No Orders in trip');
+    }
+    return this.api.newTrip(newTrip).toPromise().then( res => {
+      this.toster.success('Trip Successfully Created',"Success",{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from new trip ',err); throw err })
+  }
+
 }
