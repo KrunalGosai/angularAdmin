@@ -70,8 +70,10 @@ export class OffersComponentsOfferAddComponent implements OnInit {
           console.log(offer)
           this.offerForm.patchValue(offer);
           this.offerForm.patchValue({ user_role: offer.user_role && offer.user_role.length > 0 ? offer.user_role[0]:'',
+          user_id: offer.user_id && offer.user_id.length > 0 ? offer.user_id[0]:'',
           expiry:new Date(offer.expiry)
          });
+         this.userRoleChanged();
          this.offerTypeChanged();
         },
         (err) => console.error(err)
@@ -113,7 +115,7 @@ export class OffersComponentsOfferAddComponent implements OnInit {
     this.offerOnItem = [];
     switch (value.toUpperCase()) {
       case "ITEM":
-        this.itemFacade.getItemListForDropDown().subscribe(items => {
+        this.itemFacade.getItemListForDropDown(false).subscribe(items => {
           this.offerOnItem = items.data;
         },err => console.error(err))
         break;
