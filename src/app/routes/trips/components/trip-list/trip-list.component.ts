@@ -70,6 +70,10 @@ export class TripsComponentsTripListComponent implements OnInit {
     return this.settingSvc.isDepo;
   }
 
+  get isHawker(){
+    return this.settingSvc.isHawker
+  }
+
   public filterTrip(){
     this.facade.loadTripList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,'')
   }
@@ -82,6 +86,18 @@ export class TripsComponentsTripListComponent implements OnInit {
     this.sidebarNoticeSvc.setComponent(TripViewComponent);
     this.sidebarNoticeSvc.setIsOpened(true);
     this.facade.setTripViewData(row); 
+  }
+
+  public startTrip(tripId){
+    this.facade.startEndTrip(tripId,true).then(res => {
+      this.filterTrip();
+    })
+  }
+
+  public endTrip(tripId){
+    this.facade.startEndTrip(tripId,false).then(res => {
+      this.filterTrip();
+    })
   }
 
 }

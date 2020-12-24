@@ -55,4 +55,11 @@ export class TripFacadeService {
     return this.state.getTripDetail().pipe(tap(cate => cate))
   }
 
+  public startEndTrip(trip_id:string,is_start:boolean){
+    return this.api.startEndTrip({trip_id,is_start}).toPromise().then(res => {
+      this.toster.success('Trip Successfully Updated',"Success",{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from change start end status ',err ); throw err  })
+  }
+
 }
