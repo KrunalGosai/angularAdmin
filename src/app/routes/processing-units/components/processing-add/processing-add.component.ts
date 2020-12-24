@@ -153,7 +153,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     this.itemFacade.getPackagingItemList(false).subscribe(list => {
       this.packingItemList = list.data;
     })
-    this.itemFacade.getSallableItemList(false).subscribe(list => {
+    this.itemFacade.getSallableItemList(true).subscribe(list => {
       this.sellableItemList = list.data;      
     })
     this.itemFacade.getRawItemList(false).subscribe(list => {
