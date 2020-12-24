@@ -35,5 +35,10 @@ export class TripApiService {
     return this.http.get(url);
   }
 
+  public startEndTrip(trip){
+    let url = this.baseUrl + `/api/trip/start-end-trip`;
+    return this.http.patch(url,trip);
+  }
+
   
 }

@@ -118,15 +118,20 @@
             </button>
           </mat-grid-tile>
           <mat-grid-tile *ngIf="isAdmin || isDepo">
-            <button mat-icon-button aria-label="Edit"  (click)="navigateToEdit(row._id)" [routerLink]="[]" >
+            <button mat-icon-button aria-label="Edit" matTooltip="Edit" (click)="navigateToEdit(row._id)" [routerLink]="[]" >
               <mat-icon color="primary">create</mat-icon>
             </button>
           </mat-grid-tile>
-          <!-- <mat-grid-tile>
-            <button mat-icon-button aria-label="Delete" (click)="deleteIcon(row._id)" >
-              <mat-icon color="accent">delete</mat-icon>
+          <mat-grid-tile *ngIf="isHawker && row.status == 'ASSIGNED'" >
+            <button mat-icon-button matTooltip="Start Trip" (click)="startTrip(row._id)" >
+              <mat-icon style="color: green;">check_circle</mat-icon>
             </button>
-          </mat-grid-tile> -->
+          </mat-grid-tile>
+          <mat-grid-tile *ngIf="(isHawker || isAdmin || isDepo) && row.status == 'STARTED'" >
+            <button mat-icon-button matTooltip="End Trip" (click)="endTrip(row._id)" >
+              <mat-icon color="error">cancel</mat-icon>
+            </button>
+          </mat-grid-tile>
         </mat-grid-list>
       </td>
     </ng-container>
