@@ -14,67 +14,44 @@
         <img src="{{viewData.thumbnail}}" alt="Item Thumbnail" height="60px" width="80px" />
       </div>
 
-      <div fxFlex="15" fxFlex.lt-sm="100">
-          <mat-label><strong> Name </strong></mat-label>
-      </div>
-      <div fxFlex="35" fxFlex.lt-sm="100">
-        <mat-label>: {{viewData.name}}</mat-label>
+      <div fxFlex="50" fxFlex.lt-sm="100">
+        <mat-label><strong> Name </strong>: {{viewData.name}}</mat-label>
       </div>
 
-      <div fxFlex="15" fxFlex.lt-sm="100">
-        <mat-label><strong>Category </strong></mat-label>
-      </div>
-      <div fxFlex="35" fxFlex.lt-sm="100">
-        <mat-label>: {{viewData.category_id ? viewData.category_id.name : ''}}</mat-label>
+      <div fxFlex="50" fxFlex.lt-sm="100">
+        <mat-label><strong>Category </strong>: {{viewData.category_id ? viewData.category_id.name : ''}}</mat-label>
       </div>
 
-      <div fxFlex="15" fxFlex.lt-sm="100">
-        <mat-label><strong> Type </strong></mat-label>
-      </div>
-      <div fxFlex="35" fxFlex.lt-sm="100">
-        <mat-label>: {{itemTypes[viewData.type]}}</mat-label>
+      <div fxFlex="50" fxFlex.lt-sm="100">
+        <mat-label><strong> Type </strong>: {{itemTypes[viewData.type]}}</mat-label>
       </div>
 
-      <div fxFlex="15" fxFlex.lt-sm="100">
-        <mat-label><strong> Position </strong></mat-label>
-      </div>
-      <div fxFlex="35" fxFlex.lt-sm="100">
-        <mat-label>: {{viewData.position}}</mat-label>
+      <div fxFlex="50" fxFlex.lt-sm="100">
+        <mat-label><strong> Position </strong>: {{viewData.position}}</mat-label>
       </div>
 
-      <div fxFlex="15" fxFlex.lt-sm="100">
-        <mat-label><strong> is Active </strong></mat-label>
-      </div>
-      <div fxFlex="35" fxFlex.lt-sm="100">
-        <mat-label>: {{viewData.is_active ? 'Yes' : 'No'}}</mat-label>
+      <div fxFlex="50" fxFlex.lt-sm="100">
+        <mat-label><strong> is Active </strong>: {{viewData.is_active ? 'Yes' : 'No'}}</mat-label>
       </div>
 
-      <div fxFlex="15" fxFlex.lt-sm="100">
-        <mat-label><strong> Price </strong></mat-label>
-      </div>
-      <div fxFlex="35" fxFlex.lt-sm="100">
-        <mat-label>: {{viewData.price}}</mat-label>
+      <div fxFlex="50" fxFlex.lt-sm="100">
+        <mat-label><strong> Price </strong>: {{viewData.price}}</mat-label>
       </div>
 
-      <div fxFlex="15" fxFlex.lt-sm="100">
-        <mat-label><strong> Unit Name</strong></mat-label>
-      </div>
-      <div fxFlex="85" fxFlex.lt-sm="100">
-        <mat-label>: {{viewData.unit_id? viewData.unit_id.name:''}}</mat-label>
+      <div fxFlex="50" fxFlex.lt-sm="100">
+        <mat-label><strong> Secondary Name</strong>: {{viewData.secondary_name? viewData.secondary_name :''}}</mat-label>
       </div>
 
-      <div fxFlex="15" fxFlex.lt-sm="100">
-        <mat-label><strong>Description</strong></mat-label>
-      </div>
-      <div fxFlex="85" fxFlex.lt-sm="100">
-        <mat-label>: {{viewData.description}}</mat-label>
+      <div fxFlex="50" fxFlex.lt-sm="100">
+        <mat-label><strong> Unit Name</strong>: {{viewData.unit_id? viewData.unit_id.name:''}}</mat-label>
       </div>
 
-      <div fxFlex="15" fxFlex.lt-sm="100">
-        <mat-label><strong>Benefits</strong></mat-label>
+      <div fxFlex="100" fxFlex.lt-sm="100">
+        <mat-label><strong>Description</strong>: {{viewData.description}}</mat-label>
       </div>
-      <div fxFlex="85" fxFlex.lt-sm="100">
-        <mat-label>: {{viewData.benefits}}</mat-label>
+
+      <div fxFlex="100" fxFlex.lt-sm="100">
+        <mat-label><strong>Benefits</strong>: {{viewData.benefits}}</mat-label>
       </div>
 
       <div fxFlex="15" fxFlex.lt-sm="100">
