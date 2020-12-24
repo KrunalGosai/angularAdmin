@@ -11,6 +11,7 @@ import { itemList } from "../../../items/entities";
 import { UsersFacade } from './../../../users/users-facade';
 import { RequestFacadeService } from '../../request-facade.service'
 import { SettingsService } from '@core';
+import { UserRole } from '@shared/entities';
 
 @Component({
 	selector: 'app-request-components-request-add',
@@ -25,9 +26,9 @@ export class AddRequestComponents implements OnInit {
 	dataSource: MatTableDataSource<itemList>;
 	itemTypeList: string[] = [];
 	itemTypes: any = { SELLABLE: 'Sellable', PACKAGING_MATERIAL: 'Packaging Material', RAW_MATERIAL: 'Raw Material' };
-	itemList:object;
+	itemList:any;
 	unitList: unit[];
-	requestType: Array<object> = [{ "value": "TRANSFER_ORDER", "lable": "Transfer Order" }];
+	requestType: Array<object> = [];
 	filterRoleList: any;
 	filterUserList: any = [];
 	destinationRoleList: any;
@@ -118,11 +119,12 @@ export class AddRequestComponents implements OnInit {
 				this.filterRoleChanged('destinationRoleName')
 			})
 		}
+		this.getRole();
 		this.unitFacde.loadUnites(1, 500);
 		this.unitFacde.getUnites().subscribe((units) => {
 			this.unitList = units.data;
 		});
-		this.usersFacade.getUsersByType(1, 2000).subscribe(res => {
+		this.usersFacade.getUsersByType().subscribe(res => {
 			this.filterUserList = res.userList;
 			if(this.filterUserList && this.filterUserList.length){
 				this.getRole();
@@ -149,12 +151,36 @@ export class AddRequestComponents implements OnInit {
 
 			}
 		})
+
+		if(this.settingService.isAdmin)
+			this.requestType.push({ "value": "PURCHASE_ORDER", "lable": "Purchase Order" },{ "value": "TRANSFER_ORDER", "lable": "Transfer Order" });
+		else if(this.settingService.isPurchaseManager)
+			this.requestType.push({ "value": "PURCHASE_ORDER", "lable": "Purchase Order" });
+		else if(this.settingService.isManufaturingPlant || this.settingService.isDepo)
+			this.requestType.push({ "value": "TRANSFER_ORDER", "lable": "Transfer Order" });
+
+
+		// if(this.settingService.isAdmin || this.settingService.isManufaturingPlant || )
+			
 		// this.requestForm.controls['searchBySorceRoleName'].valueChanges.subscribe((value) => {
 		// 	console.log("value",value)
 		// 	if(this.filterRoleList && this.filterRoleList.length > 0)
 		// 	this.destinationRoleList = this.filterRoleList.filter(role => role._id != value &&  role.type != 'ADMIN' && role.type != 'CUSTOMER' && role.type != 'DELIVERY_BOY' && role.type != 'SUPPLIER');
 		// })
 	}
+
+	public sendRecieveChange(){
+		let requestType = this.requestForm.get('selectRequestType').value;
+		if(requestType == 'send'){
+			this.requestForm.get('searchBySorceRoleName').setValue(this.settingService.user.role_id.type)
+			this.requestForm.get('sourceUserId').setValue(this.settingService.user._id)
+		}else if(requestType == 'recieve'){
+			this.requestForm.get('destinationRoleName').setValue(this.settingService.user.role_id.type)
+			this.requestForm.get('destinationUserId').setValue(this.settingService.user._id)
+		}
+		this.loadDestinationRoleList();
+	}
+
 	private loadDestinationRoleList(){
 		let value = this.requestForm.controls['searchBySorceRoleName'].value;
 		if(this.filterRoleList && this.filterRoleList.length >= 0){
@@ -274,43 +300,30 @@ export class AddRequestComponents implements OnInit {
 		});
 		return total;
 	}
-	getRoleList(){
-		let roleType = this.settingService.user.role_id.type;
-		if(roleType === 'ADMIN' ){
-
-		}
-	}
+	
 	getRole(){
 		this.usersFacade.getRoleList().subscribe(res => {
 			let roles: any = res;
-			if(this.settingService.user.role_id.type === ('PURCHASE_MANAGER' || 'MANUFACTURING_PLANT')){
-				this.filterRoleList = roles.data.filter(role => role.type == 'PURCHASE_MANAGER' && role.type == 'MANUFACTURING_PLANT');
-				if(this.settingService.user.role_id.type === 'PURCHASE_MANAGER'){
-					this.requestForm.controls['searchBySorceRoleName'].patchValue({"value":this.settingService.user.role_id,disabled: true});
-					
-					this.requestForm.controls['searchBySorceRoleName'].patchValue({"value":this.settingService.user.role_id,disabled: true});
-
-					// this.requestForm.controls['sourceUserId'].patchValue({"value":this.settingService.user._id,disabled: true});
-					
-
-				}
-				if(this.settingService.user.role_id.type === 'MANUFACTURING_PLANT'){
-					this.requestForm.controls['searchBySorceRoleName'].patchValue({"value":this.settingService.user.role_id,disabled: true});	
-				}
-			}else if(this.settingService.user.role_id.type === 'DEPO'){
-				this.filterRoleList = roles.data.filter(role => role.type == 'HAWKER' && role.type == 'MANUFACTURING_PLANT' || role.type == 'RETAILERS');
-			}else if(this.settingService.user.role_id.type === 'HAWKER'){
-				this.filterRoleList = roles.data.filter(role => role.type == 'HAWKER' && role.type == 'DEPO');
-			}else if(this.settingService.user.role_id.type === 'RETAILERS'){
-				this.filterRoleList = roles.data.filter(role => role.type == 'RETAILERS' && role.type == 'DEPO');
+			if(this.settingService.isPurchaseManager){
+				this.filterRoleList = roles.data.filter(role => role.type == UserRole.MANUFACTURING_PLANT );
+				this.requestForm.controls['searchBySorceRoleName'].patchValue({"value":this.settingService.user.role_id,disabled: true});
+				this.requestForm.controls['searchBySorceRoleName'].patchValue({"value":this.settingService.user.role_id,disabled: true});
+			}else if(this.settingService.isManufaturingPlant){
+				this.filterRoleList = roles.data.filter(role => role.type == UserRole.PURCHASE_MANAGER || role.type == UserRole.MANUFACTURING_PLANT || role.type == UserRole.DEPO);
+				this.requestForm.controls['searchBySorceRoleName'].patchValue({"value":this.settingService.user.role_id,disabled: true});	
+			}else if(this.settingService.isDepo){
+				this.filterRoleList = roles.data.filter(role => role.type == (UserRole.HAWKER || UserRole.MANUFACTURING_PLANT || UserRole.RETAILERS));
+			}else if(this.settingService.isHawker){
+				this.filterRoleList = roles.data.filter(role => role.type == (UserRole.HAWKER || UserRole.DEPO));
+			}else if(this.settingService.isRetailer){
+				this.filterRoleList = roles.data.filter(role => role.type == (UserRole.RETAILERS || UserRole.DEPO));
 			}else{
-				this.filterRoleList = roles.data.filter(role => role.type != 'ADMIN' && role.type != 'CUSTOMER' && role.type != 'DELIVERY_BOY' && role.type != 'SUPPLIER');
+				this.filterRoleList = roles.data.filter(role => role.type != UserRole.ADMIN && role.type != UserRole.CUSTOMER && role.type != UserRole.DELIVERY_BOY && role.type != UserRole.SUPPLIER);
 			}
-			if(this.settingService.user.role_id.type === 'ADMIN' || this.settingService.user.role_id.type === 'MANUFACTURING_PLANT' || this.settingService.user.role_id.type == 'PURCHASE_MANAGER'){
-				
-				this.requestType.push({ "value": "PURCHASE_ORDER", "lable": "Purchase Order" });
+			this.loadDestinationRoleList();
+			if(this.settingService.isAdmin  || this.settingService.isManufaturingPlant || this.settingService.isPurchaseManager){
 
-				let supplierObj =  roles.data.filter((item:any) => item.type === 'SUPPLIER')[0];
+				let supplierObj =  roles.data.filter((item:any) => item.type === UserRole.SUPPLIER)[0];
 
 				this.supplierList = this.filterUserList.filter((user:any) => user.role_id._id == supplierObj._id);
 			}

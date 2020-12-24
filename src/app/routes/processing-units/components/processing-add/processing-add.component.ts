@@ -150,13 +150,13 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     this.unitFacade.getUnites().subscribe(list => {
       this.unitList = list.data;
     })
-    this.itemFacade.getPackagingItemList().subscribe(list => {
+    this.itemFacade.getPackagingItemList(false).subscribe(list => {
       this.packingItemList = list.data;
     })
-    this.itemFacade.getSallableItemList().subscribe(list => {
+    this.itemFacade.getSallableItemList(false).subscribe(list => {
       this.sellableItemList = list.data;      
     })
-    this.itemFacade.getRawItemList().subscribe(list => {
+    this.itemFacade.getRawItemList(false).subscribe(list => {
       this.rawItemList = list.data;
       this.itemList = this.rawItemList;
     })
@@ -180,6 +180,10 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     return this.settingSvc.isRetailer || this.processingForm.get('role_id').value == UserRole.RETAILERS;
   }
 
+  get isMP(){
+    return this.settingSvc.isManufaturingPlant || this.processingForm.get('role_id').value == UserRole.MANUFACTURING_PLANT;
+  }
+
   public roleChanged(){
     this.userList = [];
     if(this.isAdmin){
@@ -188,6 +192,12 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
         this.userList = users.userList;
       })
     }
+    this.processingForm.get('item_type').setValue('');
+  }
+
+  public itemTypeChanged(){
+    this.processingForm.get('raw_item_id').setValue('');
+    this.processingForm.get('sellable_item_id').setValue('');
   }
 
   public getUnit(id){

@@ -16,7 +16,7 @@
         class="form-field-full"
       >
         <div fxLayout="row wrap" fxLayoutGap="8px grid">
-          <div fxFlex="40" fxFlex.lt-sm="100">
+          <div fxFlex="25" fxFlex.lt-sm="100">
             <mat-form-field>
               <mat-label>Name</mat-label>
               <input
@@ -30,8 +30,18 @@
               </mat-error>
             </mat-form-field>
           </div>
+          
+          <div fxFlex="25" fxFlex.lt-sm="100">
+            <mat-form-field>
+              <mat-label>Secondary Name</mat-label>
+              <input matInput placeholder="Secondary Name" formControlName="secondary_name" required />
+              <mat-error *ngIf="itemForm.get('secondary_name').invalid">
+                {{ "validations.required" | translate }}
+              </mat-error>
+            </mat-form-field>
+          </div>
 
-          <div fxFlex="40" fxFlex.lt-sm="100">
+          <div fxFlex="30" fxFlex.lt-sm="100">
             <mat-form-field>
               <mat-label>Price</mat-label>
               <input

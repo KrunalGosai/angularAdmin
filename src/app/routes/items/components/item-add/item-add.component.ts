@@ -37,7 +37,7 @@ export class ItemsComponentsItemAddComponent implements OnInit {
       name: ["", [Validators.required, Validators.maxLength(50)]],
       price: [0, [Validators.required, Validators.pattern("[1-9]{1}[0-9]*")]],
       is_active: [true],
-      // item_volume:[0],
+      secondary_name:[''],
       category_id: [""],
       unit_id: [""],
       item_type: [""],
