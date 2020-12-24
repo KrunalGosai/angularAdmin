@@ -25,9 +25,9 @@
                     <!-- send recieve -->
                     <div fxFlex="70" fxFlex.lt-sm="100" *ngIf="!isAdmin">
                         <mat-radio-group aria-label="Select request type" formControlName="selectRequestType">
-                            <mat-radio-button value="send">Send</mat-radio-button>
+                            <mat-radio-button (change)="sendRecieveChange($event)" value="send">Send</mat-radio-button>
                             &nbsp; &nbsp;
-                            <mat-radio-button value="recieve">Recieve</mat-radio-button>
+                            <mat-radio-button (change)="sendRecieveChange($event)"  value="recieve">Recieve</mat-radio-button>
                         </mat-radio-group>
                     </div>
 
@@ -97,7 +97,7 @@
 
                     <!-- supplier -->
                     <div fxFlex="50" fxFlex.lt-sm="100"
-                        *ngIf="requestForm.get('requestOrderType').value == 'PURCHASE_ORDER' && requestForm.get('sourceUserId').value">
+                        *ngIf="requestForm.get('requestOrderType').value == 'PURCHASE_ORDER'">
                         <mat-form-field>
                             <mat-label>Supplier User</mat-label>
                             <mat-select placeholder="User" formControlName="supplierUserId">
@@ -115,7 +115,7 @@
                     </div> -->
                 </div>
                 <div fxLayout="row wrap" fxLayoutGap="8px grid">
-                    <div fxFlex="50" fxFlex.lt-sm="100" style="padding-right: 20px;">
+                    <div fxFlex="50" fxFlex.lt-sm="100" *ngIf="itemList && itemList.data && itemList.data.length > 0" style="padding-right: 20px;">
                         <mat-card-title>Items</mat-card-title>
                         <div class="">
                             <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
