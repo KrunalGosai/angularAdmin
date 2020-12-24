@@ -38,10 +38,10 @@ export class ItemApiService {
     return this.http.get<itemListResponse>(url);
   }
 
-  getItemListForDropDown(searchItemType = '',adminlist = true){
+  getItemListForDropDown(searchItemType = '',adminlist:boolean = true){
     let url = this.baseURl+`/api/item/get_admin_item_list?`;
     
-    if(adminlist != undefined && adminlist !=  null)
+    if(adminlist != undefined && adminlist !=  null && adminlist == true)
       url += `&adminlist=${adminlist}`;
     if(searchItemType != undefined && searchItemType !=  null && searchItemType.trim() != '')
       url += `&item_type=${searchItemType}`;
