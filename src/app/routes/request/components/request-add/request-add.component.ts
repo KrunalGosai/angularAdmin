@@ -305,7 +305,7 @@ export class AddRequestComponents implements OnInit {
 		this.usersFacade.getRoleList().subscribe(res => {
 			let roles: any = res;
 			if(this.settingService.isPurchaseManager){
-				this.filterRoleList = roles.data.filter(role => role.type == UserRole.PURCHASE_MANAGER || role.type == UserRole.MANUFACTURING_PLANT );
+				this.filterRoleList = roles.data.filter(role => role.type == UserRole.MANUFACTURING_PLANT );
 				this.requestForm.controls['searchBySorceRoleName'].patchValue({"value":this.settingService.user.role_id,disabled: true});
 				this.requestForm.controls['searchBySorceRoleName'].patchValue({"value":this.settingService.user.role_id,disabled: true});
 			}else if(this.settingService.isManufaturingPlant){
