@@ -99,6 +99,12 @@
       "icon":"local_shipping"
     },
     {
+      "route": "franchise/pos",
+      "name": "pos",
+      "type": "link",
+      "icon":"tv"
+    },
+    {
       "route": "address",
       "name": "address",
       "type": "sub",

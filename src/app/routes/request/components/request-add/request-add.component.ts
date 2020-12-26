@@ -131,14 +131,6 @@ export class AddRequestComponents implements OnInit {
 			}			
 		});
 		
-		this.requestForm.controls['requestOrderType'].valueChanges.subscribe((value) => {
-			if(value === 'PURCHASE_ORDER'){
-				//this.filterRoleList = this.filterRoleList.filter(role => role.type == 'PURCHASE_MANAGER' && role.type == 'MANUFACTURING_PLANT');
-			}else{
-
-			}
-		})
-
 		if(this.settingService.isAdmin){
 			this.requestType.push({ "value": "PURCHASE_ORDER", "lable": "Purchase Order" },{ "value": "TRANSFER_ORDER", "lable": "Transfer Order" });
 			this.getItem();
