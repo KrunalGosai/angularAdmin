@@ -10,7 +10,7 @@
             <input type="number" 
             [ngModelOptions]="{standalone: true}" 
             (change)="changePrice(element)" 
-            style="max-width: 65px;" [(ngModel)]="element.price" />
+            style="max-width: 65px;"  min="0" [(ngModel)]="element.price" />
           </td>
         </ng-container>
 

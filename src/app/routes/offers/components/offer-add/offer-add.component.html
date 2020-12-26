@@ -64,7 +64,7 @@
               <mat-form-field>
                 <mat-label>Min Value</mat-label>
                 <input matInput placeholder="Min Value" formControlName="min_value"
-                       required type="number">
+                       required min="0" type="number">
                 <mat-error *ngIf="offerForm.get('min_value').invalid">
                   {{'validations.required' | translate}}
                 </mat-error>
@@ -75,7 +75,7 @@
                 <mat-form-field>
                   <mat-label>Usage Count</mat-label>
                   <input matInput placeholder="Usage Count" formControlName="usage_count"
-                         required type="number">
+                         required min="0" type="number">
                   <mat-error *ngIf="offerForm.get('usage_count').invalid">
                     {{'validations.required' | translate}}
                   </mat-error>
@@ -100,7 +100,7 @@
                 <mat-form-field>
                   <mat-label>Discount Value</mat-label>
                   <input matInput placeholder="Discount Value" formControlName="discount_value"
-                         required type="number">
+                         required min="0" type="number">
                   <mat-error *ngIf="offerForm.get('discount_value').invalid">
                     {{'validations.required' | translate}}
                   </mat-error>
@@ -146,7 +146,7 @@
                 <mat-form-field>
                   <mat-label>Age</mat-label>
                   <input matInput placeholder="Age" formControlName="age"
-                         required type="number">
+                         required min="0" type="number">
                   <mat-error *ngIf="offerForm.get('age').invalid">
                     {{'validations.required' | translate}}
                   </mat-error>
@@ -157,7 +157,7 @@
                 <mat-form-field>
                   <mat-label>Position</mat-label>
                   <input matInput placeholder="Position" formControlName="position"
-                         type="number">
+                         min="0" type="number">
                 </mat-form-field>
             </div>
 
