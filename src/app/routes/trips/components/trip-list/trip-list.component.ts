@@ -16,7 +16,7 @@ import { TripViewComponent } from '../trip-view/trip-view.component';
 })
 export class TripsComponentsTripListComponent implements OnInit {
 
-  displayedColumns: string[] = ["trip_name", "assign_time","start_time","end_time","total_cash_collected","total_distance_travelled","role_type", "status",'total_amount_to_collect',"controls"];
+  displayedColumns: string[] = ["assign_time","start_time","end_time","total_cash_collected","total_distance_travelled","role_type", "status",'total_amount_to_collect',"controls"];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
   pageDetails = {
