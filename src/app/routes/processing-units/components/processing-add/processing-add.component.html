@@ -95,7 +95,7 @@
           <div fxFlex="33" *ngIf="!isSallable" fxFlex.lt-sm="100">
             <mat-form-field>
               <mat-label>Quantity</mat-label>
-              <input matInput placeholder="Quantity" formControlName="consumed_quantity" required type="number">
+              <input matInput placeholder="Quantity" formControlName="consumed_quantity" required min="0" type="number">
               <mat-error *ngIf="processingForm.get('consumed_quantity').invalid">
                 {{'validations.required' | translate}}
               </mat-error>
@@ -121,7 +121,7 @@
           <div fxFlex="34" fxFlex.lt-sm="100">
             <mat-form-field>
               <mat-label>Wastage Quantity</mat-label>
-              <input matInput placeholder="Wastage Quantity" formControlName="wastage_quantity" type="number">
+              <input matInput placeholder="Wastage Quantity" formControlName="wastage_quantity" min="0" type="number">
               <!-- <mat-error *ngIf="processingForm.get('wastage_quantity').invalid">
                 {{'validations.required' | translate}}
               </mat-error> -->
@@ -170,7 +170,7 @@
                       <div fxFlex="30" fxFlex.lt-sm="100">
                         <mat-form-field>
                           <mat-label>Production Quantity</mat-label>
-                          <input matInput placeholder="Production Quantity" formControlName="production_quantity" required type="number">
+                          <input matInput placeholder="Production Quantity" formControlName="production_quantity" required min="0" type="number">
                           <mat-error *ngIf="productionForm.get('production_quantity').invalid">
                             {{'validations.required' | translate}}
                           </mat-error>
@@ -269,7 +269,7 @@
                     <div fxFlex="30" fxFlex.lt-sm="100">
                       <mat-form-field>
                         <mat-label>Packaging Quantity</mat-label>
-                        <input matInput placeholder="Packaging Quantity" formControlName="consumed_quantity" required type="number">
+                        <input matInput placeholder="Packaging Quantity" formControlName="consumed_quantity" required min="0" type="number">
                         <mat-error *ngIf="packingForm.get('consumed_quantity').invalid">
                           {{'validations.required' | translate}}
                         </mat-error>
@@ -298,7 +298,7 @@
                     <div fxFlex="30" fxFlex.lt-sm="100">
                       <mat-form-field>
                         <mat-label>Wastage Quantity</mat-label>
-                        <input matInput placeholder="Wastage Quantity" formControlName="wastage_quantity" type="number">
+                        <input matInput placeholder="Wastage Quantity" formControlName="wastage_quantity" min="0" type="number">
                         <!-- <mat-error *ngIf="packingForm.get('wastage_quantity').invalid">
                           {{'validations.required' | translate}}
                         </mat-error> -->

@@ -130,30 +130,11 @@ export class AddRequestComponents implements OnInit {
 				this.getRole();
 			}			
 		});
-
-		// this.requestForm.controls['sourceUserId'].valueChanges.subscribe((value) => {
-			
-		// 	if(this.requestForm.controls['requestOrderType'].value === 'PURCHASE_ORDER'){
-		// 		this.searchUserId = null;
-		// 		this.getItem('RAW_MATERIAL');
-		// 	}
-		// 	if(this.requestForm.controls['requestOrderType'].value === 'TRANSFER_ORDER'){
-		// 		// console.log(this.requestForm.controls['requestOrderType'].value,value);
-		// 		this.searchUserId = value;
-		// 		this.getItem('SELLABLE');
-		// 	}
-		// })
 		
-		this.requestForm.controls['requestOrderType'].valueChanges.subscribe((value) => {
-			if(value === 'PURCHASE_ORDER'){
-				//this.filterRoleList = this.filterRoleList.filter(role => role.type == 'PURCHASE_MANAGER' && role.type == 'MANUFACTURING_PLANT');
-			}else{
-
-			}
-		})
-
-		if(this.settingService.isAdmin)
+		if(this.settingService.isAdmin){
 			this.requestType.push({ "value": "PURCHASE_ORDER", "lable": "Purchase Order" },{ "value": "TRANSFER_ORDER", "lable": "Transfer Order" });
+			this.getItem();
+		}
 		else if(this.settingService.isPurchaseManager)
 			this.requestType.push({ "value": "PURCHASE_ORDER", "lable": "Purchase Order" });
 		else if(this.settingService.isManufaturingPlant || this.settingService.isDepo)
@@ -169,8 +150,8 @@ export class AddRequestComponents implements OnInit {
 		// })
 	}
 
-	public sendRecieveChange(){
-		let requestType = this.requestForm.get('selectRequestType').value;
+	public sendRecieveChange(event){
+		let requestType = event.value;
 		if(requestType == 'send'){
 			this.requestForm.get('searchBySorceRoleName').setValue(this.settingService.user.role_id.type)
 			this.requestForm.get('sourceUserId').setValue(this.settingService.user._id)
@@ -179,6 +160,7 @@ export class AddRequestComponents implements OnInit {
 			this.requestForm.get('destinationUserId').setValue(this.settingService.user._id)
 		}
 		this.loadDestinationRoleList();
+		this.getItem(requestType);		
 	}
 
 	private loadDestinationRoleList(){
@@ -339,14 +321,14 @@ export class AddRequestComponents implements OnInit {
 		if(this.requestForm.controls['requestOrderType'].value === 'TRANSFER_ORDER'){
 			this.searchUserId = value;
 		}
-		this.getItem();
 	}
 
-	getItem(){
+	getItem(requestType = 'send'){
 		
 		// this.itemFacade.loadItemList(this.pageDetails.currentPage, this.pageDetails.itemsPerPage,itemType, null, this.searchRoleName, this.searchUserId, null, this.searchByName)
+		let getAdminList =  requestType == 'send' ? false : true;
 		
-		this.itemFacade.getItemListForDropDown().subscribe((items:any) => {
+		this.itemFacade.getItemListForDropDown(getAdminList).subscribe((items:any) => {
 			if(this.requestForm.controls['requestOrderType'].value == 'TRANSFER_ORDER'){
 				let filterItem = {"data" : [],"totalCount":0};
 				if(items){

@@ -39,7 +39,7 @@
               <mat-form-field>
                 <mat-label>Position</mat-label>
                 <input matInput placeholder="Position Order" formControlName="position"
-                       required type="number">
+                       required min="0" type="number">
                 <mat-error *ngIf="bannerForm.get('position').invalid">
                   {{'validations.required' | translate}}
                 </mat-error>

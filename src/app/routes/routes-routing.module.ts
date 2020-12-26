@@ -41,6 +41,7 @@ const routes: Routes = [
     { path: 'processing-units', loadChildren: () => import('./processing-units/processing-units.module').then(m => m.ProcessingUnitsModule) },
     { path: 'orders', loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule) },
     { path: 'trips', loadChildren: () => import('./trips/trips.module').then(m => m.TripsModule) },
+    { path: 'franchise', loadChildren: () => import('./franchise/franchise.module').then(m => m.FranchiseModule) },
     ],
   },
   {

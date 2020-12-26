@@ -11,6 +11,7 @@
     "request":"Request",
     "trips":"Trips",
     "orders":"Orders",
+    "pos":"POS",
     "orders.purchaseorder":"Purchase",
     "orders.transferorder":"Transfer",
     "orders.customerorder":"Customer",

@@ -34,7 +34,7 @@
             <div fxFlex="25" fxFlex.lt-sm="100">
               <mat-form-field>
                 <mat-label>Base Quantity</mat-label>
-                <input matInput placeholder="Base Quantity" type="number"
+                <input matInput placeholder="Base Quantity" min="0" type="number"
                         formControlName="base_quantity" >
                 <mat-error *ngIf="unitForm.get('base_quantity').invalid">
                   {{'validations.required' | translate}}
@@ -81,7 +81,7 @@
                         <div fxFlex="30" fxFlex.lt-sm="100">
                             <mat-form-field>
                                 <mat-label>Item Quantity</mat-label>
-                                <input matInput placeholder="Item Quantity" type="number" formControlName="item_quantity"
+                                <input matInput placeholder="Item Quantity" min="0" type="number" formControlName="item_quantity"
                                         required>
                                 <mat-error *ngIf="packageForm.get('item_quantity').invalid">
                                     {{'validations.required' | translate}}
