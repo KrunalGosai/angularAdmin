@@ -172,8 +172,8 @@ export class RequestListComponent implements OnInit {
 			if (result == true) {
 				let rowcopy = {request_id: row._id,status:row.status};
 				this.facade.changeStatus(rowcopy).then(res => {
-				this.filterRequest()
-				});
+				this.filterRequest();
+				}).catch(err => {this.refreshRequestTable()});
 			}else{
 				this.refreshRequestTable();
 			}

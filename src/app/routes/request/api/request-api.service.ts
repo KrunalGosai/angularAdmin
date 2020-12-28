@@ -24,9 +24,9 @@ export class RequestApiService {
     if(searchByDestination && searchByDestination.trim() != '')
       url += `&searchByDestination=${searchByDestination}`;
     if(searchByOrdertype && searchByOrdertype.trim() != '')
-      url += `&searchByOrdertype=${searchByOrdertype}`;
+      url += `&searchByRequesttype=${searchByOrdertype}`;
     if(searchByOrderstatus && searchByOrderstatus.trim() != '')
-      url += `&searchByOrdertype=${searchByOrderstatus}`;    
+      url += `&searchByRequeststatus=${searchByOrderstatus}`;    
       
     url = url.replace('?&','?');
 
