@@ -130,7 +130,7 @@ export class AddressApiService {
   }
 
   public getStateByCountryId(id):Observable<any>{
-    let url = this.baseUrl+`/api/state?searchBycountryId=${id}`;
+    let url = this.baseUrl+`/api/state?SearchByCountryId=${id}`;
     return this.http.get<any>(url);
   }
 
