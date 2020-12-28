@@ -25,8 +25,8 @@
           <mat-form-field fxFlex="33" fxFlex.lt-sm="100" class="matero-col">
             <mat-label>Order Type</mat-label>
             <mat-select placeholder="Order Type" [(ngModel)]="order_type" [ngModelOptions]="{ standalone: true }"> 
-              <mat-option *ngFor="let type of orderType" [value]="type.value" >
-                {{ type }}
+              <mat-option *ngFor="let type of orderType" [value]="type" >
+                {{ type.replace('_',' ')  | titlecase}}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -35,7 +35,7 @@
             <mat-label>Status</mat-label>
             <mat-select placeholder="Status" [ngModelOptions]="{ standalone: true }" [(ngModel)]="order_status" >
               <mat-option *ngFor="let cate of status" [value]="cate">
-                {{ cate }}
+                {{ cate | titlecase}}
               </mat-option>
             </mat-select>
           </mat-form-field>
