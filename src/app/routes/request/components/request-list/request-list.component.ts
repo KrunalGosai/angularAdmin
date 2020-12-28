@@ -45,6 +45,7 @@ export class RequestListComponent implements OnInit {
 		totalRecords: 200
 	}
 	totalBanner: number = 0;
+	requestlist:any;
 
 	constructor(
 		private router: Router,
@@ -61,9 +62,8 @@ export class RequestListComponent implements OnInit {
 		//this.filterRequest()
 		this.facade.getRequestList(this.pageDetails.currentPage, this.pageDetails.itemsPerPage).subscribe((requestList: any) => {
 			if (requestList) {
-				this.dataSource = new MatTableDataSource(requestList.message);
-				this.dataSource.sort = this.sort;
-				this.pageDetails.totalRecords = requestList.totalcount;
+				this.requestlist = {...requestList};
+				this.refreshRequestTable();
 			}
 		})
 		// this.facade.getItemTypes().subscribe(types => {
@@ -78,6 +78,18 @@ export class RequestListComponent implements OnInit {
 			let roles: any = res;
 			this.filterRoleList = roles.data.filter(role => role.type != 'ADMIN' && role.type != 'CUSTOMER' && role.type != 'DELIVERY_BOY');
 		})
+	}
+
+	refreshRequestTable(){
+		if(this.requestlist && this.requestlist.message){
+			let newData = []
+			this.requestlist.message.map(item => {
+				newData.push({...item});
+			});
+			this.dataSource = new MatTableDataSource(newData);
+			this.dataSource.sort = this.sort;
+			this.pageDetails.totalRecords = this.requestlist.totalcount;
+		}
 	}
 
 	get isAdmin() {
@@ -156,10 +168,16 @@ export class RequestListComponent implements OnInit {
 		});
 	}
 	public changeStatus(row) {
-		let rowcopy = {request_id: row._id,status:row.status};
-		this.facade.changeStatus(rowcopy).then(res => {
-		  this.filterRequest()
-		});
+		this.confirmService.confirm(`Are you sure want to change status to ${row.status}`, 'Confirm').subscribe(result => {
+			if (result == true) {
+				let rowcopy = {request_id: row._id,status:row.status};
+				this.facade.changeStatus(rowcopy).then(res => {
+				this.filterRequest();
+				}).catch(err => {this.refreshRequestTable()});
+			}else{
+				this.refreshRequestTable();
+			}
+		})
 	}
 
 	destRoleChanged() {
