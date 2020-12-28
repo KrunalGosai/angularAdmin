@@ -189,6 +189,19 @@ export class ItemsComponentsItemListComponent implements OnInit {
     rowcopy.item_type = rowcopy.type;
     rowcopy.category_id = rowcopy.category_id._id
     rowcopy.subCategory_ids = subcats;
+   
+    this.facade.updateItem(rowcopy);
+  }
+
+  public changePrice(row){
+    let rowcopy = {...row};
+    let subcats = [];
+    rowcopy.subCategory_ids.map(sub => {
+      subcats.push(sub._id);
+    })
+    rowcopy.item_type = rowcopy.type;
+    rowcopy.category_id = rowcopy.category_id._id
+    rowcopy.subCategory_ids = subcats;
     if(this.isUserView){
       this.updateItemDepoPrice(rowcopy)
     }else{

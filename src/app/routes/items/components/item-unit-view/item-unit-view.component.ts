@@ -57,7 +57,7 @@ export class ItemUnitViewComponent implements OnInit {
           _id: unit._id,
           is_customer_show: unit.unit_id._id == value ? true : false,
           item_quantity: unit.item_quantity, 
-          price: unit.price,
+          price: unit.price ? unit.price : 0,
           unit_id: unit.unit_id ? unit.unit_id._id : ''
         })
       })
@@ -68,7 +68,7 @@ export class ItemUnitViewComponent implements OnInit {
           _id: unit._id,
           is_customer_show: !isAlreadySet ? unit.is_customer_show : false,
           item_quantity: unit.item_quantity, 
-          price: unit.price,
+          price: unit.price ? unit.price : 0,
           unit_id: unit.unit_id ? unit.unit_id._id : ''
         })
         isAlreadySet = unit.is_customer_show
