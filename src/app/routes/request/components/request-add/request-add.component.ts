@@ -294,11 +294,13 @@ export class AddRequestComponents implements OnInit {
 				this.filterRoleList = roles.data.filter(role => role.type == UserRole.PURCHASE_MANAGER || role.type == UserRole.MANUFACTURING_PLANT || role.type == UserRole.DEPO);
 				this.requestForm.controls['searchBySorceRoleName'].patchValue({"value":this.settingService.user.role_id,disabled: true});	
 			}else if(this.settingService.isDepo){
-				this.filterRoleList = roles.data.filter(role => role.type == UserRole.HAWKER || role.type == UserRole.MANUFACTURING_PLANT || role.type == UserRole.RETAILERS);
+				this.filterRoleList = roles.data.filter(role => role.type == UserRole.DEPO || role.type == UserRole.HAWKER || role.type == UserRole.MANUFACTURING_PLANT || role.type == UserRole.RETAILERS);
 			}else if(this.settingService.isHawker){
-				this.filterRoleList = roles.data.filter(role => role.type == UserRole.HAWKER || role.type == UserRole.DEPO);
+				this.filterRoleList = roles.data.filter(role => role.type == UserRole.DEPO);
 			}else if(this.settingService.isRetailer){
-				this.filterRoleList = roles.data.filter(role => role.type == UserRole.RETAILERS || role.type == UserRole.DEPO);
+				this.filterRoleList = roles.data.filter(role => role.type == UserRole.DEPO);
+			}else if(this.settingService.isFranchise){
+				this.filterRoleList = roles.data.filter(role => role.type == UserRole.DEPO);
 			}else{
 				this.filterRoleList = roles.data.filter(role => role.type != UserRole.ADMIN && role.type != UserRole.CUSTOMER && role.type != UserRole.DELIVERY_BOY && role.type != UserRole.SUPPLIER);
 			}
