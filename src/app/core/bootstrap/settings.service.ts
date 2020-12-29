@@ -117,4 +117,8 @@ export class SettingsService {
   get isHawker(){
     return this.user.role_id.type == UserRole.HAWKER;
   }
+  
+  get isFranchise(){
+    return this.user.role_id.type == UserRole.FRANCHISE;
+  }
 }
