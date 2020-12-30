@@ -64,7 +64,7 @@ export class OrdersDispatchReadyComponent implements OnInit {
     })
     this.loadDropdowns();
     this.viewData.items.forEach(item => {
-      let itemobj = {item_id: item.item_id._id, item_name:item.item_name,qty:item.booked_item_quantity,unit:item.item_unit_id.name}
+      let itemobj = {item_id: item.item_id._id, item_name:item.item_name,qty:item.item_quantity,unit:item.item_unit_id.name}
         this.itemData = [...this.itemData, itemobj];
     });
     this.dataSource = new MatTableDataSource(this.itemData);
@@ -152,7 +152,7 @@ export class OrdersDispatchReadyComponent implements OnInit {
       
       let id = orderItem.item_id._id;
       let unitId = orderItem.item_unit_id._id;
-      let orderqty = orderItem.booked_item_quantity;
+      let orderqty = orderItem.item_quantity;
       // check if base unit exists then take base unit id 
       if(orderItem.item_unit_id.base_unit && orderItem.item_unit_id.base_unit._id)
         unitId = orderItem.item_unit_id.base_unit._id;
