@@ -84,7 +84,7 @@
                     <div fxFlex="50" fxFlex.lt-sm="100" *ngIf="isAdmin || requestForm.get('selectRequestType').value === 'send'">
                         <mat-form-field>
                             <mat-label>Destination User</mat-label>
-                            <mat-select placeholder="User" formControlName="destinationUserId">
+                            <mat-select placeholder="User" (selectionChange)="destinationUserChange()" formControlName="destinationUserId">
                                 <mat-option *ngFor="let destinationUser of destinationUserList"
                                     [value]="destinationUser._id">{{ destinationUser.first_name | titlecase}}
                                 </mat-option>
@@ -125,7 +125,7 @@
                                     <td mat-cell *matCellDef="let row; let i = index">
                                         <mat-grid-list cols="3" rowHeight="50px">
                                             <mat-grid-tile>
-                                                <button mat-icon-button aria-label="Add" (click)="addCartItem(row,i)">
+                                                <button mat-icon-button aria-label="Add" type="button" (click)="addCartItem(row,i)">
                                                     <mat-icon color="accent">add_circle_outline</mat-icon>
                                                 </button>
                                             </mat-grid-tile>
@@ -144,7 +144,7 @@
                                 <ng-container matColumnDef="price">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
                                     <td mat-cell *matCellDef="let row">
-                                        {{row.user_price | currency:'INR'}}
+                                        {{row.price ? row.price : row.user_price | currency:'INR'}}
                                         <!-- <input type="number" [ngModelOptions]="{ standalone: true }"
                                             (change)="changePosition(row)" style="max-width: 50px"
                                             [(ngModel)]="row.price" /> -->
@@ -166,7 +166,7 @@
                             <table mat-table [dataSource]="dataSourceCart" matSort style="width: 100%;">
                                 <ng-container matColumnDef="action">
                                     <td mat-cell *matCellDef="let row; let i = index">
-                                        <button mat-icon-button aria-label="Add" (click)="deleteICartItem(row,i)">
+                                        <button mat-icon-button aria-label="Add" (click)="deleteICartItem(row,i)" type="button">
                                             <mat-icon color="accent">delete_outline</mat-icon>
                                         </button>
                                     </td>
@@ -208,11 +208,11 @@
                                     <!-- <form> -->
                                         <td mat-cell *matCellDef="let row; let i = index;">
                                             <mat-select style="max-width: 80px;" placeholder="Unit"
-                                                (selectionChange)="updateUnit(row,i)"
+                                                (selectionChange)="updateUnit(row,i,$event)"
                                                 [ngModelOptions]="{ standalone: true }" [(ngModel)]="row.unit"
                                                 name="unit"> 
                                                 <!-- *ngIf="requestForm.get('requestOrderType').value === 'PURCHASE_ORDER'" -->
-                                                <mat-option *ngFor="let unit of unitList" [value]="unit._id">{{unit.name}}</mat-option>
+                                                <mat-option *ngFor="let unit of row.all_item_units" [value]="unit.unit_id._id">{{unit.unit_id.name}}</mat-option>
                                             </mat-select>
                                             <!-- <span *ngIf="requestForm.get('requestOrderType').value === 'TRANSFER_ORDER'">
                                                 {{row.unit_id.name | titlecase}}

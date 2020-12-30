@@ -25,20 +25,20 @@ export class ItemsFacadeService {
     return this.state.getItemList().pipe(tap(res => res))
   }
 
-  public getSallableItemList(adminlist = true){
-    return this.api.getItemListForDropDown('SELLABLE',adminlist).pipe(tap(res => res))
+  public getSallableItemList(adminlist = true,searchRoleName = '',userId = ''){
+    return this.api.getItemListForDropDown('SELLABLE',adminlist,searchRoleName,userId).pipe(tap(res => res))
   }
 
-  public getPackagingItemList(adminlist = true){
-    return this.api.getItemListForDropDown('PACKAGING_MATERIAL',adminlist).pipe(tap(res => res))
+  public getPackagingItemList(adminlist = true,searchRoleName = '',userId = ''){
+    return this.api.getItemListForDropDown('PACKAGING_MATERIAL',adminlist,searchRoleName,userId).pipe(tap(res => res))
   }
 
-  public getRawItemList(adminlist = true){
-    return this.api.getItemListForDropDown('RAW_MATERIAL',adminlist).pipe(tap(res => res))
+  public getRawItemList(adminlist = true,searchRoleName = '',userId = ''){
+    return this.api.getItemListForDropDown('RAW_MATERIAL',adminlist,searchRoleName,userId).pipe(tap(res => res))
   }
 
-  public getItemListForDropDown(adminlist = true){
-    return this.api.getItemListForDropDown('',adminlist).pipe(tap(res => res))
+  public getItemListForDropDown(adminlist = true,searchRoleName = '',userId = ''){
+    return this.api.getItemListForDropDown('',adminlist,searchRoleName,userId).pipe(tap(res => res))
   }
 
 

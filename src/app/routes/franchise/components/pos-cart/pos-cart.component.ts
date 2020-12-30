@@ -109,7 +109,6 @@ export class FranchiseComponentsPosCartComponent implements OnInit {
 
 	private reloadCartTable(){
 		this.dataSourceCart = new MatTableDataSource(this.cartItemList);
-		console.log(this.cartItemList);
 	}
 
 	private reloadItemTable(){
@@ -118,14 +117,14 @@ export class FranchiseComponentsPosCartComponent implements OnInit {
 	}
 
 	addCartItem(raw:any,index:number){
-		this.itemList['data'].splice(index,1);
+		// this.itemList['data'].splice(index,1);
 		raw.quantity = 1;
 		this.cartItemList.push(raw);
 		this.reloadCartTable();
 		this.reloadItemTable();
 	}
 	deleteICartItem(raw:object,index:number){
-		this.cartItemList.splice(index,1);
+		// this.cartItemList.splice(index,1);
 		//console.log(index,this.cartItemList);return;
 		this.itemList['data'].push(raw);
 		this.reloadCartTable();
