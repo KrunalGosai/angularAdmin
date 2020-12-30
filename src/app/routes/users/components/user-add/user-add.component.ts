@@ -1,3 +1,5 @@
+import { filter } from 'rxjs/operators';
+import { AddressFacadeService } from './../../../address/address-facade.service';
 import { SettingsService } from '@core';
 import { ToastrService } from "ngx-toastr";
 import { UsersFacade } from "./../../users-facade";
@@ -28,13 +30,17 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
   cityList = [];
   areaList = [];
   vehicleList = [];
+  userList = [];
   isEditMode: boolean = false;
   activeEditId;
+
+  showParent = false;
 
   translateSubscription: Subscription;
 
   constructor(
     private usersFacade: UsersFacade,
+    private addressFacade:AddressFacadeService,
     private fb: FormBuilder,
     private settingSvc:SettingsService,
     private dateAdapter: DateAdapter<any>,
@@ -69,6 +75,7 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
       area_id: [""],
       vehicle_id: [""],
       location: [""],
+      parent_id:[""],
       is_active: [true],
     });
 
@@ -128,6 +135,7 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
       (res) => {
         let data: any = res;
         this.roleList = data.data;
+        this.isEditMode ? this.roleChanged() : '';
         this.roleDepoFilter();
         this.roleMPlantFilter();
         this.rolePManagerFilter();
@@ -154,7 +162,7 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
  
 
   public loadFormDropdowns() {
-    this.usersFacade.getCountryList().subscribe(
+    this.addressFacade.getCountryList().subscribe(
       (res) => {
         let data: any = res;
         this.countryList = data.data;
@@ -171,17 +179,39 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
     );
   }
 
+  public roleChanged(){
+    let value = this.userForm.get('role_id').value;
+    if(value){
+      let role = this.roleList.filter(role => role._id == value);
+      if(role && role.length > 0){
+        if(role[0].type == UserRole.FRANCHISE || role[0].type == UserRole.POS){
+            this.showParent = true;
+            this.userForm.get('parent_id').setValue('');
+            this.usersFacade.getUsersByType(0,0,'',role[0].type == UserRole.FRANCHISE ? UserRole.DEPO : UserRole.FRANCHISE).toPromise().then(list => {
+              this.userList = list.userList;
+            }).catch(err => {console.error(err)})
+          }
+          else{
+            this.showParent = false;
+            this.userForm.get('parent_id').setValue('');
+          }
+      }else{
+        this.showParent = false;
+        this.userForm.get('parent_id').setValue('');
+      }
+    }    
+  }
+
   public countryChange(){
     this.stateList = [];
     this.cityList = [];
     this.areaList= [];
     let country_id = this.userForm.get("country_id").value;
-    this.usersFacade.getStateList(country_id).subscribe(
+    this.addressFacade.getStateByCountryId(country_id).then(
       (res) => {
         let data: any = res;
         this.stateList = data.data;
-      },
-      (err) => console.error(err)
+      }).catch((err) => console.error(err)
     );
   }
 
@@ -189,24 +219,22 @@ export class UsersUserAddComponent implements OnInit, OnDestroy {
     this.cityList = [];
     this.areaList= [];
     let stateId = this.userForm.get("state_id").value;
-    this.usersFacade.getCityList(stateId).subscribe(
+    this.addressFacade.getCityByStateId(stateId).then(
       (res) => {
         let data: any = res;
         this.cityList = data.data;
-      },
-      (err) => console.error(err)
+      }).catch((err) => console.error(err)
     );
   }
 
   public cityChange(){
     this.areaList= [];
     let cityId = this.userForm.get("city_id").value;
-    this.usersFacade.getAreaList(cityId).subscribe(
+    this.addressFacade.getAreaByCityId(cityId).then(
       (res) => {
         let data: any = res;
         this.areaList = data.data;
-      },
-      (err) => console.error(err)
+      }).catch((err) => console.error(err)
     );
   }
 

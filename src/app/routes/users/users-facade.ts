@@ -31,23 +31,7 @@ export class UsersFacade {
 
   public getRoleList(){
     return this.api.getUserRoleList().pipe(tap(res => res))
-  }
-  
-  public getCountryList(){
-    return this.api.getCountryList().pipe(tap(res => res))
-  }
-
-  public getStateList(countryId){
-    return this.api.getStateList(countryId).pipe(tap(res => res))
-  }
-
-  public getCityList(stateId){
-    return this.api.getCityList(stateId).pipe(tap(res => res))
-  }
-
-  public getAreaList(cityId){
-    return this.api.getAreaList(cityId).pipe(tap(res => res))
-  }
+  } 
 
   public getVehicleList(){
     return this.api.getVehicleList().pipe(tap(res => res))

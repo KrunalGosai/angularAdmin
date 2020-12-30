@@ -121,4 +121,8 @@ export class SettingsService {
   get isFranchise(){
     return this.user.role_id.type == UserRole.FRANCHISE;
   }
+
+  get isPOS(){
+    return this.user.role_id.type == UserRole.FRANCHISE;
+  }
 }

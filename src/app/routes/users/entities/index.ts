@@ -59,6 +59,7 @@ export interface userEntity{
     area_id?: string,
     vehicle_id?: string,
     location?: string,
+    parent_id?: string,
     is_active?: boolean
 }
 

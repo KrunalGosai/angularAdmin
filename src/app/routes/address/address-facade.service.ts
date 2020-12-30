@@ -49,7 +49,7 @@ export class AddressFacadeService {
   }
 
   public getCountryList(){
-    return this.state.getCountryList().pipe(tap(cate => cate))
+    return this.api.getCountryList().pipe(tap(cate => cate))
   }
 
   public deleteArea(id){
@@ -121,13 +121,11 @@ export class AddressFacadeService {
     }).catch(err => {console.error('api call error from load State list',err); throw err });
   }
 
-  
-
-  
-
-  // public getItemDetails(){
-  //   return this.state.getEditItem().pipe(tap(item => item))
-  // }
+  public getAreaByCityId(cityId){
+    return this.api.getAreaByCityId(cityId).toPromise().then(res => {
+      return res
+    }).catch(err => {console.error('api call error from load area list',err); throw err });
+  }
 
   public loadCountryDetails(id){
     return this.api.getCountryDetailsById(id).toPromise().then(res => {
