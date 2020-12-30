@@ -137,4 +137,8 @@ export class AddressApiService {
   public getCityByStateId(stateId):Observable<any>{
     return this.http.get(this.baseUrl+`/api/city?searchByStateId=${stateId}`);
   }
+
+  public getAreaByCityId(cityId){
+    return this.http.get(this.baseUrl+`/api/area?searchByCityId=${cityId}`);
+  }
 }

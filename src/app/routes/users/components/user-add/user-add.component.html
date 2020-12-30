@@ -102,6 +102,7 @@
                   <mat-select
                     formControlName="role_id"
                     placeholder="User Role"
+                    (selectionChange)="roleChanged()"
                     required
                   >
                     <mat-option
@@ -131,7 +132,7 @@
               </div>
 
               <!-- dob -->
-              <div fxFlex="25" fxFlex.lt-sm="100">
+              <div fxFlex="50" fxFlex.lt-sm="100">
                 <mat-form-field color="accent">
                   <mat-label>Birthdate</mat-label>
                   <input
@@ -148,8 +149,32 @@
                 </mat-form-field>
               </div>
 
+              <!-- parent id -->
+              <div fxFlex="50" *ngIf="showParent" fxFlex.lt-sm="100">
+                <mat-form-field>
+                  <mat-label>Parent User</mat-label>
+                  <mat-select formControlName="parent_id" placeholder="Parent User" required>
+                    <mat-option *ngFor="let user of userList" [value]="user._id" >{{ user.first_name }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="userForm.get('parent_id').invalid">
+                    {{ getErrorMessage(userForm) | translate }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <!-- is_active -->
+              <div fxFlex="34" fxFlex.lt-sm="100">
+                <mat-slide-toggle
+                  formControlName="is_active"
+                  style="margin-top: 20px"
+                  color="primary"
+                >
+                  {{ is_active_value ? "Active" : "Inactive" }}
+                </mat-slide-toggle>
+              </div>
+
               <!-- uid -->
-              <div fxFlex="25" fxFlex.lt-sm="100">
+              <div fxFlex="33" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>UID</mat-label>
                   <input matInput placeholder="UID" formControlName="uid" />
@@ -157,7 +182,7 @@
               </div>
 
               <!-- contact_2 -->
-              <div fxFlex="25" fxFlex.lt-sm="100">
+              <div fxFlex="33" fxFlex.lt-sm="100">
                 <mat-form-field>
                   <mat-label>Alternative Contact</mat-label>
                   <input
@@ -167,18 +192,7 @@
                     formControlName="contact_2"
                   />
                 </mat-form-field>
-              </div>
-
-              <!-- is_active -->
-              <div fxFlex="25" fxFlex.lt-sm="100">
-                <mat-slide-toggle
-                  formControlName="is_active"
-                  style="margin-top: 20px"
-                  color="primary"
-                >
-                  {{ is_active_value ? "Active" : "Inactive" }}
-                </mat-slide-toggle>
-              </div>
+              </div>              
 
               <!-- family_details -->
               <div fxFlex="100" fxFlex.lt-sm="100">

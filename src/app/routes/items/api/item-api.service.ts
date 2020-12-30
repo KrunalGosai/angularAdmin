@@ -38,13 +38,17 @@ export class ItemApiService {
     return this.http.get<itemListResponse>(url);
   }
 
-  getItemListForDropDown(searchItemType = '',adminlist:boolean = true){
+  getItemListForDropDown(searchItemType = '',adminlist:boolean = true,searchRoleName = '',userId = ''){
     let url = this.baseURl+`/api/item/get_admin_item_list?`;
     
     if(adminlist != undefined && adminlist !=  null && adminlist == true)
       url += `&adminlist=${adminlist}`;
     if(searchItemType != undefined && searchItemType !=  null && searchItemType.trim() != '')
       url += `&item_type=${searchItemType}`;
+    if(searchRoleName != undefined && searchRoleName !=  null && searchRoleName.trim() != '')
+      url += `&user_type=${searchRoleName}`;
+    if(userId != undefined && userId !=  null && userId.trim() != '')
+      url += `&user_id=${userId}`;
     
     url = url.replace('?&','?')
       

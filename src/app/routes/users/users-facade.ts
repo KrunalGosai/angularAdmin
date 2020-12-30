@@ -25,29 +25,13 @@ export class UsersFacade {
     return this.usersstate.getUsers().pipe(tap(res => res))
   }
 
-  public getUsersByType(currentPage = 0,currentPageSize = 0,searchByName = '',searchByType = ''){
-    return this.api.getUsers(currentPage,currentPageSize,searchByName,searchByType).pipe(tap(res => res));
+  public getUsersByType(currentPage = 0,currentPageSize = 0,searchByName = '',searchByType = '',adminlist = false){
+    return this.api.getUsers(currentPage,currentPageSize,searchByName,searchByType,adminlist).pipe(tap(res => res));
   }
 
   public getRoleList(){
     return this.api.getUserRoleList().pipe(tap(res => res))
-  }
-  
-  public getCountryList(){
-    return this.api.getCountryList().pipe(tap(res => res))
-  }
-
-  public getStateList(countryId){
-    return this.api.getStateList(countryId).pipe(tap(res => res))
-  }
-
-  public getCityList(stateId){
-    return this.api.getCityList(stateId).pipe(tap(res => res))
-  }
-
-  public getAreaList(cityId){
-    return this.api.getAreaList(cityId).pipe(tap(res => res))
-  }
+  } 
 
   public getVehicleList(){
     return this.api.getVehicleList().pipe(tap(res => res))

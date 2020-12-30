@@ -12,6 +12,7 @@ import { UsersFacade } from './../../../users/users-facade';
 import { RequestFacadeService } from '../../request-facade.service'
 import { SettingsService } from '@core';
 import { UserRole } from '@shared/entities';
+import { truncateSync } from 'fs';
 
 @Component({
 	selector: 'app-request-components-request-add',
@@ -124,7 +125,7 @@ export class AddRequestComponents implements OnInit {
 		this.unitFacde.getUnites().subscribe((units) => {
 			this.unitList = units.data;
 		});
-		this.usersFacade.getUsersByType().subscribe(res => {
+		this.usersFacade.getUsersByType(0,0,'','',true).subscribe(res => {
 			this.filterUserList = res.userList;
 			if(this.filterUserList && this.filterUserList.length){
 				this.getRole();
@@ -133,7 +134,7 @@ export class AddRequestComponents implements OnInit {
 		
 		if(this.settingService.isAdmin){
 			this.requestType.push({ "value": "PURCHASE_ORDER", "lable": "Purchase Order" },{ "value": "TRANSFER_ORDER", "lable": "Transfer Order" });
-			this.getItem();
+			// this.getItem();
 		}
 		else if(this.settingService.isPurchaseManager)
 			this.requestType.push({ "value": "PURCHASE_ORDER", "lable": "Purchase Order" });
@@ -160,7 +161,7 @@ export class AddRequestComponents implements OnInit {
 			this.requestForm.get('destinationUserId').setValue(this.settingService.user._id)
 		}
 		this.loadDestinationRoleList();
-		this.getItem(requestType);		
+		// this.getItem(requestType);		
 	}
 
 	private loadDestinationRoleList(){
@@ -242,7 +243,6 @@ export class AddRequestComponents implements OnInit {
 
 	private reloadCartTable(){
 		this.dataSourceCart = new MatTableDataSource(this.cartItemList);
-		console.log(this.cartItemList);
 	}
 
 	private reloadItemTable(){
@@ -251,16 +251,18 @@ export class AddRequestComponents implements OnInit {
 	}
 
 	addCartItem(raw:any,index:number){
-		this.itemList['data'].splice(index,1);
-		raw.quantity = 1;
-		this.cartItemList.push(raw);
+		// this.itemList['data'].splice(index,1);
+		let rowitem:any = {};
+		rowitem = {...raw};
+		rowitem.quantity = 1;
+		this.cartItemList.push(rowitem);
 		this.reloadCartTable();
 		this.reloadItemTable();
 	}
 	deleteICartItem(raw:object,index:number){
 		this.cartItemList.splice(index,1);
 		//console.log(index,this.cartItemList);return;
-		this.itemList['data'].push(raw);
+		// this.itemList['data'].push(raw);
 		this.reloadCartTable();
 		this.reloadItemTable();
 	}
@@ -323,14 +325,28 @@ export class AddRequestComponents implements OnInit {
 		if(this.requestForm.controls['requestOrderType'].value === 'TRANSFER_ORDER'){
 			this.searchUserId = value;
 		}
+		this.getItem()
 	}
 
-	getItem(requestType = 'send'){
+	public destinationUserChange(){
+		this.getItem();
+	}
+
+	public getItem(){
 		
 		// this.itemFacade.loadItemList(this.pageDetails.currentPage, this.pageDetails.itemsPerPage,itemType, null, this.searchRoleName, this.searchUserId, null, this.searchByName)
-		let getAdminList =  requestType == 'send' ? false : true;
-		
-		this.itemFacade.getItemListForDropDown(getAdminList).subscribe((items:any) => {
+		// let getAdminList =  requestType == 'send' ? false : true;
+		let userId = '', role = '', requestType = '';
+		requestType = this.requestForm.get('selectRequestType').value;
+		if(this.isAdmin || requestType == 'recieve'){
+			userId = this.requestForm.get('sourceUserId').value;
+			// role = this.requestForm.get('searchBySorceRoleName').value;
+		}else if(requestType == 'send'){
+			userId = this.requestForm.get('destinationUserId').value;
+			// role = this.requestForm.get('destinationRoleName').value;
+		}
+
+		this.itemFacade.getItemListForDropDown(false,role,userId).subscribe((items:any) => {
 			if(this.requestForm.controls['requestOrderType'].value == 'TRANSFER_ORDER'){
 				let filterItem = {"data" : [],"totalCount":0};
 				if(items){
@@ -364,9 +380,14 @@ export class AddRequestComponents implements OnInit {
 		})
 	}
 
-	updateUnit(row:any, index:number){
-		//if(this.cartItemList[index]['unit_id']){
-			this.cartItemList[index]['unit_id']['_id'] = row.unit;
-		//}
+	public updateUnit(row:any, index:number,event){
+		console.log(this.cartItemList)
+		this.cartItemList[index]['unit_id']['_id'] = row.unit;
+		if(row.all_item_units && row.all_item_units.length > 0){
+			let selectedUnit = row.all_item_units.filter(unit => unit._id == event.value)
+			if(selectedUnit && selectedUnit.length > 0){
+				this.cartItemList[index]['price'] = selectedUnit[0].price;
+			}
+		}
 	}
 }
