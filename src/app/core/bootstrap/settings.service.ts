@@ -123,6 +123,6 @@ export class SettingsService {
   }
 
   get isPOS(){
-    return this.user.role_id.type == UserRole.FRANCHISE;
+    return this.user.role_id.type == UserRole.POS;
   }
 }
