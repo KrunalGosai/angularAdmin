@@ -12,7 +12,7 @@ export class UsersApiService {
   private baseUrl:string = environment.SERVER_ORIGIN;
   constructor(private http:HttpClient) { }
 
-  public getUsers(currentPage = 0,currentPageSize = 0,searchByName = '',searchByType = ''):Observable<userListResponse>{
+  public getUsers(currentPage = 0,currentPageSize = 0,searchByName = '',searchByType = '',adminlist = false):Observable<userListResponse>{
     let url = this.baseUrl+`/api/user/list?`;
     
     if(currentPage != undefined && currentPage != null && currentPage != 0)
@@ -23,6 +23,8 @@ export class UsersApiService {
       url += `&searchByuserName=${searchByName}`;
     if(searchByType != undefined && searchByType !=  null && searchByType.trim() != '')
       url += `&role_type=${searchByType}`;
+    if(adminlist != undefined && adminlist !=  null && adminlist != false)
+      url += `&adminlist=${adminlist}`;
 
     url = url.replace('?&','?')
     return this.http.get(url);

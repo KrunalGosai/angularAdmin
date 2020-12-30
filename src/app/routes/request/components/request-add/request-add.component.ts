@@ -12,6 +12,7 @@ import { UsersFacade } from './../../../users/users-facade';
 import { RequestFacadeService } from '../../request-facade.service'
 import { SettingsService } from '@core';
 import { UserRole } from '@shared/entities';
+import { truncateSync } from 'fs';
 
 @Component({
 	selector: 'app-request-components-request-add',
@@ -124,7 +125,7 @@ export class AddRequestComponents implements OnInit {
 		this.unitFacde.getUnites().subscribe((units) => {
 			this.unitList = units.data;
 		});
-		this.usersFacade.getUsersByType().subscribe(res => {
+		this.usersFacade.getUsersByType(0,0,'','',true).subscribe(res => {
 			this.filterUserList = res.userList;
 			if(this.filterUserList && this.filterUserList.length){
 				this.getRole();

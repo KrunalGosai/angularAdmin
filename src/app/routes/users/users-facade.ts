@@ -25,8 +25,8 @@ export class UsersFacade {
     return this.usersstate.getUsers().pipe(tap(res => res))
   }
 
-  public getUsersByType(currentPage = 0,currentPageSize = 0,searchByName = '',searchByType = ''){
-    return this.api.getUsers(currentPage,currentPageSize,searchByName,searchByType).pipe(tap(res => res));
+  public getUsersByType(currentPage = 0,currentPageSize = 0,searchByName = '',searchByType = '',adminlist = false){
+    return this.api.getUsers(currentPage,currentPageSize,searchByName,searchByType,adminlist).pipe(tap(res => res));
   }
 
   public getRoleList(){
