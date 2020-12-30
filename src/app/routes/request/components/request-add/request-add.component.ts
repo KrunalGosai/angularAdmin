@@ -251,8 +251,10 @@ export class AddRequestComponents implements OnInit {
 
 	addCartItem(raw:any,index:number){
 		// this.itemList['data'].splice(index,1);
-		raw.quantity = 1;
-		this.cartItemList.push(raw);
+		let rowitem:any = {};
+		rowitem = {...raw};
+		rowitem.quantity = 1;
+		this.cartItemList.push(rowitem);
 		this.reloadCartTable();
 		this.reloadItemTable();
 	}
@@ -378,6 +380,7 @@ export class AddRequestComponents implements OnInit {
 	}
 
 	public updateUnit(row:any, index:number,event){
+		console.log(this.cartItemList)
 		this.cartItemList[index]['unit_id']['_id'] = row.unit;
 		if(row.all_item_units && row.all_item_units.length > 0){
 			let selectedUnit = row.all_item_units.filter(unit => unit._id == event.value)
