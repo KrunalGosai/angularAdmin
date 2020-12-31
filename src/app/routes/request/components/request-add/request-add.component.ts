@@ -342,7 +342,7 @@ export class AddRequestComponents implements OnInit {
 			userId = this.requestForm.get('sourceUserId').value;
 			// role = this.requestForm.get('searchBySorceRoleName').value;
 		}else if(requestType == 'send'){
-			userId = this.requestForm.get('destinationUserId').value;
+			userId = this.settingService.user._id;
 			// role = this.requestForm.get('destinationRoleName').value;
 		}
 
