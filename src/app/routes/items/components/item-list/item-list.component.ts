@@ -180,18 +180,18 @@ export class ItemsComponentsItemListComponent implements OnInit {
     }
   }
 
-  public changePosition(row){
-    let rowcopy = {...row};
-    let subcats = [];
-    rowcopy.subCategory_ids.map(sub => {
-      subcats.push(sub._id);
-    })
-    rowcopy.item_type = rowcopy.type;
-    rowcopy.category_id = rowcopy.category_id._id
-    rowcopy.subCategory_ids = subcats;
+  // public changePosition(row){
+  //   let rowcopy = {...row};
+  //   let subcats = [];
+  //   rowcopy.subCategory_ids.map(sub => {
+  //     subcats.push(sub._id);
+  //   })
+  //   rowcopy.item_type = rowcopy.type;
+  //   rowcopy.category_id = rowcopy.category_id._id
+  //   rowcopy.subCategory_ids = subcats;
    
-    this.facade.updateItem(rowcopy);
-  }
+  //   this.facade.updateItem(rowcopy);
+  // }
 
   public changePrice(row){
     let rowcopy = {...row};
