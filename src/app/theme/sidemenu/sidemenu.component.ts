@@ -84,29 +84,29 @@ export class SidemenuComponent implements OnInit {
       if(item.name == 'menu.orders'){
         if(this.settingsService.isPurchaseManager){
           item.children = item.children.filter((menuItem => 
-            menuItem.name != "orders.transferorder" ||
-            menuItem.name != "menu.orders.customerorder" ||
+            menuItem.name != "menu.orders.transferorder" &&
+            menuItem.name != "menu.orders.customerorder" &&
             menuItem.name != "menu.orders.hawkercustomerorder"))
         }else if(this.settingsService.isManufaturingPlant){
           item.children = item.children.filter((menuItem => 
-            menuItem.name != "menu.orders.customerorder" ||
+            menuItem.name != "menu.orders.customerorder" &&
             menuItem.name != "menu.orders.hawkercustomerorder"))
         }else if(this.settingsService.isDepo){
           item.children = item.children.filter((menuItem => 
             menuItem.name != "menu.orders.purchaseorder"))
         }else if(this.settingsService.isHawker){
           item.children = item.children.filter((menuItem => 
-            menuItem.name != "menu.orders.purchaseorder" ||
+            menuItem.name != "menu.orders.purchaseorder" &&
             menuItem.name != "menu.orders.customerorder"))
         }else if(this.settingsService.isRetailer){
           item.children = item.children.filter((menuItem => 
-            menuItem.name != "menu.orders.purchaseorder" ||
-            menuItem.name != "menu.orders.customerorder" ||
+            menuItem.name != "menu.orders.purchaseorder" &&
+            menuItem.name != "menu.orders.customerorder" &&
             menuItem.name != "menu.orders.hawkercustomerorder"))
         }else if(this.settingsService.isFranchise){
           item.children = item.children.filter((menuItem => 
-            menuItem.name != "menu.orders.purchaseorder" ||
-            menuItem.name != "menu.orders.customerorder" ||
+            menuItem.name != "menu.orders.purchaseorder" &&
+            menuItem.name != "menu.orders.customerorder" &&
             menuItem.name != "menu.orders.hawkercustomerorder"))
         }
       }
