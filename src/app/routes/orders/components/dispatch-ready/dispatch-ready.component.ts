@@ -152,7 +152,7 @@ export class OrdersDispatchReadyComponent implements OnInit {
       
       let id = orderItem.item_id._id;
       let unitId = orderItem.item_unit_id._id;
-      let orderqty = orderItem.item_quantity;
+      let orderqty = orderItem.booked_item_quantity;
       // check if base unit exists then take base unit id 
       if(orderItem.item_unit_id.base_unit && orderItem.item_unit_id.base_unit._id)
         unitId = orderItem.item_unit_id.base_unit._id;
