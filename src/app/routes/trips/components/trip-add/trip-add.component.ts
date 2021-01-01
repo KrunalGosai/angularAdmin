@@ -71,13 +71,17 @@ export class TripsComponentsTripAddComponent implements OnInit {
         (res) => {
           let data: any = { ...res };
           if(!data.user_id) return;
-          console.log(data)
           this.tripFrom.patchValue({
             user_type:data.role_type,
             delivery_boy_id:data.user_id._id,
             total_amount_to_collect: data.total_amount_to_collect
           });
-          this.tripOrders = data.orders;
+          let editOrders = [];
+          data.orders.map(orderObj => {
+            let orderItem = orderObj.order_id;
+            editOrders.push(orderItem)
+          })
+          this.tripOrders = editOrders;
           this.userTypeChanged();
         },(err) => console.error(err)
       );
@@ -119,9 +123,8 @@ export class TripsComponentsTripAddComponent implements OnInit {
     if (!this.tripFrom.valid) return;
     if (this.isEditMode) {
       // let value = this.tripFrom.value;
-      // value.user_id = [value.user_id];
       // value._id = this.activeEditId;
-      // this.facade.updateOffer(value).then((res) => {
+      // this.facade.update(value).then((res) => {
       //   this.tripFrom.reset();
       //   this.router.navigate(["offers"]);
       // });
