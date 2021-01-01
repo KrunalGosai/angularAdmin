@@ -117,7 +117,7 @@
               <mat-icon color="primary">visibility</mat-icon>
             </button>
           </mat-grid-tile>
-          <mat-grid-tile *ngIf="isAdmin || isDepo">
+          <mat-grid-tile *ngIf="(isAdmin || isDepo) && row.status == 'ASSIGNED'">
             <button mat-icon-button aria-label="Edit" matTooltip="Edit" (click)="navigateToEdit(row._id)" [routerLink]="[]" >
               <mat-icon color="primary">create</mat-icon>
             </button>
