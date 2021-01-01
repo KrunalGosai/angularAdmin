@@ -354,7 +354,7 @@ export class AddRequestComponents implements OnInit {
 						items.data.map((item:any) => {
 							if(item.hasOwnProperty('all_item_units')){
 								item.all_item_units.map((unit:any) => {
-									if(!unit.is_customer_show){
+									if(unit.is_customer_show){
 										item.unit_id = unit; 
 										filterItem.data.push(item);	
 									}
