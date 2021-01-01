@@ -24,7 +24,7 @@
 
           <mat-form-field fxFlex="33" *ngIf="isAdmin" fxFlex.lt-sm="100">
             <mat-label>User</mat-label>
-            <mat-select placeholder="User" required formControlName="user_id" name="searchUserId" >
+            <mat-select placeholder="User" required formControlName="user_id" (selectionChange)="userSelectionChange()" name="searchUserId" >
               <mat-option *ngFor="let user of userList"  [value]="user._id" >
                 {{ user.first_name }}
               </mat-option>

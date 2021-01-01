@@ -150,22 +150,35 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     this.unitFacade.getUnites().subscribe(list => {
       this.unitList = list.data;
     })
-    this.itemFacade.getPackagingItemList(false).subscribe(list => {
-      this.packingItemList = list.data;
-    })
-    this.itemFacade.getSallableItemList(true).subscribe(list => {
-      this.sellableItemList = list.data;      
-    })
-    this.itemFacade.getRawItemList(false).subscribe(list => {
-      this.rawItemList = list.data;
-      this.itemList = this.rawItemList;
-    })
+    
     if(this.isAdmin){
       this.usersFacade.getRoleList().subscribe(res => {
         let roles:any = res;
         this.roleList = roles.data.filter(role => role.type == UserRole.DEPO || role.type == UserRole.HAWKER || role.type == UserRole.FRANCHISE || role.type == UserRole.RETAILERS || role.type == UserRole.MANUFACTURING_PLANT);
       })
     }
+  }
+
+  private getItemListsByUserId(){
+
+    let userId = '';
+    if(this.isAdmin)
+      userId = this.processingForm.get('user_id').value;
+
+    this.itemFacade.getPackagingItemList(false,'',userId).toPromise().then(list => {
+      this.packingItemList = list.data;
+    })
+    this.itemFacade.getSallableItemList(true).toPromise().then(list => {
+      this.sellableItemList = list.data;      
+    })
+    this.itemFacade.getRawItemList(false,'',userId).toPromise().then(list => {
+      this.rawItemList = list.data;
+      this.itemList = this.rawItemList;
+    })
+  }
+
+  public userSelectionChange(){
+    this.getItemListsByUserId();
   }
 
   get isSallable(){
@@ -198,6 +211,8 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   public itemTypeChanged(){
     this.processingForm.get('raw_item_id').setValue('');
     this.processingForm.get('sellable_item_id').setValue('');
+    if(!this.isAdmin)
+      this.getItemListsByUserId()
   }
 
   public getUnit(id){
