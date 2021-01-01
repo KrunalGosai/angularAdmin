@@ -384,7 +384,7 @@ export class AddRequestComponents implements OnInit {
 		console.log(this.cartItemList)
 		this.cartItemList[index]['unit_id']['_id'] = row.unit;
 		if(row.all_item_units && row.all_item_units.length > 0){
-			let selectedUnit = row.all_item_units.filter(unit => unit._id == event.value)
+			let selectedUnit = row.all_item_units.filter(unit => unit.unit_id._id == event.value)
 			if(selectedUnit && selectedUnit.length > 0){
 				this.cartItemList[index]['price'] = selectedUnit[0].price;
 			}
