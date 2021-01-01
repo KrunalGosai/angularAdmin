@@ -67,7 +67,7 @@
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
       <td mat-cell style="max-width: 100px" *matCellDef="let row">
-        {{ row.canceledStatus && row.canceledStatus == "CANCELED" ? 'Canceled' : ''}}
+        {{ row.canceledStatus && row.canceledStatus == "CANCELED" ? 'Canceled' : 'N/A'}}
       </td>
     </ng-container>
 
