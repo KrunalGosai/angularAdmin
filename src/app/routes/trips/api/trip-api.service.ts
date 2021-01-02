@@ -29,7 +29,11 @@ export class TripApiService {
     let url = this.baseUrl + '/api/trip';
     return this.http.post(url,trip);
   }
-
+  
+  public updateTrip(trip){
+    let url = this.baseUrl + '/api/trip/update-trip';
+    return this.http.post(url,trip);
+  }
   public getTripDetailsById(tripId){
     let url = this.baseUrl + `/api/trip/trip-details/${tripId}`;
     return this.http.get(url);

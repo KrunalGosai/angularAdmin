@@ -122,12 +122,12 @@ export class TripsComponentsTripAddComponent implements OnInit {
     let value = this.tripFrom.value;
     if (!this.tripFrom.valid) return;
     if (this.isEditMode) {
-      // let value = this.tripFrom.value;
-      // value._id = this.activeEditId;
-      // this.facade.update(value).then((res) => {
-      //   this.tripFrom.reset();
-      //   this.router.navigate(["offers"]);
-      // });
+      let value = this.tripFrom.value;
+      value.trip_id = this.activeEditId;
+      this.facade.updateTrip(value).then((res) => {
+        this.tripFrom.reset();
+        this.router.navigate(["trips"]);
+      });
       
     } else {
       this.facade.newTrip(value).then((res) => {

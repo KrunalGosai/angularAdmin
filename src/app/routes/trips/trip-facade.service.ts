@@ -23,13 +23,13 @@ export class TripFacadeService {
     return this.state.getTripList().pipe(tap(cate => cate))
   }
 
-  // public updateTrip(offer){
-  //   return this.api.update(offer).toPromise().then( res => {
-  //     this.loadTripList();
-  //     this.toster.success('Trip Successfully Updated',"Success",{timeOut:3000})
-  //     return res;
-  //   }).catch(err => {console.error('api call error from update Trip',err); throw err })
-  // }
+  public updateTrip(trip){
+    return this.api.updateTrip(trip).toPromise().then( res => {
+      this.loadTripList();
+      this.toster.success('Trip Successfully Updated',"Success",{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from update Trip',err); throw err })
+  }
 
   public newTrip(newTrip){
     if(!newTrip.order_ids || newTrip.order_ids.length <= 0){
