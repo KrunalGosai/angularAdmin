@@ -132,6 +132,11 @@
               <mat-icon color="error">cancel</mat-icon>
             </button>
           </mat-grid-tile>
+          <mat-grid-tile *ngIf="(isHawker || isAdmin || isDepo) && row.status == 'STARTED'" >
+            <button mat-icon-button matTooltip="Cancel" (click)="cancelTrip(row._id)" >
+              <mat-icon color="error">cancel_presentation</mat-icon>
+            </button>
+          </mat-grid-tile>
         </mat-grid-list>
       </td>
     </ng-container>
@@ -148,6 +153,5 @@
     (page)="pageEvent($event)"
     [length]="pageDetails.totalRecords"
     [pageSize]="pageDetails.itemsPerPage"
-    [pageSizeOptions]="[5, 10, 25]"
-  ></mat-paginator>
+    [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
 </div>

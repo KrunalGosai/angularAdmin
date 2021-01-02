@@ -159,6 +159,9 @@ export class AddressFacadeService {
   }
 
   public updateState(state){
+    if(state.country_id.name){
+      state.country_id = state.country_id._id;
+    }
     return this.api.updateState(state).toPromise().then( res => {
       this.toster.success('State Successfully Updated',"Success",{timeOut:3000})
       return res;
@@ -166,6 +169,9 @@ export class AddressFacadeService {
   }
 
   public updateCity(city){
+    if(city.state_id.name){
+      city.state_id = city.state_id._id;
+    }
     return this.api.updateCity(city).toPromise().then( res => {
       this.toster.success('City Successfully Updated',"Success",{timeOut:3000})
       return res;
@@ -173,6 +179,9 @@ export class AddressFacadeService {
   }
 
   public updateArea(Area){
+    if(Area.city_id.name){
+      Area.city_id = Area.city_id._id;
+    }
     return this.api.updateArea(Area).toPromise().then( res => {
       this.toster.success('Area Successfully Updated',"Success",{timeOut:3000})
       return res;
