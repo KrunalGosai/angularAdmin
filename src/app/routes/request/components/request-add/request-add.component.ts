@@ -74,7 +74,7 @@ export class AddRequestComponents implements OnInit {
 			sourceUserId: ["", [Validators.required]],
 			destinationRoleName: ["", [Validators.required]],
 			destinationUserId: ["", [Validators.required]],
-			supplierUserId: ["",[]]
+			supplierUserId: [""]
 		});
 	}
 
@@ -209,7 +209,7 @@ export class AddRequestComponents implements OnInit {
 				"total_items": this.cartItemList.length,
 			}
 
-		if(this.settingService.user.role_id.type === ('ADMIN' || 'PURCHASE_MANAGER')  && this.requestForm.controls['requestOrderType'].value === 'PURCHASE_ORDER'){
+		if( (this.isAdmin || this.settingService.isPurchaseManager )  && this.requestForm.controls['requestOrderType'].value === 'PURCHASE_ORDER'){
 			reqData['supplier_id'] = this.requestForm.controls['supplierUserId'].value
 		}
 		if(this.cartItemList.length){
