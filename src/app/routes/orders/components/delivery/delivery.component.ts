@@ -92,7 +92,7 @@ export class OrdersComponentsDeliveryComponent implements OnInit {
     weight = element.item_quantity;
 
     if(element.item_unit_id.base_unit && element.item_unit_id.base_unit.name)
-      weight = element.item_unit_id.base_quantity * element.booked_item_quantity;
+      weight = element.item_unit_id.base_quantity * element.item_quantity;
     
     element.scaling_loss = weight - element.weight_item_quantity;
     element.fullReceived = false;
