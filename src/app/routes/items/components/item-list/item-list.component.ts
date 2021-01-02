@@ -131,7 +131,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
     this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchItemType,this.availabilityStatus,this.searchRoleName, this.searchUserId,this.filterCategoryId,this.searchByName)
     if(this.searchRoleName != '' && this.searchUserId && this.searchUserId != '' ){
       // this.displayedColumns = ['thumbnail', 'name','type', 'category', 'item_volume', 'availability_status_edit','is_active_edit', 'price_edit', 'unit_id'];
-      this.displayedColumns = ['thumbnail', 'position_edit', 'name', 'type', 'category', 'item_volume', 'availability_status_edit','is_active_edit', 'price_user', 'unit_id'];
+      this.displayedColumns = ['thumbnail', 'position_edit', 'name', 'type', 'category', 'item_volume', 'availability_status_edit','is_active_edit', 'unit_id'];
     }else{
       this.setRoleBasedColumn(); 
     }
@@ -234,7 +234,7 @@ export class ItemsComponentsItemListComponent implements OnInit {
       //   this.displayedColumns = ['thumbnail', 'name', 'type', 'category', 'item_volume', 'price_user','unit_id'];
       //   break;
       default:
-        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'availability_status','is_active', 'price_user', 'unit_id'];
+        this.displayedColumns = ['thumbnail', 'position', 'name', 'type', 'category', 'item_volume', 'availability_status','is_active', 'unit_id'];
         break;
     }
   }
