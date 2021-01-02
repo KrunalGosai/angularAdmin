@@ -166,9 +166,9 @@ export class AddressComponentsAreasComponent implements OnInit {
 
   public changeActivationStatus(row){
     let rowcopy = {...row};
-    // this.facade.changeActivationStatus(rowcopy).then(res => {
-    //   this.facade.loadItemList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName);
-    // });
+    this.facade.updateArea(rowcopy).then(res => {
+      this.facade.loadAreaList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByName);
+    });
   }
 
 }
