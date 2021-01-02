@@ -120,9 +120,9 @@
     <ng-container matColumnDef="request_no">
       <form>
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Request No</th>
-        <td mat-cell *matCellDef="let row; let i = index;">
+        <td mat-cell *matCellDef="let row; let i = index;">{{row.request_no}}
           <!-- <input type="number"  [ngModelOptions]="{ standalone: true }" style="max-width: 50px"
-            [(ngModel)]="row.position" /> --> {{i+1}}
+            [(ngModel)]="row.position" /> -->
         </td>
       </form>
     </ng-container>
