@@ -44,5 +44,10 @@ export class TripApiService {
     return this.http.patch(url,trip);
   }
 
+  public cancelTrip(trip_id){
+    let url = this.baseUrl + `/api/trip/cancel-trip`;
+    return this.http.patch(url,{trip_id});
+  }
+
   
 }

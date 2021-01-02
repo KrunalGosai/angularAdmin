@@ -118,7 +118,7 @@ export class TripsComponentsTripAddComponent implements OnInit {
     let tripOrderIds = []
     this.tripOrders.map(order => {tripOrderIds.push(order._id)});
     this.tripFrom.get('order_ids').setValue(tripOrderIds);
-    console.log("form value ", this.tripFrom.value, this.tripFrom.valid);
+    // console.log("form value ", this.tripFrom.value, this.tripFrom.valid);
     let value = this.tripFrom.value;
     if (!this.tripFrom.valid) return;
     if (this.isEditMode) {

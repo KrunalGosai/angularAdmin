@@ -70,4 +70,10 @@ export class TripFacadeService {
     }).catch(err => {console.error('api call error from change start end status ',err ); throw err  })
   }
 
+  public cancelTrip(trip_id:string){
+    return this.api.cancelTrip(trip_id).toPromise().then(res => {
+      this.toster.success('Trip Successfully Updated',"Success",{timeOut:3000})
+      return res;
+    }).catch(err => {console.error('api call error from change start end status ',err ); throw err  })
+  }
 }

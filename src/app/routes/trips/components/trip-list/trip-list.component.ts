@@ -100,4 +100,10 @@ export class TripsComponentsTripListComponent implements OnInit {
     })
   }
 
+  public cancelTrip(tripId){
+    this.facade.cancelTrip(tripId).then(res => {
+      this.filterTrip();
+    })
+  }
+
 }
