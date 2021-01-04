@@ -147,7 +147,7 @@ export class TripsComponentsTripAddComponent implements OnInit {
 
   public filterOrder(){
     let sortDate = (new Date(this.seachBySlotDate)).toLocaleDateString();
-    sortDate = sortDate.toLowerCase() != 'Invalid Date' ? sortDate : '';
+    sortDate = sortDate.toLowerCase() != 'invalid date' ? sortDate : '';
     this.orderFacade.loadTripOrderList(this.searchByOrderType,this.searchBySlotId,sortDate,this.searchByOrderStatus);
   }
 

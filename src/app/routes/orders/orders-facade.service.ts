@@ -24,14 +24,14 @@ export class OrdersFacadeService {
   }
 
   public loadTripOrderList(searchByOrderType = '',searchBySlotid = '',searchBySlotdate = '',searchByOrderStatus = ''){
-    this.api.loadOrderList(0,0,searchByOrderType,searchByOrderStatus,'','',searchBySlotid,searchBySlotdate).subscribe(offers => {
-      this.state.setOrderList(offers);
+    this.api.loadOrderList(0,0,searchByOrderType,searchByOrderStatus,'','',searchBySlotid,searchBySlotdate).subscribe(orders => {
+      this.state.setTripOrderList(orders);
     },err => console.error('api call error from load orders ',err))
   }
 
   public getTripOrderList(searchByOrderType = '',searchBySlotid = '',searchBySlotdate = '',searchByOrderStatus = ''){
     if(!this.state.isOrdersSet) this.loadTripOrderList(searchByOrderType,searchBySlotid,searchBySlotdate,searchByOrderStatus)
-    return this.state.getOrderList().pipe(tap(res => res))
+    return this.state.getTripOrderList().pipe(tap(res => res))
   }
 
   public cancelOrder(order_id){
