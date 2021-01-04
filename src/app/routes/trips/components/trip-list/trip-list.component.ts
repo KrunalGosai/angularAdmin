@@ -21,10 +21,10 @@ export class TripsComponentsTripListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   searchByStatus = '';
   pageDetails = {
-    currentPage:1,
-    itemsPerPage:10,
-    totalPages:3,
-    totalRecords:200
+    currentPage:0,
+    itemsPerPage:0,
+    totalPages:0,
+    totalRecords:0
   }
 
   constructor(
