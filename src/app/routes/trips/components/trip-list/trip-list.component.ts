@@ -19,11 +19,12 @@ export class TripsComponentsTripListComponent implements OnInit {
   displayedColumns: string[] = ["assign_time","start_time","end_time","total_cash_collected","total_distance_travelled","role_type", "status",'total_amount_to_collect',"controls"];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
+  searchByStatus = '';
   pageDetails = {
-    currentPage:1,
-    itemsPerPage:10,
-    totalPages:3,
-    totalRecords:200
+    currentPage:0,
+    itemsPerPage:0,
+    totalPages:0,
+    totalRecords:0
   }
 
   constructor(
@@ -75,11 +76,11 @@ export class TripsComponentsTripListComponent implements OnInit {
   }
 
   public filterTrip(){
-    this.facade.loadTripList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,'')
+    this.facade.loadTripList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByStatus)
   }
 
   public resetFilter(){
-    // this.searchOfferType = '';
+    this.searchByStatus = '';
   }
 
   public openView(row){

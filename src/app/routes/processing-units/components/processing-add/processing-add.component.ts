@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { unit } from './../../../unites/entities/index';
 import { SettingsService } from './../../../../core/bootstrap/settings.service';
 import { ProcessingFacadeService } from './../../processing-facade.service';
@@ -21,6 +22,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   itemList:any[] = [];
   packingItemList:any[] = [];
   unitList:any[] = [];
+  userSellableItemList:any[] = [];
   sellableItemList:any[] = [];
   rawItemList:any[] = [];
   roleList = [];
@@ -41,8 +43,10 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   packagingMaterialSource:MatTableDataSource<any>;
   production:any = [];
   productionSource:MatTableDataSource<any>;
-  productionColumn:string[] = ["consumed_unit_id","consumed_quantity","controls"]
-  
+  productionColumn:string[] = ["consumed_unit_id","consumed_quantity",'item_price',"controls"]
+
+  selectedProdItem;
+  showUnitPrice:boolean = false;  
 
   constructor(
     private fb: FormBuilder,
@@ -70,7 +74,8 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
 
     this.productionForm = this.fb.group({
         unit_id:["",[Validators.required]],
-        production_quantity:[0]
+        production_quantity:[0],
+        item_price:[0]
     })
 
     this.packingForm = this.fb.group({
@@ -168,8 +173,11 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     this.itemFacade.getPackagingItemList(false,'',userId).toPromise().then(list => {
       this.packingItemList = list.data;
     })
-    this.itemFacade.getSallableItemList(true).toPromise().then(list => {
+    this.itemFacade.getSallableItemList(false).toPromise().then(list => {
       this.sellableItemList = list.data;      
+    })
+    this.itemFacade.getSallableItemList(false ,'', userId).toPromise().then(list => {
+      this.userSellableItemList = list.data;      
     })
     this.itemFacade.getRawItemList(false,'',userId).toPromise().then(list => {
       this.rawItemList = list.data;
@@ -263,8 +271,17 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
       })
     }
     value.unit_id = unit._id;
+
+    //new object
+    let updateValue:any = {};
+    updateValue.unit_id = unit._id;
+    updateValue.production_quantity = value.production_quantity;
+    if(value.item_price && value.item_price > 0)
+    updateValue.item_price = value.item_price;
+    // value.item_price = value.item_price == 0 ? null : value.item_price;
+    
     let newValue = [...oldValue];
-    newValue.push(value);
+    newValue.push(updateValue);
     this.production = newValue;
     this.reloadProductionTable();
     this.reloadPackingTable();
@@ -325,5 +342,27 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
 
   reloadPackingTable(){
     this.packagingMaterialSource = new MatTableDataSource(this.packagingMaterial);
+  }
+
+  public productionItemChanged(event){
+    if(!event.value || event.value == '') return;
+    let item = this.userSellableItemList.filter(item => item._id == event.value);
+    this.selectedProdItem =  item && item.length > 0 ? item[0] : null;
+    this.productionForm.reset();
+    this.production = [];
+    this.reloadProductionTable();
+  }
+
+  public productionUnitChanged(event){
+    if(!event.value || event.value == '') return;
+    if(this.selectedProdItem && this.selectedProdItem.all_item_units){
+      let unit = this.selectedProdItem.all_item_units.filter(unit => unit.unit_id._id == event.value._id)
+      if(unit && unit.length > 0)
+       this.showUnitPrice = false;
+      else
+       this.showUnitPrice = true;
+    }else{
+      this.showUnitPrice = true;
+    }
   }
 }

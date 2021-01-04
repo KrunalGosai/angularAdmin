@@ -9,7 +9,7 @@
 
 <!-- Filter -->
 
-<!-- <div fxLayout="row wrap" class="matero-row">
+<div fxLayout="row wrap" class="matero-row">
   <div fxFlex="100" class="matero-col">
     <mat-card>
       <mat-card-title>Filter</mat-card-title>
@@ -19,16 +19,17 @@
         
 
           <mat-form-field fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
-            <mat-label>Offer Type</mat-label>
-            <mat-select placeholder="Type" [(ngModel)]="searchOfferType" name="searchOfferType" >
-              <mat-option *ngFor="let oType of offerTypeList" [value]="oType.value">
-                {{ oType.name }}
-              </mat-option>
+            <mat-label>Status</mat-label>
+            <mat-select placeholder="Type" [(ngModel)]="searchByStatus" name="searchByStatus" >
+              <mat-option value="ASSIGNED">Assigned</mat-option>
+              <mat-option value="STARTED">Started</mat-option>
+              <mat-option value="ENDED">Ended</mat-option>
+              <mat-option value="CANCELLED">Cancelled</mat-option>
             </mat-select>
           </mat-form-field>
 
           <div fxFlex="25" fxFlex.lt-sm="100" class="matero-col">
-            <button mat-raised-button color="primary" style="margin-right: 5px" (click)="filterOffer()">
+            <button mat-raised-button color="primary" style="margin-right: 5px" (click)="filterTrip()">
               Search
             </button>
             <button mat-raised-button (click)="resetFilter()">Reset</button>
@@ -37,7 +38,7 @@
       </form>
     </mat-card>
   </div>
-</div> -->
+</div>
 
 <!-- Table  -->
 
@@ -149,9 +150,9 @@
       </tr> -->
   </table>
 
-  <mat-paginator
+  <!-- <mat-paginator
     (page)="pageEvent($event)"
     [length]="pageDetails.totalRecords"
     [pageSize]="pageDetails.itemsPerPage"
-    [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
+    [pageSizeOptions]="[5, 10, 25]"></mat-paginator> -->
 </div>

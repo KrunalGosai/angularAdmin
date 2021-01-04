@@ -137,7 +137,7 @@
                     <div fxFlex="30" fxFlex.lt-sm="100">
                       <mat-form-field>
                           <mat-label>Production Item</mat-label>
-                          <mat-select formControlName="sellable_item_id" placeholder="Production Item" required>
+                          <mat-select formControlName="sellable_item_id" placeholder="Production Item" (selectionChange)="productionItemChanged($event)" required>
                               <mat-option *ngFor="let item of sellableItemList" [value]="item._id" >
                                   {{ item.name }}
                               </mat-option>
@@ -155,7 +155,7 @@
                       <div fxFlex="30" fxFlex.lt-sm="100">
                         <mat-form-field>
                             <mat-label>Production Unit</mat-label>
-                            <mat-select formControlName="unit_id" placeholder="Production Unit" required>
+                            <mat-select formControlName="unit_id" placeholder="Production Unit" required (selectionChange)="productionUnitChanged($event)">
                                 <mat-option *ngFor="let unit of unitList" [value]="unit" >
                                     {{ unit.name }}
                                 </mat-option>
@@ -172,6 +172,17 @@
                           <mat-label>Production Quantity</mat-label>
                           <input matInput placeholder="Production Quantity" formControlName="production_quantity" required min="0" type="number">
                           <mat-error *ngIf="productionForm.get('production_quantity').invalid">
+                            {{'validations.required' | translate}}
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                      <!-- price -->
+                      <div fxFlex="30" fxFlex.lt-sm="100" *ngIf="showUnitPrice">
+                        <mat-form-field>
+                          <mat-label>Price</mat-label>
+                          <input matInput placeholder="Price" formControlName="item_price"  required min="0" type="number">
+                          <mat-error *ngIf="productionForm.get('item_price').invalid">
                             {{'validations.required' | translate}}
                           </mat-error>
                         </mat-form-field>
@@ -200,6 +211,13 @@
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Production Qty</th>
                       <td mat-cell style="max-width: 100px" *matCellDef="let row">
                         {{ row.production_quantity }}
+                      </td>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="item_price">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+                      <td mat-cell style="max-width: 100px" *matCellDef="let row">
+                        {{ row.item_price }}
                       </td>
                     </ng-container>
                                 

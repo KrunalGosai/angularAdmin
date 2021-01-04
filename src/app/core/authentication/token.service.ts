@@ -53,6 +53,10 @@ export class TokenService {
   public getUserRoleList(){
     return this.http.get(this.baseUrl+'/api/role/list')
   }
+  
+  public userLogOut(){
+    return this.http.get(this.baseUrl+'/api/user/logout')
+  }
 }
 
 export interface loginForm{

@@ -48,9 +48,12 @@ export class UserComponent {
   }
 
   logout() {
-    this.token.clear();
-    this.settings.removeUser();
-    this.menu.reset();
-    this.router.navigateByUrl("/auth/login");
+    this.token.userLogOut().toPromise().then(res => {
+      this.token.clear();
+      this.settings.removeUser();
+      this.menu.reset();
+      location.reload()
+      this.router.navigateByUrl("/auth/login");
+    }).catch(err => console.error(err))
   }
 }
