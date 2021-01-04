@@ -56,4 +56,9 @@ export class OrdersApiService {
     return this.http.patch(url,dispatchOrder);
   }
 
+  public getOrderDetailsById(orderId){
+    let url = this.baseUrl+`/api/request-order/orderdetail/${orderId}`;
+    return this.http.get(url);
+  }
+
 }

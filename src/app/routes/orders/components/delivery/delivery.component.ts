@@ -1,5 +1,5 @@
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrdersFacadeService } from './../../orders-facade.service';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
@@ -15,9 +15,17 @@ export class OrdersComponentsDeliveryComponent implements OnInit {
     private facade:OrdersFacadeService,
     private rotuer:Router,
     private toster: ToastrService,
-    private cd: ChangeDetectorRef) { }
+    private activeRoute: ActivatedRoute,
+    private cd: ChangeDetectorRef) {
+      this.activeRoute.params.subscribe((params) => {
+        if (params.id != undefined && params.id != null && params.id != "") {
+          this.deliveryOrderId = params.id;
+        }
+      });
+     }
 
   public deliveryData:any = {};
+  private deliveryOrderId;
 
   dataSource: MatTableDataSource<any>;
   tableData:any[] = [];
@@ -26,30 +34,29 @@ export class OrdersComponentsDeliveryComponent implements OnInit {
   expandedElement: any | null;
 
   ngOnInit() {
-    this.facade.getDeliveryData().subscribe(row => {
+    this.facade.getDeliveryData(this.deliveryOrderId).subscribe(row => {
       this.deliveryData = row;
-      if(this.deliveryData == {})
-      this.rotuer.navigate(['/orders/PURCHASE_ORDER'])
-      // this.tableData = [...this.deliveryData.items];
-      this.deliveryData.items.map(item => {
-        this.tableData.push({
-          fullReceived:false,
-          check:false,
-          _id:item._id,
-          item_id :item.item_id, 
-          item_name : item.item_name,
-          booked_item_quantity :item.booked_item_quantity,
-          item_quantity :0,
-          weight_item_quantity :0,
-          item_unit_id :item.item_unit_id, 
-          wastage_item_quantity : 0,
-          wastage_reason :"",
-          scaling_loss : 0,
-          loss_in_transit : 0
+      if(this.deliveryData.items){
+        this.deliveryData.items.map(item => {
+          this.tableData.push({
+            fullReceived:false,
+            check:false,
+            _id:item._id,
+            item_id :item.item_id, 
+            item_name : item.item_name,
+            booked_item_quantity :item.booked_item_quantity,
+            item_quantity :0,
+            weight_item_quantity :0,
+            item_unit_id :item.item_unit_id, 
+            wastage_item_quantity : 0,
+            wastage_reason :"",
+            scaling_loss : 0,
+            loss_in_transit : 0
+          })
         })
-      })      
+        this.reloadTableData();    
+      }  
     })
-    this.reloadTableData();
   }
 
   private reloadTableData(){

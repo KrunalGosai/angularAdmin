@@ -15,6 +15,7 @@ export class OrdersStateService {
 
   isOrdersSet:boolean = false;
   isTripOrdersSet:boolean = false;
+  isDeliveryDataSet:boolean = false;
 
   public getOrderList():Observable<any>{
     return this.orders.asObservable();
@@ -47,6 +48,7 @@ export class OrdersStateService {
   }
 
   public setDeliveryData(deliveryData:any){
+    this.isDeliveryDataSet = true;
     this.deliveryData.next(deliveryData);
   }
 }

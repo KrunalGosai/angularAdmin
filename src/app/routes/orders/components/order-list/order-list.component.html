@@ -176,7 +176,7 @@
             </button>
           </mat-grid-tile> 
           <mat-grid-tile *ngIf="!isCustomerOrder && row.status == 'DISPATCHED'">
-            <button mat-icon-button color="primary" matTooltip="Delivery" (click)="deliveryClick(row)" [routerLink]="['delivery',row._id]"   >
+            <button mat-icon-button color="primary" matTooltip="Delivery" (click)="deliveryClick(row._id)" [routerLink]="[]">
               <mat-icon color="primary">assignment_turned_in</mat-icon>
             </button>
           </mat-grid-tile> 

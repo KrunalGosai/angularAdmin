@@ -176,8 +176,10 @@ export class OrdersOrderListComponent implements OnInit {
     this.facade.setViewData(row);    
   }
 
-  public deliveryClick(row){
-    this.facade.setDeliveryData(row);
+  public deliveryClick(id){
+    this.facade.setDeliveryData(id).then(res => {
+      this.router.navigate(['orders',this.searchByOrderType, 'delivery',id])
+    })
   }
 
   public dispatchClick(row:any){

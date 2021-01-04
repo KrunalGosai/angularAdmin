@@ -1,4 +1,4 @@
-import { tap } from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { OrdersStateService } from './state/orders-state.service';
 import { OrdersApiService } from './api/orders-api.service';
@@ -49,11 +49,18 @@ export class OrdersFacadeService {
     return this.state.getViewData().pipe(tap(data => data))
   }
 
-  public setDeliveryData(setDeliveryData){
-    this.state.setDeliveryData(setDeliveryData);
+  public setDeliveryData(id){
+    return this.api.getOrderDetailsById(id).toPromise().then(res => {
+      let data:any = res;
+      this.state.setDeliveryData(data.message);
+      console.log(data.message)
+      return res;
+    }).catch(err => {console.error('api call error from setDeliveryData',err); throw err })
+    
   }
 
-  public getDeliveryData(){
+  public getDeliveryData(id){
+    if(!this.state.isDeliveryDataSet) this.setDeliveryData(id)
     return this.state.getDeliveryData().pipe(tap(data => data))
   }
 
