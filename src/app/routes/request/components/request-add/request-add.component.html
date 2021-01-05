@@ -118,6 +118,10 @@
                     <div fxFlex="50" fxFlex.lt-sm="100" *ngIf="itemList && itemList.data && itemList.data.length > 0" style="padding-right: 20px;">
                         <mat-card-title>Items</mat-card-title>
                         <div class="">
+                            <mat-form-field>
+                                <mat-label>Search</mat-label>
+                                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Abc" #input>
+                            </mat-form-field>
                             <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
                                 <!-- position Column -->
                                 <ng-container matColumnDef="action">
@@ -155,8 +159,8 @@
                                 <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
                             </table>
 
-                            <mat-paginator (page)="pageEvent($event)" [length]="pageDetails.totalRecords"
-                                [pageSize]="pageDetails.itemsPerPage" [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
+                            <!-- <mat-paginator (page)="pageEvent($event)" [length]="pageDetails.totalRecords"
+                                [pageSize]="pageDetails.itemsPerPage" [pageSizeOptions]="[5, 10, 25]"></mat-paginator> -->
                         </div>
                     </div>
 
