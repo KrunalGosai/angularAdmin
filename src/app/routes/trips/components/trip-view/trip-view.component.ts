@@ -1,5 +1,6 @@
 import { TripFacadeService } from './../../trip-facade.service';
 import { Component, OnInit } from '@angular/core';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-trip-view',
@@ -14,7 +15,9 @@ export class TripViewComponent implements OnInit {
   dataSource = [];
 
   ngOnInit(): void {
-    this.facade.getTripViewData().subscribe(row => {
+    this.facade.getTripViewData()
+    .pipe(take(1))
+    .subscribe(row => {
       this.viewData = row;
       this.dataSource = this.viewData.orders;
       console.log(this.viewData);

@@ -32,6 +32,7 @@
                       placeholder="User Role" required>
                       <mat-option value="DEPO">Depo</mat-option>
                       <mat-option value="CUSTOMER">Customer</mat-option>
+                      <mat-option value="FRANCHISE">Franchise</mat-option>
                   </mat-select>
                   <mat-error *ngIf="offerForm.get('user_role').invalid">
                       {{ "validations.required" | translate }}

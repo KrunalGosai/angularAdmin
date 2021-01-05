@@ -1,3 +1,4 @@
+import { UserRole } from './../../../../shared/entities/index';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -6,7 +7,6 @@ import { OfferFacadeService } from '../../offer-facade.service';
 import { ItemsFacadeService } from 'app/routes/items/items-facade.service';
 import { CategoriesFacadeService } from 'app/routes/categories/categories-facade';
 import { UsersFacade } from 'app/routes/users/users-facade';
-import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
 
 @Component({
   selector: 'app-offers-components-offer-add',
@@ -131,7 +131,6 @@ export class OffersComponentsOfferAddComponent implements OnInit {
 
 
   public onFormSubmit(event) {
-    console.log("form value ", this.offerForm.value, this.offerForm.valid);
     if (!this.offerForm.valid) return;
     if (this.isEditMode) {
       let value = this.offerForm.value;

@@ -1,3 +1,4 @@
+import { UserRole } from './../../shared/entities/index';
 import { ToastrService } from 'ngx-toastr';
 import { tap } from 'rxjs/operators';
 import { OfferStateService } from './state/offer-state.service';
@@ -45,6 +46,10 @@ export class OfferFacadeService {
   }
 
   public newOffer(newOffer){
+    if(["ORDER"].indexOf(newOffer.offer_type) < 0 && newOffer.user_role == UserRole.FRANCHISE){
+      this.toster.error('Invalid Offer Type!',"Error",{timeOut:3000});
+      return;
+    }
     if(newOffer.offer_on_ids == null) newOffer.offer_on_ids = [];
     if(newOffer.user_id == null) newOffer.user_id = [];
     let expiry = new Date(newOffer.expiry)
@@ -57,6 +62,10 @@ export class OfferFacadeService {
   }
 
   public updateOffer(offer){
+    if(["ORDER"].indexOf(offer.offer_type) < 0 && offer.user_role == UserRole.FRANCHISE){
+      this.toster.error('Invalid Offer Type!',"Error",{timeOut:3000});
+      return;
+    }
     if(offer.offer_on_ids == null) offer.offer_on_ids = [];
     if(offer.user_id == null) offer.user_id = [];
     let expiry = new Date(offer.expiry)
