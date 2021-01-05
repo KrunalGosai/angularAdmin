@@ -440,6 +440,15 @@ export class AddRequestComponents implements OnInit {
 		})
 	}
 
+	applyFilter(event: Event) {
+		const filterValue = (event.target as HTMLInputElement).value;
+		this.dataSource.filter = filterValue.trim().toLowerCase();
+	
+		// if (this.dataSource.paginator) {
+		//   this.dataSource.paginator.firstPage();
+		// }
+	  }
+
 	public updateUnit(row:any, index:number,event){
 		this.cartItemList[index]['unit_id']['_id'] = row.unit;
 		if(row.all_item_units && row.all_item_units.length > 0){
