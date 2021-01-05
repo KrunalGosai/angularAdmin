@@ -372,11 +372,18 @@ export class AddRequestComponents implements OnInit {
 		}
 		else if(this.requestForm.controls['requestOrderType'].value === 'TRANSFER_ORDER'){
 			this.searchUserId = value;
-		}else if(this.isFranchiseOrder){
+		}
+		if(this.isFranchiseOrder){
 			this.offerFacade.getMyOffer(value).subscribe(res => {
 				let result:any = res;
 				this.offers = result.data;
 			})
+		}else{
+			this.offers = [];
+			this.isOfferAvailable = false;
+			this.availableOffer = [];
+			this.discount = 0;
+			this.discountedPrice = 0;
 		}
 		this.getItem();
 	}
