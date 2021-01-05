@@ -1,6 +1,7 @@
 import { itemList } from './../../entities/index';
 import { Component, OnInit, Inject } from '@angular/core';
 import { ItemsFacadeService } from '../../items-facade.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-item-view',
@@ -16,7 +17,7 @@ export class ItemViewComponent implements OnInit {
   dataSource = [];
 
   ngOnInit(): void {
-    this.facde.getItemViewData().subscribe(row => {
+    this.facde.getItemViewData().pipe(take(1)).subscribe(row => {
       this.viewData = row;
       this.dataSource = this.viewData.all_item_units;
     })

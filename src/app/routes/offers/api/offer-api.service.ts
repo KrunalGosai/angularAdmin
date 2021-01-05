@@ -61,4 +61,9 @@ export class OfferApiService {
     return this.http.put(url,offer);
   }
 
+  public getMyOffer(depoId){
+    let url = this.baseUrl+`/api/offers/myofferlist?depo_id=${depoId}&min_value=1&gender=male&age=0`
+    return this.http.get(url);
+  }
+
 }

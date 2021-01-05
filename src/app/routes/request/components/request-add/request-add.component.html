@@ -236,10 +236,38 @@
                                         <b>{{ getTotal() | currency: 'INR' }} </b>
                                     </td>
                                 </ng-container>
+
+                                <ng-container matColumnDef="discounttitle">
+                                    <td mat-footer-cell *matFooterCellDef>
+                                        <b *ngIf="isFranchiseOrder">Discount:</b>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="discount">
+                                    <td mat-footer-cell *matFooterCellDef >
+                                        <b *ngIf="isFranchiseOrder">{{ discount | currency: 'INR' }} </b>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="finalprice">
+                                    <td mat-footer-cell *matFooterCellDef >
+                                        <b *ngIf="isFranchiseOrder">Discounted Price:</b>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="discounted_price">
+                                    <td mat-footer-cell *matFooterCellDef>
+                                        <b *ngIf="isFranchiseOrder">{{ discountedPrice | currency: 'INR' }} </b>
+                                    </td>
+                                </ng-container>
                                 <!-- <tr mat-header-row *matHeaderRowDef="cartDisplayedColumns"></tr> -->
                                 <tr mat-row *matRowDef="let row; columns: cartDisplayedColumns"></tr>
                                 <tr mat-footer-row
                                     *matFooterRowDef="['title', 'blankCell', 'blankCell', 'total']; sticky: true"> </tr>
+                                <tr mat-footer-row
+                                    *matFooterRowDef="['discounttitle', 'blankCell', 'blankCell', 'discount'];"> </tr>
+                                <tr mat-footer-row 
+                                    *matFooterRowDef="['finalprice', 'blankCell', 'blankCell', 'discounted_price'];"> </tr>
                             </table>
 
                             <!-- <mat-paginator (page)="pageEvent($event)" [length]="pageDetails.totalRecords"

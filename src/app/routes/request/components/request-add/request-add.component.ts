@@ -1,3 +1,4 @@
+import { OfferFacadeService } from './../../../offers/offer-facade.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ItemsFacadeService } from "../../../items/items-facade.service";
@@ -41,6 +42,7 @@ export class AddRequestComponents implements OnInit {
 	searchUserId: any;
 	searchByName: string;
 	activeEditId:string = '';
+	offers:any[] = [];
 	pageDetails = {
 		currentPage: 1,
 		itemsPerPage: 10,
@@ -58,7 +60,8 @@ export class AddRequestComponents implements OnInit {
 		private unitFacde: UnitesFacadeService,
 		private usersFacade: UsersFacade,
 		public settingService: SettingsService,
-		private facade:RequestFacadeService
+		private facade:RequestFacadeService,
+		private offerFacade:OfferFacadeService
 	) {
 		this.activeRoute.params.subscribe((params) => {
 			if (params.id != undefined && params.id != null && params.id != "") {
@@ -84,7 +87,6 @@ export class AddRequestComponents implements OnInit {
 		if(this.isEditMode){
 		
 			this.facade.getRequestEdit(this.activeEditId).subscribe(data => {
-				console.log(data);
 				if(!data._id) return;
 				let sendRecieve = ''
 				if(data.destination_id._id == this.settingService.user._id){
@@ -133,13 +135,15 @@ export class AddRequestComponents implements OnInit {
 		});
 		
 		if(this.settingService.isAdmin){
-			this.requestType.push({ "value": "PURCHASE_ORDER", "lable": "Purchase Order" },{ "value": "TRANSFER_ORDER", "lable": "Transfer Order" });
+			this.requestType.push({ "value": "PURCHASE_ORDER", "lable": "Purchase Order" },{ "value": "TRANSFER_ORDER", "lable": "Transfer Order" },{ "value": "FRANCHISE_ORDER", "lable": "Franchise Order" });
 			// this.getItem();
 		}
 		else if(this.settingService.isPurchaseManager)
 			this.requestType.push({ "value": "PURCHASE_ORDER", "lable": "Purchase Order" });
 		else if(this.settingService.isManufaturingPlant || this.settingService.isDepo)
 			this.requestType.push({ "value": "TRANSFER_ORDER", "lable": "Transfer Order" });
+		else if(this.settingService.isFranchise)
+			this.requestType.push({ "value": "FRANCHISE_ORDER", "lable": "Franchise Order" });
 
 
 		// if(this.settingService.isAdmin || this.settingService.isManufaturingPlant || )
@@ -207,6 +211,9 @@ export class AddRequestComponents implements OnInit {
 				"items": [],
 				"type": this.requestForm.controls['requestOrderType'].value,
 				"total_items": this.cartItemList.length,
+				offer_id: this.availableOffer && this.availableOffer._id ? this.availableOffer._id : '',
+				discount:this.discount,
+				discounted_price:this.discountedPrice
 			}
 
 		if( (this.isAdmin || this.settingService.isPurchaseManager )  && this.requestForm.controls['requestOrderType'].value === 'PURCHASE_ORDER'){
@@ -224,7 +231,6 @@ export class AddRequestComponents implements OnInit {
 		}
 		if(this.isEditMode){
 			reqData['request_id'] = this.activeEditId;
-			console.log(reqData);
 			this.facade.updateRequest(reqData).then(res => {
 				this.requestForm.reset();
 				this.router.navigate(['request']);
@@ -282,7 +288,45 @@ export class AddRequestComponents implements OnInit {
 		this.cartItemList.map((item:any) => {
 			total = Number(total) + (Number(item.price) * item.quantity);
 		});
+		this.checkOffer(total);
 		return total;
+	}
+
+	isOfferAvailable = false;
+	availableOffer:any = null;
+	discount:number = 0;
+	discountedPrice:number= 0;
+	checkOffer(total){
+		if(this.offers.length > 0){
+			let avoffer = this.offers.filter(off => off.min_value <= total);
+			if(avoffer && avoffer.length > 0){
+				this.isOfferAvailable = true;
+				this.availableOffer = avoffer[0];
+				this.getDiscount(total);
+			}else{
+				this.isOfferAvailable = false;
+				this.availableOffer = null;
+				this.discount = 0;
+				this.discountedPrice = 0;
+			}
+		}else{
+			this.isOfferAvailable = false;
+			this.availableOffer = null;
+			this.discount = 0;
+			this.discountedPrice = 0;
+		}
+	}
+
+	getDiscount(total){
+		if(this.availableOffer){
+			if(this.availableOffer.discount_type == "FLAT"){
+				this.discount = this.availableOffer.discount_value;
+				this.discountedPrice = total-this.discount;
+			}else{
+				this.discount = ((this.availableOffer.discount_value * total)/100);
+				this.discountedPrice = total-this.discount;
+			}
+		}
 	}
 	
 	getRole(){
@@ -317,15 +361,31 @@ export class AddRequestComponents implements OnInit {
 		})
 	}
 
+	get isFranchiseOrder(){
+		return this.requestForm.get("requestOrderType").value == 'FRANCHISE_ORDER';
+	}
+
 	public sourceUserChange(){
 		let value = this.requestForm.get('sourceUserId').value;
 		if(this.requestForm.controls['requestOrderType'].value === 'PURCHASE_ORDER'){
 			this.searchUserId = null;
 		}
-		if(this.requestForm.controls['requestOrderType'].value === 'TRANSFER_ORDER'){
+		else if(this.requestForm.controls['requestOrderType'].value === 'TRANSFER_ORDER'){
 			this.searchUserId = value;
 		}
-		this.getItem()
+		if(this.isFranchiseOrder){
+			this.offerFacade.getMyOffer(value).subscribe(res => {
+				let result:any = res;
+				this.offers = result.data;
+			})
+		}else{
+			this.offers = [];
+			this.isOfferAvailable = false;
+			this.availableOffer = [];
+			this.discount = 0;
+			this.discountedPrice = 0;
+		}
+		this.getItem();
 	}
 
 	public destinationUserChange(){
@@ -381,7 +441,6 @@ export class AddRequestComponents implements OnInit {
 	}
 
 	public updateUnit(row:any, index:number,event){
-		console.log(this.cartItemList)
 		this.cartItemList[index]['unit_id']['_id'] = row.unit;
 		if(row.all_item_units && row.all_item_units.length > 0){
 			let selectedUnit = row.all_item_units.filter(unit => unit.unit_id._id == event.value)

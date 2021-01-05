@@ -10,6 +10,7 @@ import { OrdersFacadeService } from 'app/routes/orders/orders-facade.service';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { UserRole } from '@shared/entities';
 import { UsersFacade } from 'app/routes/users/users-facade';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-trips-components-trip-add',
