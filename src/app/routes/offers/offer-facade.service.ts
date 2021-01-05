@@ -89,5 +89,9 @@ export class OfferFacadeService {
     return this.state.getEditOfferDetails().pipe(tap(cate => cate))
   }
 
+  public getMyOffer(depoId){
+    return this.api.getMyOffer(depoId).pipe(tap(res => res))
+  }
+
 
 }
