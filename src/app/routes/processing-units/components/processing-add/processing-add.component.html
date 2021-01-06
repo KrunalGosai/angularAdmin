@@ -187,6 +187,17 @@
                           </mat-error>
                         </mat-form-field>
                       </div>
+
+                      <!-- item_barcode -->
+                      <div fxFlex="30" fxFlex.lt-sm="100" *ngIf="showUnitBarcode">
+                        <mat-form-field>
+                          <mat-label>Item Barcode</mat-label>
+                          <input matInput placeholder="Item Barcode" formControlName="item_barcode" required>
+                          <mat-error *ngIf="productionForm.get('item_barcode').invalid">
+                            {{'validations.required' | translate}}
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
                     </div>
                     <button mat-raised-button color="primary" 
                       type="submit" style="margin-right: 5px" class="m-t-8">
@@ -218,6 +229,13 @@
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
                       <td mat-cell style="max-width: 100px" *matCellDef="let row">
                         {{ row.item_price }}
+                      </td>
+                    </ng-container> 
+                    
+                    <ng-container matColumnDef="item_barcode">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Barcode</th>
+                      <td mat-cell style="max-width: 100px" *matCellDef="let row">
+                        {{ row.item_barcode }}
                       </td>
                     </ng-container>
                                 
