@@ -23,7 +23,7 @@ import { truncateSync } from 'fs';
 export class AddRequestComponents implements OnInit {
 	requestForm: FormGroup;
 	recommendedList: itemList[] = [];
-	displayedColumns: string[] = ['action', 'itemName', 'price'];
+	displayedColumns: string[] = ['action', 'itemName', 'price', 'unit'];
 	cartDisplayedColumns: string[] = ['action', 'itemName', 'quantity', 'price', 'unit'];
 	dataSource: MatTableDataSource<itemList>;
 	itemTypeList: string[] = [];
@@ -201,6 +201,7 @@ export class AddRequestComponents implements OnInit {
 		} else if (filterType === 'destinationRoleName') {
 			this.destinationUserList = this.filterUserList.filter((user: any) => user.role_id._id === this.requestForm.controls[filterType].value);
 		}
+		this.clearTables();
 		//this.usersFacade.loadUsers(1, 200, '', this.searchSorceRoleName)
 	}
 	public pageEvent(event: PageEvent) {
@@ -261,7 +262,7 @@ export class AddRequestComponents implements OnInit {
 	}
 
 	addCartItem(raw:any,index:number){
-		// this.itemList['data'].splice(index,1);
+		this.itemList['data'].splice(index,1);
 		let rowitem:any = {};
 		rowitem = {...raw};
 		rowitem.quantity = 1;
@@ -272,7 +273,7 @@ export class AddRequestComponents implements OnInit {
 	deleteICartItem(raw:object,index:number){
 		this.cartItemList.splice(index,1);
 		//console.log(index,this.cartItemList);return;
-		// this.itemList['data'].push(raw);
+		this.itemList['data'].push(raw);
 		this.reloadCartTable();
 		this.reloadItemTable();
 	}
@@ -369,6 +370,10 @@ export class AddRequestComponents implements OnInit {
 		return this.requestForm.get("requestOrderType").value == 'FRANCHISE_ORDER';
 	}
 
+	get isPurchaseOrder(){
+		return this.requestForm.get('requestOrderType').value === 'PURCHASE_ORDER';
+	}
+
 	public sourceUserChange(){
 		let value = this.requestForm.get('sourceUserId').value;
 		if(this.requestForm.controls['requestOrderType'].value === 'PURCHASE_ORDER'){
@@ -389,11 +394,21 @@ export class AddRequestComponents implements OnInit {
 			this.discount = 0;
 			this.discountedPrice = 0;
 		}
+		this.clearTables();
 		this.getItem();
 	}
 
 	public destinationUserChange(){
+		this.clearTables();
 		this.getItem();
+	}
+
+	public orderTypeChanged(){
+		this.clearTables();
+		this.requestForm.get('searchBySorceRoleName').reset();
+		this.requestForm.get('sourceUserId').reset();
+		this.requestForm.get('destinationRoleName').reset();
+		this.requestForm.get('destinationUserId').reset();
 	}
 
 	public getItem(){
@@ -409,8 +424,14 @@ export class AddRequestComponents implements OnInit {
 			userId = this.settingService.user._id;
 			// role = this.requestForm.get('destinationRoleName').value;
 		}
-
-		this.itemFacade.getItemListForDropDown(false,role,userId).subscribe((items:any) => {
+		let getAdminlist = false;
+		let itemtype = ''
+		if(this.isPurchaseOrder){
+			itemtype = 'RAW_MATERIAL';
+			userId = '';
+			getAdminlist = true;
+		}
+		this.itemFacade.getItemListForDropDown(getAdminlist,'',userId,itemtype).subscribe((items:any) => {
 			if(this.requestForm.controls['requestOrderType'].value == 'TRANSFER_ORDER'){
 				let filterItem = {"data" : [],"totalCount":0};
 				if(items){
@@ -418,10 +439,13 @@ export class AddRequestComponents implements OnInit {
 						items.data.map((item:any) => {
 							if(item.hasOwnProperty('all_item_units')){
 								item.all_item_units.map((unit:any) => {
-									if(unit.is_customer_show){
-										item.unit_id = unit; 
-										filterItem.data.push(item);	
-									}
+									let newItem:any = {};
+									newItem = {...item};
+									// if(unit.is_customer_show){
+										newItem.unit_id = unit.unit_id;
+										newItem.price = unit.price; 
+										filterItem.data.push(newItem);	
+									// }
 								});	
 							}else{
 								filterItem.data.push(item);	
@@ -453,6 +477,11 @@ export class AddRequestComponents implements OnInit {
 		// }
 	  }
 
+	applyFilterCart(event: Event) {
+		const filterValue = (event.target as HTMLInputElement).value;
+		this.dataSourceCart.filter = filterValue.trim().toLowerCase();
+	  }
+
 	public updateUnit(row:any, index:number,event){
 		this.cartItemList[index]['unit_id']['_id'] = row.unit;
 		if(row.all_item_units && row.all_item_units.length > 0){
@@ -462,4 +491,12 @@ export class AddRequestComponents implements OnInit {
 			}
 		}
 	}
+
+	clearTables(){
+		this.itemList = {"data" : [],"totalCount":0};
+		this.cartItemList = [];
+		this.reloadCartTable();
+		this.reloadItemTable();
+	}
+	
 }

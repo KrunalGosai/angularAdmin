@@ -1,7 +1,7 @@
 <page-header></page-header>
 
 <section>
-  <a mat-raised-button aria-label="View basic sidenav example" color="primary" routerLink="new" >
+  <a mat-raised-button aria-label="View basic sidenav example" *ngIf="!isHawker" color="primary" routerLink="new" >
     Add New
   </a>
 </section>
