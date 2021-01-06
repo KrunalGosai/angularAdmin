@@ -48,6 +48,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   selectedProdItem;
   showUnitPrice:boolean = false;  
   showUnitBarcode:boolean = false;
+  onlySallableMode:boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -123,6 +124,11 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
       );
     }
     this.loadDropdowns()
+    if(this.settingSvc.isDepo || this.settingSvc.isFranchise || this.settingSvc.isHawker){
+      this.onlySallableMode = true;
+      this.processingForm.get('item_type').setValue('SELLABLE');
+      this.itemTypeChanged();
+    }
   }
 
   private productionEditList(sourceList){
@@ -175,7 +181,8 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     this.itemFacade.getPackagingItemList(false,'',userId).toPromise().then(list => {
       this.packingItemList = list.data;
     })
-    this.itemFacade.getSallableItemList(false).toPromise().then(list => {
+    if(!this.onlySallableMode)
+    this.itemFacade.getSallableItemList(true).toPromise().then(list => {
       this.sellableItemList = list.data;      
     })
     this.itemFacade.getSallableItemList(false ,'', userId).toPromise().then(list => {
