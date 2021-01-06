@@ -166,7 +166,7 @@
             </button>
           </mat-grid-tile>
           <mat-grid-tile>
-            <button mat-icon-button aria-label="Delete" matTooltip="Cancel" (click)="cancelIcon(row._id)" >
+            <button mat-icon-button aria-label="Delete" matTooltip="Cancel" *ngIf="row.status != 'CANCELLED'" (click)="cancelIcon(row._id)" >
               <mat-icon color="accent">cancel</mat-icon>
             </button>
           </mat-grid-tile>

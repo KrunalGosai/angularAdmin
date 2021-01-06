@@ -140,10 +140,14 @@ export class AddRequestComponents implements OnInit {
 		}
 		else if(this.settingService.isPurchaseManager)
 			this.requestType.push({ "value": "PURCHASE_ORDER", "lable": "Purchase Order" });
-		else if(this.settingService.isManufaturingPlant || this.settingService.isDepo)
+		else if( this.settingService.isDepo || this.settingService.isHawker)
 			this.requestType.push({ "value": "TRANSFER_ORDER", "lable": "Transfer Order" });
+		else if(this.settingService.isManufaturingPlant)
+			this.requestType.push({ "value": "PURCHASE_ORDER", "lable": "Purchase Order" },{ "value": "TRANSFER_ORDER", "lable": "Transfer Order" });
 		else if(this.settingService.isFranchise)
 			this.requestType.push({ "value": "FRANCHISE_ORDER", "lable": "Franchise Order" });
+		else if(this.settingService.isRetailer)
+			this.requestType.push({ "value": "RETAILERS_ORDER", "lable": "Retailer Order" });
 
 
 		// if(this.settingService.isAdmin || this.settingService.isManufaturingPlant || )
