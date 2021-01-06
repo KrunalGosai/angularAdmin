@@ -53,6 +53,7 @@ export class UserComponent {
       this.settings.removeUser();
       this.menu.reset();
       location.reload()
+      window.location.reload();
       this.router.navigateByUrl("/auth/login");
     }).catch(err => console.error(err))
   }

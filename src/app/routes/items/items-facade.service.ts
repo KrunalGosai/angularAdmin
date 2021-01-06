@@ -37,8 +37,8 @@ export class ItemsFacadeService {
     return this.api.getItemListForDropDown('RAW_MATERIAL',adminlist,searchRoleName,userId).pipe(tap(res => res))
   }
 
-  public getItemListForDropDown(adminlist = true,searchRoleName = '',userId = ''){
-    return this.api.getItemListForDropDown('',adminlist,searchRoleName,userId).pipe(tap(res => res))
+  public getItemListForDropDown(adminlist = true,searchRoleName = '',userId = '',ItemType = ''){
+    return this.api.getItemListForDropDown(ItemType,adminlist,searchRoleName,userId).pipe(tap(res => res))
   }
 
 

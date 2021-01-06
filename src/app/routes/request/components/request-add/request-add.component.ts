@@ -23,7 +23,7 @@ import { truncateSync } from 'fs';
 export class AddRequestComponents implements OnInit {
 	requestForm: FormGroup;
 	recommendedList: itemList[] = [];
-	displayedColumns: string[] = ['action', 'itemName', 'price'];
+	displayedColumns: string[] = ['action', 'itemName', 'price', 'unit'];
 	cartDisplayedColumns: string[] = ['action', 'itemName', 'quantity', 'price', 'unit'];
 	dataSource: MatTableDataSource<itemList>;
 	itemTypeList: string[] = [];
@@ -369,6 +369,10 @@ export class AddRequestComponents implements OnInit {
 		return this.requestForm.get("requestOrderType").value == 'FRANCHISE_ORDER';
 	}
 
+	get isPurchaseOrder(){
+		return this.requestForm.get('requestOrderType').value === 'PURCHASE_ORDER';
+	}
+
 	public sourceUserChange(){
 		let value = this.requestForm.get('sourceUserId').value;
 		if(this.requestForm.controls['requestOrderType'].value === 'PURCHASE_ORDER'){
@@ -409,8 +413,14 @@ export class AddRequestComponents implements OnInit {
 			userId = this.settingService.user._id;
 			// role = this.requestForm.get('destinationRoleName').value;
 		}
-
-		this.itemFacade.getItemListForDropDown(false,role,userId).subscribe((items:any) => {
+		let getAdminlist = false;
+		let itemtype = ''
+		if(this.isPurchaseOrder){
+			itemtype = 'RAW_MATERIAL';
+			userId = '';
+			getAdminlist = true;
+		}
+		this.itemFacade.getItemListForDropDown(getAdminlist,'',userId,itemtype).subscribe((items:any) => {
 			if(this.requestForm.controls['requestOrderType'].value == 'TRANSFER_ORDER'){
 				let filterItem = {"data" : [],"totalCount":0};
 				if(items){
@@ -453,6 +463,11 @@ export class AddRequestComponents implements OnInit {
 		// }
 	  }
 
+	applyFilterCart(event: Event) {
+		const filterValue = (event.target as HTMLInputElement).value;
+		this.dataSourceCart.filter = filterValue.trim().toLowerCase();
+	  }
+
 	public updateUnit(row:any, index:number,event){
 		this.cartItemList[index]['unit_id']['_id'] = row.unit;
 		if(row.all_item_units && row.all_item_units.length > 0){
@@ -462,4 +477,5 @@ export class AddRequestComponents implements OnInit {
 			}
 		}
 	}
+	
 }
