@@ -261,7 +261,7 @@ export class AddRequestComponents implements OnInit {
 	}
 
 	addCartItem(raw:any,index:number){
-		// this.itemList['data'].splice(index,1);
+		this.itemList['data'].splice(index,1);
 		let rowitem:any = {};
 		rowitem = {...raw};
 		rowitem.quantity = 1;
@@ -272,7 +272,7 @@ export class AddRequestComponents implements OnInit {
 	deleteICartItem(raw:object,index:number){
 		this.cartItemList.splice(index,1);
 		//console.log(index,this.cartItemList);return;
-		// this.itemList['data'].push(raw);
+		this.itemList['data'].push(raw);
 		this.reloadCartTable();
 		this.reloadItemTable();
 	}
@@ -428,10 +428,13 @@ export class AddRequestComponents implements OnInit {
 						items.data.map((item:any) => {
 							if(item.hasOwnProperty('all_item_units')){
 								item.all_item_units.map((unit:any) => {
-									if(unit.is_customer_show){
-										item.unit_id = unit; 
-										filterItem.data.push(item);	
-									}
+									let newItem:any = {};
+									newItem = {...item};
+									// if(unit.is_customer_show){
+										newItem.unit_id = unit.unit_id;
+										newItem.price = unit.price; 
+										filterItem.data.push(newItem);	
+									// }
 								});	
 							}else{
 								filterItem.data.push(item);	
