@@ -140,6 +140,8 @@ export class OrdersOrderListComponent implements OnInit {
     this.searchBySource = '';
     this.searchByDestination = '';
     this.searchByInOut = '';
+    this.searchBySourceRole = '';
+    this.searchByDestinationRole = '';
   }
 
   private setColumns(){
