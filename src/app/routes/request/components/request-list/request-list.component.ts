@@ -25,7 +25,7 @@ export class RequestListComponent implements OnInit {
 	searchRequestNumber: string = '';
 	filterRoleList: any;
 	filterUserList: any;
-	orderType: string[] = ['PURCHASE_ORDER', 'TRANSFER_ORDER','FRANCHISE_ORDER'];
+	orderType: string[] = ['PURCHASE_ORDER', 'TRANSFER_ORDER','FRANCHISE_ORDER','RETAILERS_ORDER'];
 	status: string[] = ['PENDING', 'REJECTED', 'CANCELLED', 'CONFIRMED'];
 	orderStatus = ['APPROVED','CANCELLED','REJECTED'];
 	searchRoleName: string = this.settingService.user.role_id.type;
