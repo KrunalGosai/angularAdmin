@@ -20,9 +20,9 @@ export class ItemUnitViewComponent implements OnInit {
   data:any
   searchUserId:string = '';
   itemTypes:any= {SELLABLE:'Sellable',PACKAGING_MATERIAL:'Packaging Material',RAW_MATERIAL:'Raw Material'};
-  displayedColumns: string[] = ['price','discount_value', 'discounted_price', 'qty', 'unit' ,'is_customer_show'];
+  displayedColumns: string[] = ['price','discount_value', 'discounted_price', 'qty', 'unit', 'item_barcode' ,'is_customer_show'];
   dataSource:any[] = [];
-  public defaultUnitId = '';
+  public defaultUnitId = -1;
 
 
   ngOnInit(): void {
@@ -30,9 +30,13 @@ export class ItemUnitViewComponent implements OnInit {
     this.searchUserId = this.viewdata.searchUserId;
     let units:any[] = this.data.all_item_units
     this.dataSource =  this.data.all_item_units || [];
-    let defaultunits:any = units.filter(item =>  item.is_customer_show == true)
-    if(defaultunits && defaultunits.length > 0) this.defaultUnitId = defaultunits[0].unit_id._id;
-    else if(units && units.length > 0) this.defaultUnitId = units[0].unit_id._id;
+    // let defaultunits:any = units.filter(item =>  item.is_customer_show == true)
+    // if(defaultunits && defaultunits.length > 0) this.defaultUnitId = defaultunits[0].unit_id._id;
+    // else if(units && units.length > 0) this.defaultUnitId = units[0].unit_id._id;
+    units.map((item,i) => {
+      if(item.is_customer_show == true)
+      this.defaultUnitId = i;
+    })
     this.displayColumns();
   }
 
@@ -45,20 +49,21 @@ export class ItemUnitViewComponent implements OnInit {
     this.updateItemDepo(true,value)
   }
 
-  public updateItemDepo(isRadioChange:boolean = false,value = ''){
+  public updateItemDepo(isRadioChange:boolean = false,value:any = -1){
     let updatedata = {...this.data}
     
     let updatedDatasource = [];
 
     if(isRadioChange && isRadioChange == true){
       
-      this.dataSource.map(unit => {
+      this.dataSource.map((unit,i) => {
         updatedDatasource.push({
           _id: unit._id,
-          is_customer_show: unit.unit_id._id == value ? true : false,
+          is_customer_show: i == value ? true : false,
           item_quantity: unit.item_quantity, 
           price: unit.price ? unit.price : 0,
-          unit_id: unit.unit_id ? unit.unit_id._id : ''
+          unit_id: unit.unit_id ? unit.unit_id._id : '',
+          item_barcode: unit.item_barcode
         })
       })
     }else{
@@ -69,7 +74,8 @@ export class ItemUnitViewComponent implements OnInit {
           is_customer_show: !isAlreadySet ? unit.is_customer_show : false,
           item_quantity: unit.item_quantity, 
           price: unit.price ? unit.price : 0,
-          unit_id: unit.unit_id ? unit.unit_id._id : ''
+          unit_id: unit.unit_id ? unit.unit_id._id : '',
+          item_barcode: unit.item_barcode
         })
         isAlreadySet = unit.is_customer_show
       })
@@ -89,7 +95,7 @@ export class ItemUnitViewComponent implements OnInit {
 
   displayColumns(){
     if(this.settingSvc.isAdmin)
-      this.displayedColumns = ['price_edit','discount_value', 'discounted_price', 'qty', 'unit' ,'is_customer_show_edit'];
+      this.displayedColumns = ['price_edit','discount_value', 'discounted_price', 'qty', 'unit','item_barcode','is_customer_show_edit'];
     else 
       this.displayedColumns = ['price','discount_value', 'discounted_price', 'qty', 'unit' ,'is_customer_show'];
 
