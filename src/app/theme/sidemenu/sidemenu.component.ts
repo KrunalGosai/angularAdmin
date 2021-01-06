@@ -63,7 +63,7 @@ export class SidemenuComponent implements OnInit {
   }
 
   private processingMenufiter(){
-    if(this.settingsService.isAdmin || this.settingsService.isManufaturingPlant) return;
+    if(this.settingsService.isAdmin || this.settingsService.isManufaturingPlant || this.settingsService.isDepo || this.settingsService.isFranchise || this.settingsService.isHawker) return;
     this.menus = this.menus.filter(menuItem => 
       menuItem.name != "menu.processing")
   }

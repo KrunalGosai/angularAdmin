@@ -43,10 +43,12 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   packagingMaterialSource:MatTableDataSource<any>;
   production:any = [];
   productionSource:MatTableDataSource<any>;
-  productionColumn:string[] = ["consumed_unit_id","consumed_quantity",'item_price',"controls"]
+  productionColumn:string[] = ["consumed_unit_id","consumed_quantity",'item_price','item_barcode',"controls"]
 
   selectedProdItem;
   showUnitPrice:boolean = false;  
+  showUnitBarcode:boolean = false;
+  onlySallableMode:boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -75,7 +77,8 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     this.productionForm = this.fb.group({
         unit_id:["",[Validators.required]],
         production_quantity:[0],
-        item_price:[0]
+        item_price:[0],
+        item_barcode:['']
     })
 
     this.packingForm = this.fb.group({
@@ -121,6 +124,11 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
       );
     }
     this.loadDropdowns()
+    if(this.settingSvc.isDepo || this.settingSvc.isFranchise || this.settingSvc.isHawker){
+      this.onlySallableMode = true;
+      this.processingForm.get('item_type').setValue('SELLABLE');
+      this.itemTypeChanged();
+    }
   }
 
   private productionEditList(sourceList){
@@ -173,7 +181,8 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     this.itemFacade.getPackagingItemList(false,'',userId).toPromise().then(list => {
       this.packingItemList = list.data;
     })
-    this.itemFacade.getSallableItemList(false).toPromise().then(list => {
+    if(!this.onlySallableMode)
+    this.itemFacade.getSallableItemList(true).toPromise().then(list => {
       this.sellableItemList = list.data;      
     })
     this.itemFacade.getSallableItemList(false ,'', userId).toPromise().then(list => {
@@ -257,7 +266,14 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   }
 
   public onProductionFormSubmit(event){
-    if(!this.productionForm.valid) return;
+    if(!this.productionForm.valid) {
+      if(this.productionForm.get('unit_id').invalid || this.productionForm.get('production_quantity').invalid)
+        return;
+      else if(this.productionForm.get('unit_id').invalid && this.showUnitPrice)
+        return;
+      else if(this.productionForm.get('item_barcode').invalid && this.showUnitBarcode)
+        return;
+    }
     let oldValue:any = this.production;
     let value = this.productionForm.value;
     let unit = {...value.unit_id};
@@ -276,8 +292,12 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     let updateValue:any = {};
     updateValue.unit_id = unit._id;
     updateValue.production_quantity = value.production_quantity;
+
     if(value.item_price && value.item_price > 0)
     updateValue.item_price = value.item_price;
+
+    if(value.item_barcode && value.item_barcode.trim() != '')
+    updateValue.item_barcode = value.item_barcode;
     // value.item_price = value.item_price == 0 ? null : value.item_price;
     
     let newValue = [...oldValue];
@@ -357,12 +377,24 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
     if(!event.value || event.value == '') return;
     if(this.selectedProdItem && this.selectedProdItem.all_item_units){
       let unit = this.selectedProdItem.all_item_units.filter(unit => unit.unit_id._id == event.value._id)
-      if(unit && unit.length > 0)
+
+      //unit price
+      if(unit && unit.length > 0){
        this.showUnitPrice = false;
-      else
-       this.showUnitPrice = true;
+      }else{
+        this.showUnitPrice = true;
+      }
+
+      //unit barcode 
+      if(!unit || !unit.item_barcode){
+        this.showUnitBarcode = true;
+      }else{
+        this.showUnitBarcode = false
+      }
+
     }else{
       this.showUnitPrice = true;
+      this.showUnitBarcode = true;
     }
   }
 }
