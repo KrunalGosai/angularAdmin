@@ -201,6 +201,7 @@ export class AddRequestComponents implements OnInit {
 		} else if (filterType === 'destinationRoleName') {
 			this.destinationUserList = this.filterUserList.filter((user: any) => user.role_id._id === this.requestForm.controls[filterType].value);
 		}
+		this.clearTables();
 		//this.usersFacade.loadUsers(1, 200, '', this.searchSorceRoleName)
 	}
 	public pageEvent(event: PageEvent) {
@@ -393,11 +394,21 @@ export class AddRequestComponents implements OnInit {
 			this.discount = 0;
 			this.discountedPrice = 0;
 		}
+		this.clearTables();
 		this.getItem();
 	}
 
 	public destinationUserChange(){
+		this.clearTables();
 		this.getItem();
+	}
+
+	public orderTypeChanged(){
+		this.clearTables();
+		this.requestForm.get('searchBySorceRoleName').reset();
+		this.requestForm.get('sourceUserId').reset();
+		this.requestForm.get('destinationRoleName').reset();
+		this.requestForm.get('destinationUserId').reset();
 	}
 
 	public getItem(){
@@ -479,6 +490,13 @@ export class AddRequestComponents implements OnInit {
 				this.cartItemList[index]['price'] = selectedUnit[0].price;
 			}
 		}
+	}
+
+	clearTables(){
+		this.itemList = {"data" : [],"totalCount":0};
+		this.cartItemList = [];
+		this.reloadCartTable();
+		this.reloadItemTable();
 	}
 	
 }

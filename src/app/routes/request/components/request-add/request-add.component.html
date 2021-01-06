@@ -12,7 +12,7 @@
                     <div fxFlex="30" fxFlex.lt-sm="100">
                         <mat-form-field>
                             <mat-label>Order Type</mat-label>
-                            <mat-select placeholder="Order Type" required formControlName="requestOrderType">
+                            <mat-select placeholder="Order Type" (selectionChange)="orderTypeChanged()" required formControlName="requestOrderType">
                                 <mat-option *ngFor="let type of requestType" [value]="type.value">{{ type.lable }}
                                 </mat-option>
                             </mat-select>
