@@ -66,7 +66,7 @@
             <mat-form-field>
                 <mat-label>Production Item</mat-label>
                 <mat-select formControlName="sellable_item_id" placeholder="Production Item" required>
-                    <mat-option *ngFor="let item of sellableItemList" [value]="item._id" >
+                    <mat-option *ngFor="let item of userSellableItemList" [value]="item._id" >
                         {{ item.name }}
                     </mat-option>
                 </mat-select>
