@@ -161,19 +161,12 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
       <form>
       <td mat-cell *matCellDef="let row" style="text-transform: capitalize;">
-	  	<mat-form-field class="matero-col">
-            <!-- <mat-label>Status</mat-label> -->
-            <mat-select
-              [ngModelOptions]="{ standalone: true }" [(ngModel)]="row.status" (selectionChange)="changeStatus(row)"
-            >
-              <mat-option
-				*ngFor="let cate of orderStatus"
-                [value]="cate"
-                >{{ cate }}</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
-		<!-- {{row.status}} -->
+        <mat-label *ngIf="!isAdmin">{{row.status}}</mat-label>
+	  	<mat-form-field class="matero-col" *ngIf="isAdmin">
+        <mat-select *ngIf="isAdmin" [ngModelOptions]="{ standalone: true }" [(ngModel)]="row.status" (selectionChange)="changeStatus(row)">
+          <mat-option *ngFor="let cate of orderStatus" [value]="cate" >{{ cate }}</mat-option>
+        </mat-select>
+      </mat-form-field>		
       </td>
     </form>
     </ng-container>
