@@ -20,7 +20,7 @@ export class OfferStateService {
   }
 
   public setOfferList(itemList:any){
-    this.isOffersSet = true;
+    // this.isOffersSet = true;
     this.offers.next(itemList);
   }
 

@@ -20,7 +20,7 @@ export class UnitStateService {
   }
 
   public setUnit(unites:unitResponse){
-    this.isUnitesSet = true;
+    // this.isUnitesSet = true;
     this.unites.next(unites);
   }
 

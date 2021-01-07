@@ -19,7 +19,7 @@ export class BannerStateService {
   }
 
   public setBanner(banner:bannerResponse){
-    this.isBannersSet = true;
+    // this.isBannersSet = true;
     this.banners.next(banner);
   }
 

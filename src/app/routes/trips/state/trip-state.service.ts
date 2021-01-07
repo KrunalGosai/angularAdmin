@@ -21,7 +21,7 @@ export class TripStateService {
   }
 
   public setTripList(trips:any){
-    this.isTripListSet = true;
+    // this.isTripListSet = true;
     this.trips.next(trips);
   }
 

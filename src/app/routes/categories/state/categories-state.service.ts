@@ -20,7 +20,7 @@ export class CategoriesStateService {
   }
 
   public setCategories(categories){
-    this.isCategoriesSet = true;
+    // this.isCategoriesSet = true;
     this.categories.next(categories);
   }
 

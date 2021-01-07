@@ -20,7 +20,7 @@ export class RequestStateService {
   }
 
   public setRequestList(isRequestList:any){
-    this.isRequestsSet = true;
+    // this.isRequestsSet = true;
     this.requests.next(isRequestList);
   }
   public getViewData():Observable<any>{
