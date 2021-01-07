@@ -82,6 +82,11 @@
                 <td mat-cell *matCellDef="let element"> {{element.booked_item_quantity}} </td>
               </ng-container>
 
+              <ng-container matColumnDef="item_unit_id">
+                <th mat-header-cell *matHeaderCellDef> Item Unit </th>
+                <td mat-cell *matCellDef="let element"> {{element.item_unit_id ? element.item_unit_id.name : ''}} </td>
+              </ng-container>
+
               <ng-container matColumnDef="wastage_item_quantity">
                 <th mat-header-cell *matHeaderCellDef> wastage Qty </th>
                 <td mat-cell *matCellDef="let element"> {{element.wastage_item_quantity}} </td>
