@@ -23,7 +23,7 @@ import { truncateSync } from 'fs';
 export class AddRequestComponents implements OnInit {
 	requestForm: FormGroup;
 	recommendedList: itemList[] = [];
-	displayedColumns: string[] = ['action', 'itemName', 'price', 'unit'];
+	displayedColumns: string[] = [];
 	cartDisplayedColumns: string[] = ['action', 'itemName', 'quantity', 'price', 'unit'];
 	dataSource: MatTableDataSource<itemList>;
 	itemTypeList: string[] = [];
@@ -149,6 +149,7 @@ export class AddRequestComponents implements OnInit {
 		else if(this.settingService.isRetailer)
 			this.requestType.push({ "value": "RETAILERS_ORDER", "lable": "Retailer Order" });
 
+		this.displayedColumns =	['action', 'itemName', 'price', 'unit'];
 
 		// if(this.settingService.isAdmin || this.settingService.isManufaturingPlant || )
 			
@@ -257,6 +258,11 @@ export class AddRequestComponents implements OnInit {
 	}
 
 	private reloadItemTable(){
+		if(this.isPurchaseOrder){
+			this.displayedColumns = ['action', 'itemName', 'price','final_purchase_price','unit'];
+		}else{
+			this.displayedColumns = ['action', 'itemName', 'price','unit'];
+		}
 		this.pageDetails.totalRecords = this.itemList['totalCount'];
 		this.dataSource = new MatTableDataSource(this.itemList['data']);
 	}
@@ -266,6 +272,7 @@ export class AddRequestComponents implements OnInit {
 		let rowitem:any = {};
 		rowitem = {...raw};
 		rowitem.quantity = 1;
+		rowitem.price = this.isPurchaseOrder ? rowitem.final_purchase_price : rowitem.price;
 		this.cartItemList.push(rowitem);
 		this.reloadCartTable();
 		this.reloadItemTable();
@@ -461,6 +468,11 @@ export class AddRequestComponents implements OnInit {
 			}else{
 				//console.log("ocean",items);
 				this.itemList = items;
+				if(this.isPurchaseOrder){
+					this.itemList.data.map(item => {
+						item.final_purchase_price = 0;
+					})
+				}
 				// this.dataSource = new MatTableDataSource(this.itemList['data']);
 				// this.pageDetails.totalRecords = this.itemList['totalCount'];
 				this.reloadItemTable();
