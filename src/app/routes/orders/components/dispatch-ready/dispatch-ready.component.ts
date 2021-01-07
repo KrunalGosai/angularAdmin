@@ -64,7 +64,7 @@ export class OrdersDispatchReadyComponent implements OnInit {
     })
     this.loadDropdowns();
     this.viewData.items.forEach(item => {
-      let itemobj = {item_id: item.item_id._id, item_name:item.item_name,qty:item.item_quantity,unit:item.item_unit_id.name}
+      let itemobj = {item_id: item.item_id._id, item_name:item.item_name,qty:item.booked_item_quantity,unit:item.item_unit_id.name}
         this.itemData = [...this.itemData, itemobj];
     });
     this.dataSource = new MatTableDataSource(this.itemData);
@@ -208,10 +208,10 @@ export class OrdersDispatchReadyComponent implements OnInit {
         result = false;
         break
       }
-
-      return result;
       
     }
+
+    return result;
   }
 
 }

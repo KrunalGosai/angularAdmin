@@ -111,7 +111,7 @@
     </ng-container>
     <ng-container matColumnDef="destination_id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Destination</th>
-        <td mat-cell style="max-width: 100px" *matCellDef="let row">{{ row.source_id ? row.destination_id.first_name : ''}}</td>
+        <td mat-cell style="max-width: 100px" *matCellDef="let row">{{ row.destination_id ? row.destination_id.first_name : ''}}</td>
     </ng-container>
     <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
@@ -175,7 +175,7 @@
               <mat-icon color="primary">exit_to_app</mat-icon>
             </button>
           </mat-grid-tile> 
-          <mat-grid-tile *ngIf="!isCustomerOrder && row.status == 'DISPATCHED'">
+          <mat-grid-tile *ngIf="!isCustomerOrder && row.status == 'DISPATCHED' && row.destination_id._id == getuserId">
             <button mat-icon-button color="primary" matTooltip="Delivery" (click)="deliveryClick(row._id)" [routerLink]="[]">
               <mat-icon color="primary">assignment_turned_in</mat-icon>
             </button>
