@@ -93,6 +93,10 @@ export class OrdersOrderListComponent implements OnInit {
     return this.searchByOrderType == 'HAWKER_CUSTOMER_ORDER';
   }
 
+  get getuserId(){
+    return this.settingSvc.user._id;
+  }
+
   ngOnInit() {
     this.facade.getOrderList(this.pageDetails.currentPage,this.pageDetails.itemsPerPage,this.searchByOrderType,this.searchByOrderStatus).subscribe(orders => {
       this.dataSource = new MatTableDataSource(orders.data);
