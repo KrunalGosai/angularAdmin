@@ -20,7 +20,7 @@ export class ProcessingStateService {
   }
 
   public setProcessingUnitsList(procesingUnits:any){
-    this.isProcessingSet = true;
+    // this.isProcessingSet = true;
     this.processingUnits.next(procesingUnits);
   }
 

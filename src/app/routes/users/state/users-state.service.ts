@@ -21,7 +21,7 @@ export class UsersStateService {
   }
 
   public setUsers(users:userListResponse){
-    this.isUserSet = true;
+    // this.isUserSet = true;
     this.users.next(users);
   }
 

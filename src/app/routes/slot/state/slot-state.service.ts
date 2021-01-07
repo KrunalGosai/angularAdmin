@@ -17,7 +17,7 @@ export class SlotStateService {
   }
 
   public setSlotList(slotList:any){
-    this.isSlotListSet = true;
+    // this.isSlotListSet = true;
     this.slotList.next(slotList);
   }
 }

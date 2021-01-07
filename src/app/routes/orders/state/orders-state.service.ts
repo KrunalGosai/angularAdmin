@@ -22,7 +22,7 @@ export class OrdersStateService {
   }
 
   public setOrderList(itemList:any){
-    this.isOrdersSet = true;
+    // this.isOrdersSet = true;
     this.orders.next(itemList);
   }
 
@@ -31,7 +31,7 @@ export class OrdersStateService {
   }
 
   public setTripOrderList(itemList:any){
-    this.isTripOrdersSet = true;
+    // this.isTripOrdersSet = true;
     this.tripOrders.next(itemList);
   }
 

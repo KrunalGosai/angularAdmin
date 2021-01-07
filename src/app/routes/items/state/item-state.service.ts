@@ -24,7 +24,7 @@ export class ItemStateService {
   }
 
   public setItemList(itemList:itemListResponse){
-    this.isItemsSet = true;
+    // this.isItemsSet = true;
     this.items.next(itemList);
   }
 
