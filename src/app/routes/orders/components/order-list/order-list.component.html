@@ -1,4 +1,4 @@
-<page-header></page-header>
+<page-header title="{{searchByOrderType.replace('_', ' ') | titlecase }}" [nav]="['home', 'orders', searchByOrderType.replace('_', ' ').toLowerCase()]"></page-header>
 
 <!-- Filter -->
 
@@ -180,7 +180,7 @@
               <mat-icon color="primary">assignment_turned_in</mat-icon>
             </button>
           </mat-grid-tile> 
-          <mat-grid-tile *ngIf="row.status == 'READY_FOR_DISPATCH'">
+          <mat-grid-tile *ngIf="row.status == 'READY_FOR_DISPATCH' && row.source_id._id == getuserId">
             <button mat-icon-button color="primary" matTooltip="Dispatch" (click)="dispatchClick(row)">
               <mat-icon color="primary">local_shipping</mat-icon>
             </button>
