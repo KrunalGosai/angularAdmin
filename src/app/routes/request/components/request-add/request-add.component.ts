@@ -1,3 +1,4 @@
+import { AfterViewInit } from '@angular/core';
 import { OfferFacadeService } from './../../../offers/offer-facade.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
@@ -20,7 +21,7 @@ import { truncateSync } from 'fs';
 	templateUrl: './request-add.component.html',
 	styleUrls: ['./request-add.component.scss']
 })
-export class AddRequestComponents implements OnInit {
+export class AddRequestComponents implements OnInit, AfterViewInit {
 	requestForm: FormGroup;
 	recommendedList: itemList[] = [];
 	displayedColumns: string[] = [];
@@ -52,6 +53,8 @@ export class AddRequestComponents implements OnInit {
 	cartItemList:Array<object> = [];
 	dataSourceCart: MatTableDataSource<itemList>;
 	supplierList:Array<object> = [];
+	editcartdata = [];
+	editItemList = {};
 	constructor(
 		private fb: FormBuilder,
 		private router: Router,
@@ -80,6 +83,15 @@ export class AddRequestComponents implements OnInit {
 			supplierUserId: [""]
 		});
 	}
+	ngAfterViewInit(): void {
+		if(this.isEditMode)
+		setTimeout(() => {
+			this.cartItemList = this.editcartdata;
+			this.reloadCartTable();
+			this.itemList = this.editItemList;
+			this.reloadItemTable();
+		}, 5000);
+	}
 
 
 	ngOnInit() {
@@ -103,6 +115,10 @@ export class AddRequestComponents implements OnInit {
 					destinationRoleName:data.destination_id.role_id._id,
 					supplierUserId: data.supplier_id
 				  })
+				  this.sourceUserChange();
+				  this.filterRoleChanged('searchBySorceRoleName')
+				  this.filterRoleChanged('destinationRoleName')
+
 				let cartData = [];
 				data.items.map(item => {
 					let obj = {
@@ -116,10 +132,8 @@ export class AddRequestComponents implements OnInit {
 					cartData.push(obj);
 				})
 				this.cartItemList= cartData;
+				this.editcartdata = cartData;
 				this.reloadCartTable();
-				this.sourceUserChange();
-				this.filterRoleChanged('searchBySorceRoleName')
-				this.filterRoleChanged('destinationRoleName')
 			})
 		}
 		this.getRole();
@@ -158,6 +172,7 @@ export class AddRequestComponents implements OnInit {
 		// 	if(this.filterRoleList && this.filterRoleList.length > 0)
 		// 	this.destinationRoleList = this.filterRoleList.filter(role => role._id != value &&  role.type != 'ADMIN' && role.type != 'CUSTOMER' && role.type != 'DELIVERY_BOY' && role.type != 'SUPPLIER');
 		// })
+
 	}
 
 	public sendRecieveChange(event){
@@ -191,7 +206,7 @@ export class AddRequestComponents implements OnInit {
 	get isAdmin(){
 		return this.settingService.isAdmin;
 	}
-	public filterRoleChanged(filterType) {
+	public filterRoleChanged(filterType){
 		if (this.searchSorceRoleName.trim() == '') {
 			this.filterUserList = [];
 			return;
@@ -460,6 +475,7 @@ export class AddRequestComponents implements OnInit {
 						});
 						filterItem.totalCount = items.totalCount;
 						this.itemList = filterItem;
+						this.editItemList = filterItem;
 						// this.dataSource = new MatTableDataSource(this.itemList['data']);
 						// this.pageDetails.totalRecords = this.itemList['totalCount'];
 						this.reloadItemTable();
@@ -468,6 +484,7 @@ export class AddRequestComponents implements OnInit {
 			}else{
 				//console.log("ocean",items);
 				this.itemList = items;
+				this.editItemList= items;
 				if(this.isPurchaseOrder){
 					this.itemList.data.map(item => {
 						item.final_purchase_price = 0;
