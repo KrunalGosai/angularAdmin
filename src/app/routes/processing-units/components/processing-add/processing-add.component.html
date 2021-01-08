@@ -51,7 +51,7 @@
           <div fxFlex="34" *ngIf="!isSallable" fxFlex.lt-sm="100">
             <mat-form-field>
                 <mat-label>Item</mat-label>
-                <mat-select formControlName="raw_item_id" placeholder="Item" required>
+                <mat-select formControlName="raw_item_id" placeholder="Item" required (selectionChange)="getUnitIds('row')">
                     <mat-option *ngFor="let item of itemList" [value]="item._id" >
                         {{ item.name }}
                     </mat-option>
@@ -65,7 +65,7 @@
           <div fxFlex="33" *ngIf="isSallable" fxFlex.lt-sm="100">
             <mat-form-field>
                 <mat-label>Production Item</mat-label>
-                <mat-select formControlName="sellable_item_id" placeholder="Production Item" required>
+                <mat-select formControlName="sellable_item_id" placeholder="Production Item" required (selectionChange)="getUnitIds('')">
                     <mat-option *ngFor="let item of userSellableItemList" [value]="item._id" >
                         {{ item.name }}
                     </mat-option>
@@ -81,8 +81,8 @@
             <mat-form-field>
                 <mat-label>Unit</mat-label>
                 <mat-select formControlName="consumed_unit_id" placeholder="Unit" required>
-                    <mat-option *ngFor="let unit of unitList" [value]="unit._id" >
-                        {{ unit.name }}
+                    <mat-option *ngFor="let unit of itemUnitList" [value]="unit.unit_id._id" >
+                        {{ unit.unit_id.name }}
                     </mat-option>
                 </mat-select>
                 <mat-error *ngIf="processingForm.get('consumed_unit_id').invalid">
@@ -107,9 +107,9 @@
             <mat-form-field>
                 <mat-label>Wastage Unit</mat-label>
                 <mat-select formControlName="wastage_unit_id" placeholder="Wastage Unit">
-                    <mat-option *ngFor="let unit of unitList" [value]="unit._id" >
-                        {{ unit.name }}
-                    </mat-option>
+                  <mat-option *ngFor="let unit of itemUnitList" [value]="unit.unit_id._id" >
+                    {{ unit.unit_id.name }}
+                  </mat-option>
                 </mat-select>
                 <!-- <mat-error *ngIf="processingForm.get('wastage_unit_id').invalid">
                     {{ "validations.required" | translate }}
