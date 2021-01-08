@@ -128,7 +128,7 @@
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Controls</th>
                                     <td mat-cell *matCellDef="let row; let i = index">
                                         <mat-grid-list cols="3" rowHeight="50px">
-                                            <mat-grid-tile>
+                                            <mat-grid-tile *ngIf="row.showAdd">
                                                 <button mat-icon-button aria-label="Add" type="button" (click)="addCartItem(row,i)">
                                                     <mat-icon color="accent">add_circle_outline</mat-icon>
                                                 </button>
@@ -156,12 +156,11 @@
                                     </td>
                                 </ng-container>
 
-                                <ng-container matColumnDef="final_purchase_price">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Final Purchase Price</th>
+                                <ng-container matColumnDef="final_purchase_price" style="max-width: 50px;">
+                                    <th mat-header-cell *matHeaderCellDef style="max-width: 50px;" mat-sort-header>Final Purchase Price</th>
                                     <td mat-cell *matCellDef="let row">
                                         <!-- {{(row.price ? row.price : row.user_price) | currency:'INR'}} -->
                                         <input type="number" [ngModelOptions]="{ standalone: true }"
-                                             style="max-width: 50px"
                                             [(ngModel)]="row.final_purchase_price" />
                                     </td>
                                 </ng-container>
@@ -171,7 +170,7 @@
                                     <!-- <form> -->
                                         <td mat-cell *matCellDef="let row; let i = index;">
                                             <!-- (selectionChange)="updateUnit(row,i,$event)" -->
-                                            <mat-select style="max-width: 80px;" *ngIf="isPurchaseOrder" placeholder="Unit"
+                                            <mat-select style="max-width: 80px;" *ngIf="isPurchaseOrder" (selectionChange)="row.showAdd = true;" placeholder="Unit"
                                                 [ngModelOptions]="{ standalone: true }" [(ngModel)]="row.unit_id" name="unit"> 
                                                 <mat-option *ngFor="let unit of unitList" [value]="unit">{{unit.name}}</mat-option>
                                             </mat-select>
