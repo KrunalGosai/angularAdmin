@@ -10,6 +10,7 @@ import { SettingsService } from '@core';
 import { requestViewComponent } from '../request-view/request-view.component';
 
 import { SidebarNoticeService } from '@theme/sidebar-notice/sidebar-notice.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class RequestListComponent implements OnInit {
 	filterUserList: any;
 	orderType: string[] = ['PURCHASE_ORDER', 'TRANSFER_ORDER','FRANCHISE_ORDER','RETAILERS_ORDER'];
 	status: string[] = ['PENDING', 'REJECTED', 'CANCELLED', 'CONFIRMED'];
-	orderStatus = ['APPROVED','CANCELLED','REJECTED'];
+	orderStatus = ['PENDING','APPROVED','CANCELLED','REJECTED'];
 	searchRoleName: string = this.settingService.user.role_id.type;
 	searchByInOut = '';
 	searchUserId: string = '';
@@ -54,7 +55,7 @@ export class RequestListComponent implements OnInit {
 		// private categoryFacade:CategoriesFacadeService,
 		private facade: RequestFacadeService,
 		private sidebarNoticeService:SidebarNoticeService,
-		// public itemUnitViewDialog: MatDialog,
+		public toastr:ToastrService,
 		private confirmService: ConfirmService) { }
 
 	ngOnInit() {
@@ -168,6 +169,11 @@ export class RequestListComponent implements OnInit {
 		});
 	}
 	public changeStatus(row) {
+		if(row.status == 'PENDING'){
+			this.toastr.info('you can not change status back to pending!','Info',{timeOut:3000})
+			this.refreshRequestTable();
+			return false;
+		}
 		this.confirmService.confirm(`Are you sure want to change status to ${row.status}`, 'Confirm').subscribe(result => {
 			if (result == true) {
 				let rowcopy = {request_id: row._id,status:row.status};
