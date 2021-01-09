@@ -226,7 +226,7 @@ export class AddRequestComponents implements OnInit, AfterViewInit {
 		this.itemFacade.loadItemList(this.pageDetails.currentPage, this.pageDetails.itemsPerPage, null, null, this.searchRoleName, this.searchUserId, null, this.searchByName)
 	}
 	onFormSubmit(event) {
-		const reqData = {
+		let reqData = {
 				"source_id" : this.requestForm.controls['sourceUserId'].value,
 				"destination_id" : this.requestForm.controls['destinationUserId'].value,
 				"items": [],
@@ -235,6 +235,14 @@ export class AddRequestComponents implements OnInit, AfterViewInit {
 				offer_id: this.availableOffer && this.availableOffer._id ? this.availableOffer._id : '',
 				discount:this.discount,
 				discounted_price:this.discountedPrice
+			}
+
+			
+			let reqType = this.requestForm.get('selectRequestType').value;
+			if(!this.isAdmin && reqType == 'send' && reqData.source_id == null){
+				reqData.source_id = this.settingService.user._id;
+			}else if(!this.isAdmin && reqType == 'recieve' && reqData.destination_id == null){
+				reqData.destination_id = this.settingService.user._id;
 			}
 
 		if( (this.isAdmin || this.settingService.isPurchaseManager )  && this.requestForm.controls['requestOrderType'].value === 'PURCHASE_ORDER'){
