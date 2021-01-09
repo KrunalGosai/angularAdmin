@@ -57,6 +57,7 @@ export class OrdersDispatchReadyComponent implements OnInit {
   columnsToDisplay = ['item_name'];
   innerDisplayedColumns = ['item_unit_id','item_quantity','control'];
   expandedElement: any | null;
+  directReadyDispatch = [];
   
   ngOnInit(): void {
     this.facade.getViewData().subscribe(row => {
@@ -66,8 +67,18 @@ export class OrdersDispatchReadyComponent implements OnInit {
     this.viewData.items.forEach(item => {
       let itemobj = {item_id: item.item_id._id, item_name:item.item_name,qty:item.booked_item_quantity,unit:item.item_unit_id.name}
         this.itemData = [...this.itemData, itemobj];
+      let ready = {item_id:item.item_id._id,item_unit_id:item.item_unit_id,item_quantity:item.booked_item_quantity}
+      this.directReadyDispatch.push(ready);
     });
     this.dataSource = new MatTableDataSource(this.itemData);
+    if(!this.isCustomerOrder){
+      console.log(this.directReadyDispatch);
+      this.dispatchData = this.directReadyDispatch;
+    }
+  }
+
+  get isCustomerOrder(){
+    return this.viewData.type == 'CUSTOMER_ORDER';
   }
 
   getItemItemUnits(itemId){
