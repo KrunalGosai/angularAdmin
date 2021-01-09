@@ -32,7 +32,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   processingForm: FormGroup;
   productionForm: FormGroup;
   packingForm: FormGroup;
-
+  
   //edit 
   isEditMode: Boolean = false;
   activeEditId: string = "";
@@ -50,6 +50,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   showUnitBarcode:boolean = false;
   onlySallableMode:boolean = false;
 
+  itemUnitList:any = [];
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -98,12 +99,12 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   }
 
   ngOnInit() {
-    
     if (this.isEditMode) {
       this.facade.getProcessingUnitDetail(this.activeEditId).subscribe(
         (res) => {
           let data: any = { ...res };
           let item = data;
+          console.log(item);
           this.production = this.productionEditList(item.production_unit_ids);
           this.packagingMaterial = this.packingEditList(item.packaging_material);
           this.processingForm.patchValue({
@@ -119,7 +120,14 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
             packaging_material:this.packagingMaterial
           });
           this.reloadProductionTable();
-          this.reloadPackingTable()
+          this.reloadPackingTable();
+          if(item && item.raw_item_id){
+            this.setSellableItemUnit();
+          }else{
+            if(item){
+                //this.getUnitIds('row');
+            }  
+          }
         },(err) => console.error(err)
       );
     }
@@ -396,5 +404,25 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
       this.showUnitPrice = true;
       this.showUnitBarcode = true;
     }
+  }
+
+  public getUnitIds(itemType:string){
+     if(itemType == 'row'){
+        let getIndex = this.itemList.findIndex((item:any) => item._id.toString() == this.processingForm.value.raw_item_id);
+        this.itemUnitList = this.itemList[getIndex].all_item_units;
+     }else{
+        if(!this.processingForm.value.raw_item_id){
+          let getIndex = this.userSellableItemList.findIndex((item:any) => item._id.toString() == this.processingForm.value.sellable_item_id);
+          this.itemUnitList = this.userSellableItemList[getIndex].all_item_units;
+          console.log("ocean",this.itemUnitList);
+        } 
+     }
+    //console.log("itemObj",itemObj)
+  }
+  setSellableItemUnit(){
+    if(!this.processingForm.value.raw_item_id){
+        let getIndex = this.userSellableItemList.findIndex((item:any) => item._id.toString() == this.processingForm.value.sellable_item_id);
+         this.itemUnitList = this.userSellableItemList[getIndex].all_item_units;
+    } 
   }
 }
