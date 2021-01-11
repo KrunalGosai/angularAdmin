@@ -32,7 +32,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   processingForm: FormGroup;
   productionForm: FormGroup;
   packingForm: FormGroup;
-  
+
   //edit 
   isEditMode: Boolean = false;
   activeEditId: string = "";
@@ -50,7 +50,6 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   showUnitBarcode:boolean = false;
   onlySallableMode:boolean = false;
 
-  itemUnitList:any = [];
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -99,16 +98,19 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
   }
 
   ngOnInit() {
+    
     if (this.isEditMode) {
       this.facade.getProcessingUnitDetail(this.activeEditId).subscribe(
         (res) => {
           let data: any = { ...res };
           let item = data;
-          console.log(item);
           this.production = this.productionEditList(item.production_unit_ids);
           this.packagingMaterial = this.packingEditList(item.packaging_material);
+          console.log(item)
+          this.productionForm.reset();
           this.processingForm.patchValue({
-            user_id:data.user_id,
+            role_id:item.user_id ? item.user_id.role_id.type : '',
+            user_id:item.user_id ? item.user_id._id : '',
             item_type:item.raw_item_id ? 'RAW_MATERIAL' : 'SELLABLE',
             raw_item_id:item.raw_item_id ? item.raw_item_id : '',
             sellable_item_id:item.sellable_item_id ? item.sellable_item_id : '',
@@ -119,15 +121,10 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
             production_unit_ids:this.production,
             packaging_material:this.packagingMaterial
           });
+          this.roleChanged();
+          this.userSelectionChange();
           this.reloadProductionTable();
-          this.reloadPackingTable();
-          if(item && item.raw_item_id){
-            this.setSellableItemUnit();
-          }else{
-            if(item){
-                //this.getUnitIds('row');
-            }  
-          }
+          this.reloadPackingTable()
         },(err) => console.error(err)
       );
     }
@@ -230,7 +227,7 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
         this.userList = users.userList;
       })
     }
-    this.processingForm.get('item_type').setValue('');
+    // this.processingForm.get('item_type').setValue('');
   }
 
   public itemTypeChanged(){
@@ -404,25 +401,5 @@ export class ProcessingUnitsComponentsProcessingAddComponent implements OnInit {
       this.showUnitPrice = true;
       this.showUnitBarcode = true;
     }
-  }
-
-  public getUnitIds(itemType:string){
-     if(itemType == 'row'){
-        let getIndex = this.itemList.findIndex((item:any) => item._id.toString() == this.processingForm.value.raw_item_id);
-        this.itemUnitList = this.itemList[getIndex].all_item_units;
-     }else{
-        if(!this.processingForm.value.raw_item_id){
-          let getIndex = this.userSellableItemList.findIndex((item:any) => item._id.toString() == this.processingForm.value.sellable_item_id);
-          this.itemUnitList = this.userSellableItemList[getIndex].all_item_units;
-          console.log("ocean",this.itemUnitList);
-        } 
-     }
-    //console.log("itemObj",itemObj)
-  }
-  setSellableItemUnit(){
-    if(!this.processingForm.value.raw_item_id){
-        let getIndex = this.userSellableItemList.findIndex((item:any) => item._id.toString() == this.processingForm.value.sellable_item_id);
-         this.itemUnitList = this.userSellableItemList[getIndex].all_item_units;
-    } 
   }
 }
