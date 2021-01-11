@@ -261,12 +261,14 @@ export class AddRequestComponents implements OnInit, AfterViewInit {
 		}
 		if (this.cartItemList.length) {
 			this.cartItemList.map((item: any) => {
-				reqData.items.push({
+				let itemObj:any = {
 					"item_id": item._id,
 					"item_name": item.name,
 					"booked_item_quantity": item.quantity,
 					"item_unit_id": item.unit_id._id,
-				});
+				}
+				itemObj.final_purchase_price = item.price;
+				reqData.items.push(itemObj);
 			});
 		}
 		if (this.isEditMode) {
