@@ -111,7 +111,7 @@
               <ng-container matColumnDef="wastage_unit_id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Wastage Unit</th>
                 <td mat-cell style="max-width: 100px" *matCellDef="let row">
-                  {{ row.wastage_unit_id.name }}
+                  {{ row.wastage_unit_id ? row.wastage_unit_id.name : '' }}
                 </td>
               </ng-container>
 
