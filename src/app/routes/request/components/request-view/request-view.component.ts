@@ -20,4 +20,8 @@ export class requestViewComponent implements OnInit {
     })
   }
 
+  getTotal(){
+    return this.viewData.total_price;
+  }
+
 }
