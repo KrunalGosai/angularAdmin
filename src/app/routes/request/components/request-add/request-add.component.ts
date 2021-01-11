@@ -1,4 +1,4 @@
-import { AfterViewInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { OfferFacadeService } from './../../../offers/offer-facade.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
@@ -21,7 +21,7 @@ import { truncateSync } from 'fs';
 	templateUrl: './request-add.component.html',
 	styleUrls: ['./request-add.component.scss']
 })
-export class AddRequestComponents implements OnInit, AfterViewInit {
+export class AddRequestComponents implements OnInit, AfterViewChecked {
 	requestForm: FormGroup;
 	recommendedList: itemList[] = [];
 	displayedColumns: string[] = [];
@@ -84,12 +84,13 @@ export class AddRequestComponents implements OnInit, AfterViewInit {
 			supplierUserId: [""]
 		});
 	}
-	ngAfterViewInit(): void {
+	ngAfterViewChecked(): void {
 		if (this.isEditMode) {
-			//this.cartItemList = this.editcartdata;
-			//this.reloadCartTable();
-			//this.itemList = this.editItemList;
+			this.cartItemList = this.editcartdata;
+			this.reloadCartTable();
+			this.itemList = this.editItemList;
 			this.reloadItemTable();
+			this.reloadCartTable();
 
 		}
 	}
